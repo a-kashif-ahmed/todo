@@ -1,22 +1,49 @@
-import { createClient } from "./server";
+// src/lib/supabase/auth-helper.ts
+import { createClient, createServiceClient } from "./server";
 import { NextResponse } from "next/server";
 
-export async function getAuthContext() {
+export interface AuthContext {
+  user: { id: string };
+  teamId: string;
+  role: string;
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  db: ReturnType<typeof createServiceClient>;
+  error?: never;
+}
+
+export interface AuthError {
+  error: NextResponse;
+  user?: never;
+  teamId?: never;
+}
+
+export async function getAuthContext(): Promise<AuthContext | AuthError> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
+  if (!user) {
+    return {
+      error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+    };
+  }
 
   const { data: profile } = await supabase
-    .from("profiles").select("team_id, role").eq("id", user.id).single();
+    .from("flowlens_profiles")
+    .select("team_id, role")
+    .eq("id", user.id)
+    .single();
 
-  if (!profile?.team_id)
-    return { error: NextResponse.json({ error: "No team" }, { status: 403 }) };
+  if (!profile?.team_id) {
+    return {
+      error: NextResponse.json({ error: "No team assigned" }, { status: 403 }),
+    };
+  }
 
-  return { user, teamId: profile.team_id, role: profile.role, supabase };
+  return {
+    user,
+    teamId: profile.team_id,
+    role: profile.role,
+    supabase,
+    db: createServiceClient(),
+  };
 }
-
-// Usage in any route handler:
-// const ctx = await getAuthContext();
-// if (ctx.error) return ctx.error;
-// const { user, teamId, supabase } = ctx;
