@@ -12,10 +12,10 @@ import { History, CheckCircle, AlertTriangle } from "lucide-react";
 export default function Home() {
   return (
     <div className="flex min-h-screen bg-surface">
-      <Sidebar />
+      
 
       <div className="flex flex-col flex-1">
-        <Navbar />
+        
         <main className="flex-1 p-8 overflow-y-auto">
 
           {/* Header */}
