@@ -23,7 +23,7 @@ export async function POST(
       snap_before:snapshot_before(normalised),
       snap_after:snapshot_after(normalised)
     `)
-    .eq("id", params.id)
+    .eq("id", (await params).id)
     .eq("team_id", teamId)
     .single();
 
@@ -67,7 +67,7 @@ export async function POST(
       impact_summary: analysis.impact_summary,
       suggested_fix: analysis.suggested_fix,
     })
-    .eq("id", params.id);
+    .eq("id", (await params).id);
 
   return NextResponse.json({ cached: false, analysis, diff });
 }

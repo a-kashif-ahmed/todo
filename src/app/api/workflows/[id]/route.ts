@@ -10,7 +10,7 @@ import { getAuthContext } from "@/lib/supabase/auth-helper";
 
 export async function GET(
   _req: Request,
-  { params }: { params: { id: string } }
+{ params }: { params: Promise<{ id: string }> }
 ) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
@@ -19,7 +19,7 @@ export async function GET(
   const { data, error } = await supabase
     .from("flowlens_workflows")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", (await params).id)
     .eq("team_id", teamId)
     .single();
 
@@ -31,7 +31,7 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+{ params }: { params: Promise<{ id: string }> }
 ) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
@@ -45,7 +45,7 @@ export async function PATCH(
   const { data, error } = await db
     .from("flowlens_workflows")
     .update(updates)
-    .eq("id", params.id)
+    .eq("id", (await params).id)
     .eq("team_id", teamId)
     .select()
     .single();
@@ -56,7 +56,7 @@ export async function PATCH(
 
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } }
+{ params }: { params: Promise<{ id: string }> }
 ) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
@@ -65,7 +65,7 @@ export async function DELETE(
   const { error } = await db
     .from("flowlens_workflows")
     .delete()
-    .eq("id", params.id)
+    .eq("id", (await params).id)
     .eq("team_id", teamId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

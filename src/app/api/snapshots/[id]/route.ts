@@ -8,7 +8,7 @@ import { getAuthContext } from "@/lib/supabase/auth-helper";
 
 export async function GET(
   _req: Request,
-  { params }: { params: { id: string } }
+{ params }: { params: Promise<{ id: string }> }
 ) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
@@ -17,7 +17,7 @@ export async function GET(
   const { data, error } = await supabase
     .from("flowlens_snapshots")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", (await params).id)
     .eq("team_id", teamId)
     .single();
 
