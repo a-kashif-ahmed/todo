@@ -3,16 +3,19 @@
 // POST /api/incidents/:id/analyse — run AI root cause analysis
 // ─────────────────────────────────────────────────────────────
 
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { diffWorkflows } from "@/lib/services/diff";
 import { analyseRootCause } from "@/lib/services/ai";
 
+
+
 export async function POST(
-  _req: Request,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const ctx = await getAuthContext();
+  const { id } = await params;
   if (ctx.error) return ctx.error;
   const { teamId, db } = ctx;
 
@@ -23,7 +26,7 @@ export async function POST(
       snap_before:snapshot_before(normalised),
       snap_after:snapshot_after(normalised)
     `)
-    .eq("id", (await params).id)
+    .eq("id", id)
     .eq("team_id", teamId)
     .single();
 
@@ -67,7 +70,7 @@ export async function POST(
       impact_summary: analysis.impact_summary,
       suggested_fix: analysis.suggested_fix,
     })
-    .eq("id", (await params).id);
+    .eq("id", id);
 
   return NextResponse.json({ cached: false, analysis, diff });
 }
