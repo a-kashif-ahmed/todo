@@ -85,16 +85,10 @@ export default function Sidebar() {
       </div>
 
       {/* Sidebar Container */}
-      <div
-  className={`
-    fixed inset-y-0 left-0 z-40
-    flex h-screen w-64 flex-col
-    bg-surface
-    transition-transform duration-300
-    md:static md:translate-x-0
-    ${isOpen ? "translate-x-0" : "-translate-x-full"}
-  `}
->
+ <div className={` 
+        fixed inset-y-0 left-0 z-40 w-52 transform bg-surface text-gray-100 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:flex md:flex-col
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
 
         {/* Header / Logo */}
         <div className="border-b border-default px-6 py-6">

@@ -21,7 +21,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center">
+    <div className="min-h-screen bg-surface flex items-center justify-center text-white">
       <div className="w-full max-w-sm bg-surface-2 border border-border rounded-lg p-8">
         <h1 className="text-xl font-semibold mb-6">Sign in to FlowLens</h1>
         <form onSubmit={handleLogin} className="space-y-4">
