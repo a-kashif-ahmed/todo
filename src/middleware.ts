@@ -25,12 +25,12 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isAuthPage = path.startsWith("/login") || path.startsWith("/signup");
 
-//   if (!user && !isAuthPage) {
-//     return NextResponse.redirect(new URL("/login", request.url));
-//   }
-//   if (user && isAuthPage) {
-//     return NextResponse.redirect(new URL("/", request.url));
-//   }
+  if (!user && !isAuthPage) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+  if (user && isAuthPage) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   return response;
 }

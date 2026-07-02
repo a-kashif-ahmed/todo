@@ -13,19 +13,29 @@ interface Incident {
 
 export default function InvestigatePage() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    fetch("/api/incidents?status=open")
-      .then(r => r.json())
-      .then(data => setIncidents(data.incidents || []));
-  }, []);
+ useEffect(() => {
+  async function loadIncidents() {
+    try {
+      const res = await fetch("/api/incidents?status=open");
+      const data = await res.json();
+      setIncidents(data.incidents ?? []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
+  loadIncidents();
+}, []);
   return (
     <div className="p-8">
       <h1 className="text-xl font-semibold text-white mb-1">Investigate</h1>
       <p className="text-sm text-gray-500 mb-6">Open incidents requiring attention.</p>
 
-      <div className="space-y-2">
+      {loading ? <p className="text-gray-500 text-sm px-5">Loading workflows...</p> : <div className="space-y-2">
         {incidents.map(inc => (
           <Link
             key={inc.id}
@@ -41,7 +51,7 @@ export default function InvestigatePage() {
         {incidents.length === 0 && (
           <p className="text-sm text-gray-500">No open incidents. All workflows healthy.</p>
         )}
-      </div>
+      </div>}
     </div>
   );
 }

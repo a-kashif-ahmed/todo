@@ -15,7 +15,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from("flowlens_workflows")
-    .select("*, snapshots(count)")
+    .select("*, flowlens_snapshots(count)")
     .eq("team_id", teamId)
     .order("updated_at", { ascending: false });
 

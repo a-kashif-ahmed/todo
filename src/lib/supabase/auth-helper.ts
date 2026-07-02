@@ -16,10 +16,10 @@ export interface AuthError {
   user?: never;
   teamId?: never;
 }
-
 export async function getAuthContext(): Promise<AuthContext | AuthError> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+  
 
   if (!user) {
     return {
@@ -27,11 +27,16 @@ export async function getAuthContext(): Promise<AuthContext | AuthError> {
     };
   }
 
-  const { data: profile } = await supabase
+  // ← only this line changes: db instead of supabase
+  const db = createServiceClient();
+
+  const { data: profile, error: profileError } = await db
     .from("flowlens_profiles")
     .select("team_id, role")
     .eq("id", user.id)
     .single();
+
+  
 
   if (!profile?.team_id) {
     return {
@@ -44,6 +49,6 @@ export async function getAuthContext(): Promise<AuthContext | AuthError> {
     teamId: profile.team_id,
     role: profile.role,
     supabase,
-    db: createServiceClient(),
+    db,
   };
 }

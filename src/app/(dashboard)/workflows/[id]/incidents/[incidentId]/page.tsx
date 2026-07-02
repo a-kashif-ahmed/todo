@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import TimelineEvent from "@/components/incident/TimelineEvent";
 import AIIntelligenceReport from "@/components/incident/AIIntelligenceReport";
+import { Wand } from "lucide-react";
 
 interface Incident {
   id: string;

@@ -8,7 +8,7 @@ import {
   Menu,
   X, 
   CircleQuestionMark,
-  UserRound
+  UserRound, Plus
 } from "lucide-react";
 import { SvgIcon } from "../svgIcon/page";
 
@@ -85,24 +85,33 @@ export default function Sidebar() {
       </div>
 
       {/* Sidebar Container */}
-      <div className={` 
-        fixed inset-y-0 left-0 z-40 w-52 transform bg-surface text-gray-100 transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:flex md:flex-col
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-      `}>
+      <div
+  className={`
+    fixed inset-y-0 left-0 z-40
+    flex h-screen w-64 flex-col
+    bg-surface
+    transition-transform duration-300
+    md:static md:translate-x-0
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+  `}
+>
 
         {/* Header / Logo */}
-        <div className=" h-16 py-2 items-center justify-between px-6  ">
-          <Link href="/" className="text-2xl font-bold tracking-wider text-brand-blue">
-            FlowLens
-          </Link>
-          <button className="md:hidden" onClick={() => setIsOpen(false)}>
-            <X className="h-5 w-5 text-gray-400 hover:text-white" />
-          </button>
-          <p className="text-inactive">AI Automation Detective</p>
-        </div>
+        <div className="border-b border-default px-6 py-6">
+  <Link
+    href="/"
+    className="text-3xl font-bold tracking-tight text-brand-blue"
+  >
+    FlowLens
+  </Link>
+
+  <p className="mt-1 text-s text-inactive">
+    AI Automation Detective
+  </p>
+</div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 space-y-1 py-10 px-2 overflow-y-auto">
+        <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-5">
           {navigation.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -125,19 +134,35 @@ export default function Sidebar() {
             );
           })}
         </nav>
-
+          <div className="px-4 pb-6">
+  <Link
+    href="/workflows/new"
+    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-blue px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+  >
+    <Plus size={20} strokeWidth={2.5} />
+    New Workflow
+  </Link>
+</div>
         {/* Profile Footer */}
-        <div className="border-t border-gray-800 p-4 flex flex-col gap-2 text-inactive px-2 ">
-          <div className="flex items-center gap-3 hover:bg-surface-2 hover:border-l-4 hover:border-brand-blue hover:text-white ">
-            <CircleQuestionMark />
-            <p className="text-sm font-medium  truncate ">Support</p>
-          </div>
-          <div className="flex items-center gap-3 hover:bg-surface-2 hover:border-l-4 hover:border-brand-blue hover:text-white ">
-            <UserRound/>
-            <p className="text-sm font-medium  truncate">Account</p>
-          </div>
+        <div className="border-t border-default p-4 space-y-1">
 
-        </div>
+  <Link
+    href="/support"
+    className="flex items-center gap-3 rounded-lg px-3 py-2 text-inactive transition hover:bg-surface-2 hover:text-white"
+  >
+    <CircleQuestionMark size={20} />
+    <span>Support</span>
+  </Link>
+
+  <Link
+    href="/account"
+    className="flex items-center gap-3 rounded-lg px-3 py-2 text-inactive transition hover:bg-surface-2 hover:text-white"
+  >
+    <UserRound size={20} />
+    <span>Account</span>
+  </Link>
+
+</div>
 
       </div>
 
