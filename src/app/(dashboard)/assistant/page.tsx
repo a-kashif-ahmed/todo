@@ -1,128 +1,76 @@
+// ============================================================
+// FILE 1: src/app/(dashboard)/assistant/page.tsx
+// Index — lists all workflows, user picks one to chat about
+// ============================================================
+
 "use client";
-
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Plus, Clock3 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { MessageSquare, AlertTriangle, CheckCircle } from "lucide-react";
 import Card from "@/components/ui/card/page";
-
 interface Workflow {
   id: string;
   name: string;
   platform: string;
   status: "healthy" | "degraded" | "failing" | "unknown";
-  last_snapshot_at: string | null;
 }
 
-const statusMap = {
-  healthy: {
-    label: "Healthy",
-    color: "success" as const,
-  },
-  degraded: {
-    label: "Warning",
-    color: "warning" as const,
-  },
-  failing: {
-    label: "Offline",
-    color: "error" as const,
-  },
-  unknown: {
-    label: "Unknown",
-    color: "warning" as const,
-  },
-};
-
-export default function AssistantPage() {
+export default function AssistantIndexPage() {
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch("/api/workflows");
-        const data = await res.json();
-
-        setWorkflows(data.workflows ?? []);
-        console.log(data.workflows)
-      } catch (err) {
-        console.error(err);
-      } finally {
+    fetch("/api/workflows")
+      .then(r => r.json())
+      .then(data => {
+        setWorkflows(data.workflows || []);
         setLoading(false);
-      }
-    }
-
-    load();
+      });
   }, []);
 
-  if (loading) {
-    return (
-      <main className="p-8 text-inactive">
-        <div className="mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-white">
-            AI Assistants
-          </h1>
-
-          <p className="text-inactive mt-2">
-            Monitor and manage your workflow assistants.
-          </p>
-          Loading Assistants....
-        </div>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen p-8">
+    <div className="p-8 max-w-3xl">
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-white mb-1">AI Assistant</h1>
+        <p className="text-sm text-gray-500">
+          Select a workflow to start a debugging session with FlowLens AI.
+        </p>
+      </div>
 
-      <div className="mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-white">
-            AI Assistants
-          </h1>
+      {loading ? (
+        <p className="text-gray-500 text-sm">Loading workflows...</p>
+      ) : (
+        <div className="grid grid-cols-2 ">
+          {[...workflows]
+  .sort((a, b) => {
+    const priority = { failing: 0, degraded: 1, unknown: 2, healthy: 3 };
+    return (priority[a.status] ?? 2) - (priority[b.status] ?? 2);
+  }).map(wf => (
+             <Card
+                                    key={wf.id}
+                                    title={wf.name}
+                                    description={wf.platform}
+                                    href={`/assistant/${wf.id}`}
+                                    status={{
+                                      label: wf.status === "failing" ? "Needs Attention" : "Healthy",
+                                      color: wf.status === "failing" ? "error" : "success",
+                                    }}
+                                    button={ {label: wf.status === "failing" ? "Fix with Assistant" : "Chat with Assistant",
+                                      color: wf.status === "failing" ? "error" : "success",}}
+                                  />
+          ))}
 
-          <p className="text-inactive mt-2">
-            Monitor and manage your workflow assistants.
-          </p>
+          {workflows.length === 0 && (
+            <div className="text-center py-12 text-gray-500 text-sm">
+              No workflows yet.{" "}
+              <a href="/import" className="text-brand-blue hover:underline">Import one</a> to get started.
+            </div>
+          )}
         </div>
-
-        <button className="flex items-center gap-2 rounded-md bg-brand-blue px-4 py-2 text-white">
-          <Plus size={18} />
-          New Assistant
-        </button>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-
-        <Card variant="create" />
-
-        {workflows.map((workflow) => (
-          <Card
-            key={workflow.id}
-            title={workflow.name}
-            description={`Platform: ${workflow.platform}`}
-            status={statusMap[workflow.status]}
-            href={`/assistant/${workflow.id}`}
-            footer={
-              <div className="flex items-center gap-2">
-                <Clock3 size={14} />
-                <span>
-                  {workflow.last_snapshot_at
-                    ? new Date(
-                        workflow.last_snapshot_at
-                      ).toLocaleString()
-                    : "No snapshots"}
-                </span>
-              </div>
-            }
-            button={{
-              label: "Chat",
-              color: "warning",
-            }}
-          />
-        ))}
-      </div>
-    </main>
+      )}
+    </div>
   );
 }
+
+

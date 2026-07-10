@@ -65,7 +65,11 @@ export default function Home() {
   <p className="text-gray-500 text-sm px-5">Loading workflows...</p>
 ) : (
  <div className="grid grid-cols-2 ">
-                  {workflows.slice(0, 3).map(wf => {
+                  {[...workflows]
+  .sort((a, b) => {
+    const priority:Record<string, number> = { failing: 0, degraded: 1, unknown: 2, healthy: 3 };
+    return (priority[a.status] ?? 2) - (priority[b.status] ?? 2);
+  }).map(wf => {
                     const hasIncident = incidents.some(i => i.workflow_id === wf.id);
                     return (
                       <Card

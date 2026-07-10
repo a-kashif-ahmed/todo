@@ -3,16 +3,13 @@
 
 import { WorkflowDiff } from "@/types/flowlens";
 
-const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
-const MODEL = "google/gemini-2.0-flash";
+const OPENROUTER_BASE = "https://generativelanguage.googleapis.com/v1beta/openai";
+const MODEL = "gemini-2.0-flash";
 
-// ── Helper: base fetch with auth headers ─────────────────────────────────────
 function openRouterHeaders() {
   return {
-    "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    "Authorization": `Bearer ${process.env.GOOGLE_AI_KEY}`,
     "Content-Type": "application/json",
-    "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-    "X-Title": "FlowLens",
   };
 }
 
@@ -88,12 +85,13 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. No expla
         model: MODEL,
         max_tokens: 1000,
         messages: [{ role: "user", content: prompt }],
-        response_format: { type: "json_object" }, // force JSON output
+        
       }),
     });
 
     if (!res.ok) {
       const err = await res.text();
+      console.error("OpenRouter bad request:", res.status, err);
       throw new Error(`OpenRouter error: ${err}`);
     }
 
@@ -176,7 +174,6 @@ ${context}`,
           }
         }
       }
-
       controller.enqueue(encoder.encode("data: [DONE]\n\n"));
       controller.close();
     },
