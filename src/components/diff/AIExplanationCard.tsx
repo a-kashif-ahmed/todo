@@ -46,15 +46,15 @@ export default function AIExplanationCard({
       </div>
 
       {suggestedFix && (
-        <div className="flex items-center justify-between bg-brand-blue/10 border border-brand-blue/20 rounded-lg px-3 py-2.5">
-          <p className="text-xs text-brand-blue flex-1 mr-3">
+        <div className="flex items-center justify-between bg-brand-orange/10 border border-brand-orange/20 rounded-lg px-3 py-2.5">
+          <p className="text-xs text-brand-orange flex-1 mr-3">
             {suggestedFix.description}
           </p>
           {onApplyFix && (
             <button
               onClick={onApplyFix}
               disabled={applying}
-              className="text-xs font-medium bg-brand-blue text-white rounded px-3 py-1.5 whitespace-nowrap disabled:opacity-60 hover:opacity-90 transition-opacity"
+              className="text-xs font-medium bg-brand-orange text-white rounded px-3 py-1.5 whitespace-nowrap disabled:opacity-60 hover:opacity-90 transition-opacity"
             >
               {applying ? "Applying..." : "Apply Fix"}
             </button>

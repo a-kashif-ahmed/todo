@@ -53,7 +53,7 @@ export default function SignupPage() {
             value={form.name}
             onChange={e => setForm(prev => ({ ...prev, name: e.target.value }))}
             required
-            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-brand-blue/50"
+            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-brand-orange/50"
           />
           <input
             type="text"
@@ -61,7 +61,7 @@ export default function SignupPage() {
             value={form.team}
             onChange={e => setForm(prev => ({ ...prev, team: e.target.value }))}
             required
-            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-brand-blue/50"
+            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-brand-orange/50"
           />
           <input
             type="email"
@@ -69,7 +69,7 @@ export default function SignupPage() {
             value={form.email}
             onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))}
             required
-            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-brand-blue/50"
+            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-brand-orange/50"
           />
           <input
             type="password"
@@ -77,7 +77,7 @@ export default function SignupPage() {
             value={form.password}
             onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))}
             required
-            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-brand-blue/50"
+            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-white placeholder:text-gray-500 outline-none focus:border-brand-orange/50"
           />
 
           {error && <p className="text-status-error text-xs">{error}</p>}
@@ -85,7 +85,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-brand-blue text-white rounded py-2 text-sm font-medium disabled:opacity-60 hover:opacity-90 transition-opacity"
+            className="w-full bg-brand-orange text-white rounded py-2 text-sm font-medium disabled:opacity-60 hover:opacity-90 transition-opacity"
           >
             {loading ? "Creating account..." : "Create account"}
           </button>
@@ -93,7 +93,7 @@ export default function SignupPage() {
 
         <p className="text-xs text-center text-gray-500 mt-4">
           Already have an account?{" "}
-          <a href="/login" className="text-brand-blue hover:underline">Sign in</a>
+          <a href="/login" className="text-brand-orange hover:underline">Sign in</a>
         </p>
       </div>
     </div>

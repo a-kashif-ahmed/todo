@@ -1,34 +1,33 @@
 @import "tailwindcss";
 
-
 @theme {
   /* Colors */
-  --color-surface: #0d1117;       /* was #10131a — too blue-shifted vs image */
-  --color-surface-2: #161b22;     /* ✓ correct */
-  --color-surface-3: #1c2128;     /* was #1c2230 — image is less blue/purple */
-  --color-inactive: #4a5568;      /* was rgb(50 53 80) — too purple, image is neutral gray */
-  --color-brand-blue: #ADC6FF;    /* ✓ correct */
-  --color-brand-purple: #a855f7;  /* ✓ correct */
+  --color-surface: #191919;        /* deep brown-black background */
+  --color-surface-2: #221d18;      /* slightly lifted warm dark surface */
+  --color-surface-3: #2b2420;      /* card / tertiary surface, warm dark brown */
+  --color-inactive: #6b645c;       /* muted warm gray */
+  --color-brand-orange: #DA7756;   /* primary terracotta accent (Crail) */
+  --color-brand-brown: #E8D5B0;    /* warm parchment used as secondary accent on dark */
 
-  --color-status-success: #22c55e; /* ✓ correct */
-  --color-status-warning: #f59e0b; /* ✓ correct */
-  --color-status-error: #ef4444;   /* ✓ correct */
+  --color-status-success: #22c55e;
+  --color-status-warning: #f59e0b;
+  --color-status-error: #ef4444;
 
-  --color-border: #30363d;         /* ✓ correct */
-  --color-border-light: #21262d;   /* ✓ correct */
+  --color-border: #3a332c;         /* warm dark border */
+  --color-border-light: #4a4238;   /* subtle warm border */
 
-  /* Text — these were missing entirely */
-  --color-text-primary: #e6edf3;   /* main white text in image */
-  --color-text-muted: #7d8590;     /* timestamps, descriptions, inactive labels */
+  /* Text */
+  --color-text-primary: #F4F3EE;   /* cream text on dark */
+  --color-text-muted: #B1ADA1;     /* cloudy gray — timestamps, descriptions */
 
   /* Fonts */
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: "Fira Code", "Cascadia Code", monospace;
 
   /* Radius */
   --radius: 8px;
 }
-
 /* 
 :root {
   --background: #ffffff;

@@ -70,11 +70,11 @@ export default function AIIntelligenceReport({
           <div className="flex items-center gap-2">
             <div className="w-28 h-1.5 bg-surface rounded-full overflow-hidden">
               <div
-                className="h-full bg-brand-blue rounded-full"
+                className="h-full bg-brand-orange rounded-full"
                 style={{ width: `${Math.round(confidence * 100)}%` }}
               />
             </div>
-            <span className="text-sm font-semibold text-brand-blue">
+            <span className="text-sm font-semibold text-brand-orange">
               {Math.round(confidence * 100)}%
             </span>
           </div>
@@ -102,7 +102,7 @@ export default function AIIntelligenceReport({
             key={i}
             onClick={action.onClick}
             disabled={action.loading}
-            className="w-full flex items-start gap-3 bg-surface-2 border border-border rounded-xl p-4 text-left hover:border-brand-blue/30 transition-colors disabled:opacity-60"
+            className="w-full flex items-start gap-3 bg-surface-2 border border-border rounded-xl p-4 text-left hover:border-brand-orange/30 transition-colors disabled:opacity-60"
           >
             <span className="w-9 h-9 rounded-lg bg-surface-3 border border-border flex items-center justify-center text-base flex-shrink-0">
               {actionIcon[action.icon]}

@@ -94,7 +94,7 @@ export default function Sidebar() {
         <div className="border-b border-default px-6 py-6">
   <Link
     href="/"
-    className="text-3xl font-bold tracking-tight text-brand-blue"
+    className="text-3xl font-bold tracking-tight text-brand-orange"
   >
     FlowLens
   </Link>
@@ -116,8 +116,8 @@ export default function Sidebar() {
                 className={`
                   flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors
                   ${isActive
-                    ? "bg-surface-2 border-l-4 border-brand-blue text-brand-blue"
-                    : "text-inactive hover:bg-surface-2 hover:border-l-4 hover:border-brand-blue hover:text-white"
+                    ? "bg-surface-2 border-l-4 border-brand-orange text-brand-orange"
+                    : "text-inactive hover:bg-surface-2 hover:border-l-4 hover:border-brand-orange hover:text-white"
                   }
                 `}
               >
@@ -131,7 +131,7 @@ export default function Sidebar() {
           <div className="px-4 pb-6">
   <Link
     href="/workflows/new"
-    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-blue px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
   >
     <Plus size={20} strokeWidth={2.5} />
     New Workflow

@@ -40,7 +40,7 @@ export default function Dropzone({ onFile, onPasteRaw, status, statusMessage }: 
       onClick={() => inputRef.current?.click()}
       className={`relative cursor-pointer border-2 border-dashed rounded-2xl px-10 py-20 flex flex-col items-center text-center transition-colors ${
         dragging
-          ? "border-brand-blue bg-brand-blue/5"
+          ? "border-brand-orange bg-brand-orange/5"
           : "border-border hover:border-gray-600"
       }`}
     >
@@ -53,7 +53,7 @@ export default function Dropzone({ onFile, onPasteRaw, status, statusMessage }: 
       />
 
       <div className="w-16 h-16 rounded-full bg-surface-2 border border-border flex items-center justify-center mb-6">
-        <UploadCloud size={28} className="text-brand-blue" />
+        <UploadCloud size={28} className="text-brand-orange" />
       </div>
 
       <h2 className="text-2xl font-semibold text-white mb-2">
@@ -73,7 +73,7 @@ export default function Dropzone({ onFile, onPasteRaw, status, statusMessage }: 
       <div className="flex gap-3" onClick={e => e.stopPropagation()}>
         <button
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 bg-brand-blue hover:bg-brand-blue/90 text-white font-medium text-sm rounded-lg px-5 py-2.5 transition-colors"
+          className="flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-white font-medium text-sm rounded-lg px-5 py-2.5 transition-colors"
         >
           <UploadCloud size={15} />
           Browse Files

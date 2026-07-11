@@ -187,7 +187,7 @@ export default function AssistantChatPage() {
         {/* Chat header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-brand-blue/15 border border-brand-blue/25 flex items-center justify-center text-brand-blue text-sm">
+            <div className="w-9 h-9 rounded-lg bg-brand-orange/15 border border-brand-orange/25 flex items-center justify-center text-brand-orange text-sm">
               ◎
             </div>
             <div>
@@ -229,7 +229,7 @@ export default function AssistantChatPage() {
                 </div>
               ) : (
                 <div className="flex gap-2.5">
-                  <span className="w-7 h-7 rounded-lg bg-brand-blue/15 border border-brand-blue/20 flex items-center justify-center flex-shrink-0 text-brand-blue text-xs mt-0.5">
+                  <span className="w-7 h-7 rounded-lg bg-brand-orange/15 border border-brand-orange/20 flex items-center justify-center flex-shrink-0 text-brand-orange text-xs mt-0.5">
                     ✦
                   </span>
                   <div className="flex-1">
@@ -242,8 +242,8 @@ export default function AssistantChatPage() {
 
                     {/* AI Recommendation box — shown on last assistant message if incident exists */}
                     {!streaming && i === messages.length - 1 && incident?.root_cause && (
-                      <div className="mt-3 bg-brand-blue/10 border border-brand-blue/20 rounded-lg px-3.5 py-3">
-                        <p className="text-xs font-semibold text-brand-blue mb-1">⚐ AI Recommendation</p>
+                      <div className="mt-3 bg-brand-orange/10 border border-brand-orange/20 rounded-lg px-3.5 py-3">
+                        <p className="text-xs font-semibold text-brand-orange mb-1">⚐ AI Recommendation</p>
                         <p className="text-xs text-gray-300 leading-relaxed">
                           {incident.impact_summary || incident.root_cause}
                         </p>
@@ -263,7 +263,7 @@ export default function AssistantChatPage() {
                             });
                             router.push(`/workflows/${workflowId}`);
                           }}
-                          className="flex items-center gap-1.5 bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium text-white hover:border-brand-blue/40 transition-colors"
+                          className="flex items-center gap-1.5 bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium text-white hover:border-brand-orange/40 transition-colors"
                         >
                           ✨ Apply AI Fix
                         </button>
@@ -319,7 +319,7 @@ export default function AssistantChatPage() {
             <button
               onClick={send}
               disabled={streaming || !input.trim()}
-              className="w-7 h-7 rounded-lg bg-brand-blue flex items-center justify-center disabled:opacity-40 hover:opacity-90 transition-opacity flex-shrink-0"
+              className="w-7 h-7 rounded-lg bg-brand-orange flex items-center justify-center disabled:opacity-40 hover:opacity-90 transition-opacity flex-shrink-0"
             >
               <ArrowUp size={13} className="text-white" />
             </button>

@@ -12,7 +12,7 @@ interface Props2 {
 }
 
 const variantStyle: Record<string, string> = {
-  success: "border-brand-blue/50 text-brand-blue",
+  success: "border-brand-orange/50 text-brand-orange",
   error: "border-status-error/50 text-status-error",
   waiting: "border-border text-gray-500",
 };

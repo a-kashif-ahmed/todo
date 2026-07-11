@@ -11,8 +11,8 @@ interface ConnectionItem {
 
 const connections: ConnectionItem[] = [
   { id: "n8n", label: "Connect n8n" },
-  // { id: "zapier", label: "Connect Zapier" },
-  // { id: "make", label: "Connect Make" },
+  { id: "zapier", label: "Connect Zapier" },
+  { id: "make", label: "Connect Make" },
 ];
 
 export default function DirectConnections() {

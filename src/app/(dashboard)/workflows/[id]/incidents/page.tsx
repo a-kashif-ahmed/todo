@@ -38,7 +38,7 @@ export default function HistoryPage() {
           <Link
             key={entry.id}
             href={`/workflows/${entry.workflow_id}`}
-            className="flex items-center justify-between bg-surface-2 border border-border rounded-lg px-4 py-3 hover:border-brand-blue/30 transition-colors"
+            className="flex items-center justify-between bg-surface-2 border border-border rounded-lg px-4 py-3 hover:border-brand-orange/30 transition-colors"
           >
             <div>
               <p className="text-sm text-white">{entry.action.replace(/_/g, " ")}</p>

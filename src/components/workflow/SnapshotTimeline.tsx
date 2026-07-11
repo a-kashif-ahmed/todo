@@ -42,7 +42,7 @@ export default function SnapshotTimeline({ snapshots, selectedId, onSelect }: Pr
               onClick={() => onSelect(s.id)}
               className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${
                 isSelected
-                  ? "bg-surface-3 border border-brand-blue/30"
+                  ? "bg-surface-3 border border-brand-orange/30"
                   : "hover:bg-surface-3/50 border border-transparent"
               }`}
             >

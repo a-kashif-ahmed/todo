@@ -23,7 +23,7 @@ export default function ChatMessageBubble({ role, content, timestamp, streaming 
 
   return (
     <div className="flex gap-2.5">
-      <span className="w-7 h-7 rounded-lg bg-brand-blue/15 border border-brand-blue/25 flex items-center justify-center flex-shrink-0 text-brand-blue text-xs mt-0.5">
+      <span className="w-7 h-7 rounded-lg bg-brand-orange/15 border border-brand-orange/25 flex items-center justify-center flex-shrink-0 text-brand-orange text-xs mt-0.5">
         ✦
       </span>
       <div className="text-sm text-gray-200 leading-relaxed max-w-[90%]">

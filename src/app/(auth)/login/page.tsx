@@ -33,12 +33,12 @@ export default function LoginPage() {
             className="w-full bg-surface border border-border rounded px-3 py-2 text-sm" />
           {error && <p className="text-status-error text-xs">{error}</p>}
           <button type="submit" disabled={loading}
-            className="w-full bg-brand-blue text-white rounded py-2 text-sm font-medium disabled:opacity-60">
+            className="w-full bg-brand-orange text-white rounded py-2 text-sm font-medium disabled:opacity-60">
             {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
         <p className="text-xs text-center text-text-muted mt-4">
-          No account? <a href="/signup" className="text-brand-blue">Sign up</a>
+          No account? <a href="/signup" className="text-brand-orange">Sign up</a>
         </p>
       </div>
     </div>

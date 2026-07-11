@@ -102,7 +102,7 @@ export default function AIAssistantPanel({
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-border-light">
         <div className="flex items-center gap-3">
-          <span className="w-9 h-9 rounded-lg bg-brand-blue/15 border border-brand-blue/25 flex items-center justify-center text-brand-blue">
+          <span className="w-9 h-9 rounded-lg bg-brand-orange/15 border border-brand-orange/25 flex items-center justify-center text-brand-orange">
             ◎
           </span>
           <div>
@@ -162,7 +162,7 @@ export default function AIAssistantPanel({
             placeholder="Ask FlowLens..."
             className="flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
           />
-          <button onClick={send} disabled={streaming || !input.trim()} className="text-brand-blue disabled:opacity-40">
+          <button onClick={send} disabled={streaming || !input.trim()} className="text-brand-orange disabled:opacity-40">
             <ArrowUp size={18} />
           </button>
         </div>

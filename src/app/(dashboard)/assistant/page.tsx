@@ -64,7 +64,7 @@ export default function AssistantIndexPage() {
           {workflows.length === 0 && (
             <div className="text-center py-12 text-gray-500 text-sm">
               No workflows yet.{" "}
-              <a href="/import" className="text-brand-blue hover:underline">Import one</a> to get started.
+              <a href="/import" className="text-brand-orange hover:underline">Import one</a> to get started.
             </div>
           )}
         </div>

@@ -26,7 +26,7 @@ const iconByType: Record<string, string> = {
 };
 
 const colorByType: Record<string, string> = {
-  healthy: "text-brand-blue border-brand-blue/40 bg-brand-blue/10",
+  healthy: "text-brand-orange border-brand-orange/40 bg-brand-orange/10",
   change: "text-amber-400 border-amber-400/40 bg-amber-400/10",
   connection: "text-amber-400 border-amber-400/40 bg-amber-400/10",
   error: "text-status-error border-status-error/40 bg-status-error/10",
@@ -72,7 +72,7 @@ export default function TimelineEvent({
         <p className="text-sm text-gray-400 leading-relaxed">{description}</p>
 
         {badge && (
-          <span className="inline-block mt-3 text-[11px] font-semibold tracking-wide text-brand-blue bg-brand-blue/10 border border-brand-blue/20 rounded px-2.5 py-1">
+          <span className="inline-block mt-3 text-[11px] font-semibold tracking-wide text-brand-orange bg-brand-orange/10 border border-brand-orange/20 rounded px-2.5 py-1">
             {badge}
           </span>
         )}

@@ -24,7 +24,7 @@ export default function AssistantActions({
       <button
         onClick={onApplyFix}
         disabled={applyingFix}
-        className="flex items-center gap-1.5 bg-surface-3 border border-border rounded-lg px-3.5 py-2 text-xs font-medium text-white hover:border-brand-blue/40 transition-colors disabled:opacity-60"
+        className="flex items-center gap-1.5 bg-surface-3 border border-border rounded-lg px-3.5 py-2 text-xs font-medium text-white hover:border-brand-orange/40 transition-colors disabled:opacity-60"
       >
         ✨ {applyingFix ? "Applying..." : "Apply AI Fix"}
       </button>
