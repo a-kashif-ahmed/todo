@@ -64,7 +64,7 @@ export default function Home() {
                 {loading ? (
   <p className="text-gray-500 text-sm px-5">Loading workflows...</p>
 ) : (
- <div className="grid grid-cols-2 ">
+ <div className="grid grid-cols-2 "> 
                   {[...workflows]
   .sort((a, b) => {
     const priority:Record<string, number> = { failing: 0, degraded: 1, unknown: 2, healthy: 3 };
