@@ -17,7 +17,7 @@ export default function PasteJsonModal({ open, onClose, onSubmit }: Props) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-6">
+    <div className="fixed inset-0 bg-surface/60 flex items-center justify-center z-50 p-6">
       <div className="bg-surface-2 border border-border rounded-xl p-6 w-full max-w-2xl">
         <h3 className="text-base font-semibold text-white mb-3">Paste raw JSON</h3>
         <textarea

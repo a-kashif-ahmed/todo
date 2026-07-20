@@ -149,7 +149,7 @@ export default function Sidebar() {
   </Link>
 
   <Link
-    href="/account"
+    href="/profile"
     className="flex items-center gap-3 rounded-lg px-3 py-2 text-inactive transition hover:bg-surface-2 hover:text-white"
   >
     <UserRound size={20} />
@@ -164,7 +164,7 @@ export default function Sidebar() {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+          className="fixed inset-0 z-30 bg-surface/50 md:hidden"
         />
       )}
     </>
