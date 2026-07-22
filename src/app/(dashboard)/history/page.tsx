@@ -26,7 +26,7 @@ function actionIcon(action: string) {
 
 const actorBadge = {
   user:   "bg-brand-blue/15 text-brand-blue",
-  system: "bg-gray-500/15 text-gray-400",
+  system: "bg-gray-500/15 text-text-muted",
   ai:     "bg-purple-500/15 text-purple-300",
 };
 
@@ -64,29 +64,29 @@ export default function HistoryPage() {
             <div className="w-24 h-24 rounded-2xl bg-surface-2 border border-dashed border-border flex items-center justify-center mb-6">
               <Clock size={32} className="text-gray-600" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">No activity tracked yet</h2>
-            <p className="text-gray-500 text-sm max-w-sm mb-8 leading-relaxed">
+            <h2 className="text-2xl font-bold text-text-primary mb-2">No activity tracked yet</h2>
+            <p className="text-text-muted text-sm max-w-sm mb-8 leading-relaxed">
               Once you start deploying workflows or making changes, your audit log will appear here for versioning and recovery.
             </p>
             <div className="flex gap-3">
-              <Link href="/workflows" className="flex items-center gap-2 bg-brand-blue text-white text-sm font-medium rounded-lg px-5 py-2.5 hover:opacity-90 transition-opacity">
+              <Link href="/workflows" className="flex items-center gap-2 bg-brand-blue text-text-primary text-sm font-medium rounded-lg px-5 py-2.5 hover:opacity-90 transition-opacity">
                 <GitBranch size={14} /> Go to Workflows
               </Link>
-              <Link href="/import" className="flex items-center gap-2 bg-surface-2 border border-border text-white text-sm font-medium rounded-lg px-5 py-2.5 hover:border-gray-500 transition-colors">
+              <Link href="/import" className="flex items-center gap-2 bg-surface-2 border border-border text-text-primary text-sm font-medium rounded-lg px-5 py-2.5 hover:border-gray-500 transition-colors">
                 Import JSON
               </Link>
             </div>
           </div>
         ) : (
           <>
-            <h1 className="text-2xl font-semibold text-white mb-6">History</h1>
+            <h1 className="text-2xl font-semibold text-text-primary mb-6">History</h1>
             {loading ? (
-              <p className="text-gray-500 text-sm">Loading...</p>
+              <p className="text-text-muted text-sm">Loading...</p>
             ) : (
               <div className="space-y-8">
                 {Object.entries(grouped).map(([date, entries]) => (
                   <div key={date}>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{date}</p>
+                    <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-3">{date}</p>
                     <div className="space-y-2">
                       {entries.map(entry => (
                         <Link
@@ -99,16 +99,16 @@ export default function HistoryPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <p className="text-sm font-medium text-white">
+                              <p className="text-sm font-medium text-text-primary">
                                 {entry.action.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
                               </p>
                               <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${actorBadge[entry.actor_type]}`}>
                                 {entry.actor_type === "ai" ? "FlowLens AI" : entry.profiles?.display_name || "System"}
                               </span>
                             </div>
-                            <p className="text-xs text-gray-500 mt-0.5 truncate">{entry.workflow_id}</p>
+                            <p className="text-xs text-text-muted mt-0.5 truncate">{entry.workflow_id}</p>
                           </div>
-                          <span className="text-xs text-gray-500 whitespace-nowrap">
+                          <span className="text-xs text-text-muted whitespace-nowrap">
                             {new Date(entry.created_at).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
                           </span>
                         </Link>
@@ -123,23 +123,23 @@ export default function HistoryPage() {
       </div>
 
       {/* ── RIGHT: Builder Insights sidebar ── */}
-      <div className="w-72 flex-shrink-0 border-l border-border overflow-y-auto p-6 space-y-5">
+      <div className="w-72 flex-shrink-0 border-l border-border overflow-y-auto p-6 space-y-5 scrollbar">
         <div className="flex items-center gap-2">
           <span className="text-purple-300">◎</span>
-          <h2 className="text-base font-semibold text-white">Builder Insights</h2>
+          <h2 className="text-base font-semibold text-text-primary">Builder Insights</h2>
         </div>
-        <p className="text-xs text-gray-500">Maximize your automation visibility</p>
+        <p className="text-xs text-text-muted">Maximize your automation visibility</p>
 
         <div className="bg-surface-2 border border-border rounded-xl p-4">
           <p className="text-[10px] font-bold text-brand-blue tracking-wider mb-2">✦ AUTO-VERSIONING</p>
-          <p className="text-xs text-gray-400 leading-relaxed">
+          <p className="text-xs text-text-muted leading-relaxed">
             Every single logic node update or trigger change is automatically snapshot. You can roll back to any point in time with 100% state persistence.
           </p>
         </div>
 
         <div className="bg-surface-2 border border-border rounded-xl p-4">
           <p className="text-[10px] font-bold text-status-warning tracking-wider mb-2">◉ ANOMALY DETECTION</p>
-          <p className="text-xs text-gray-400 leading-relaxed">
+          <p className="text-xs text-text-muted leading-relaxed">
             FlowLens AI constantly monitors your history to find patterns. If a workflow begins failing due to a logic loop, it will highlight the exact version where it started.
           </p>
         </div>
@@ -152,13 +152,13 @@ export default function HistoryPage() {
             </div>
           </div>
           <div className="px-4 py-3">
-            <p className="text-xs font-semibold text-white">Version Engine Active</p>
+            <p className="text-xs font-semibold text-text-primary">Version Engine Active</p>
           </div>
         </div>
 
         {/* Recent system health */}
         <div>
-          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-3">Recent System Health</p>
+          <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wide mb-3">Recent System Health</p>
           <div className="space-y-2">
             {[
               { label: "Log Engine", status: "Operational" },
@@ -168,7 +168,7 @@ export default function HistoryPage() {
                 <span className="w-3 h-3 rounded-full border-2 border-brand-blue flex items-center justify-center flex-shrink-0">
                   <span className="w-1 h-1 rounded-full bg-brand-blue" />
                 </span>
-                <span className="text-xs text-gray-400">{item.label}: <span className="text-gray-300">{item.status}</span></span>
+                <span className="text-xs text-text-muted">{item.label}: <span className="text-gray-300">{item.status}</span></span>
               </div>
             ))}
           </div>

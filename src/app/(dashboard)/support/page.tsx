@@ -61,7 +61,7 @@ const support = [
 
 export default function SupportPage() {
   return (
-    <div className="min-h-screen bg-surface text-white">
+    <div className="min-h-screen bg-surface text-text-primary">
       <div className="mx-auto max-w-7xl px-8 py-1">
 
         {/* Hero */}

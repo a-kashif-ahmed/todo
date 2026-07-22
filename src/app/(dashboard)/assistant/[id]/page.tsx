@@ -146,7 +146,7 @@ export default function AssistantChatPage() {
   }
 
   if (loading) {
-    return <div className="p-8 text-gray-400 text-sm">Loading...</div>;
+    return <div className="p-8 text-text-muted text-sm">Loading...</div>;
   }
 
   if (!workflow) {
@@ -165,7 +165,7 @@ export default function AssistantChatPage() {
             <p className="text-sm font-semibold text-status-error">
               Incident: ID-{incident.id.slice(0, 4).toUpperCase()}
             </p>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-text-muted mt-0.5">
               Status: {workflow.status} since {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </p>
           </div>
@@ -191,7 +191,7 @@ export default function AssistantChatPage() {
               ◎
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">Flow Detective</p>
+              <p className="text-sm font-semibold text-text-primary">Flow Detective</p>
               <p className="text-[11px] flex items-center gap-1.5">
                 <span className={`w-1.5 h-1.5 rounded-full ${streaming ? "bg-status-success animate-pulse" : "bg-status-success"}`} />
                 <span className="text-status-success">
@@ -202,7 +202,7 @@ export default function AssistantChatPage() {
           </div>
           <button
             onClick={() => router.push("/assistant")}
-            className="text-gray-500 hover:text-white transition-colors"
+            className="text-text-muted hover:text-text-primary transition-colors"
           >
             <X size={18} />
           </button>
@@ -220,7 +220,7 @@ export default function AssistantChatPage() {
             <div key={i}>
               {m.role === "user" ? (
                 <div className="flex flex-col items-end">
-                  <div className="bg-surface-2 border border-border text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%]">
+                  <div className="bg-surface-2 border border-border text-text-primary text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%]">
                     {m.content}
                   </div>
                   {m.timestamp && (
@@ -263,7 +263,7 @@ export default function AssistantChatPage() {
                             });
                             router.push(`/workflows/${workflowId}`);
                           }}
-                          className="flex items-center gap-1.5 bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium text-white hover:border-brand-orange/40 transition-colors"
+                          className="flex items-center gap-1.5 bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium text-text-primary hover:border-brand-orange/40 transition-colors"
                         >
                           ✨ Apply AI Fix
                         </button>
@@ -279,14 +279,14 @@ export default function AssistantChatPage() {
                             });
                             router.push(`/workflows/${workflowId}`);
                           }}
-                          className="flex items-center gap-1.5 bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium text-white hover:border-gray-500 transition-colors"
+                          className="flex items-center gap-1.5 bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium text-text-primary hover:border-gray-500 transition-colors"
                         >
                           ↺ Restore Version
                         </button>
                         {incident && (
                           <button
                             onClick={() => router.push(`/workflows/${workflowId}/compare?from=${incident.snapshot_before}&to=${incident.snapshot_after}`)}
-                            className="flex items-center gap-1.5 bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium text-white hover:border-gray-500 transition-colors"
+                            className="flex items-center gap-1.5 bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium text-text-primary hover:border-gray-500 transition-colors"
                           >
                             ⇗ Open Compare
                           </button>
@@ -314,22 +314,22 @@ export default function AssistantChatPage() {
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}
               placeholder="Ask FollowLens..."
-              className="flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
+              className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none"
             />
             <button
               onClick={send}
               disabled={streaming || !input.trim()}
               className="w-7 h-7 rounded-lg bg-brand-orange flex items-center justify-center disabled:opacity-40 hover:opacity-90 transition-opacity flex-shrink-0"
             >
-              <ArrowUp size={13} className="text-white" />
+              <ArrowUp size={13} className="text-text-primary" />
             </button>
           </div>
           <div className="flex items-center justify-between mt-2 px-1">
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1 text-[11px] text-gray-500 cursor-pointer hover:text-gray-300">
+              <span className="flex items-center gap-1 text-[11px] text-text-muted cursor-pointer hover:text-gray-300">
                 <Paperclip size={11} /> CONTEXT
               </span>
-              <span className="flex items-center gap-1 text-[11px] text-gray-500 cursor-pointer hover:text-gray-300">
+              <span className="flex items-center gap-1 text-[11px] text-text-muted cursor-pointer hover:text-gray-300">
                 <Mic size={11} /> VOICE
               </span>
             </div>

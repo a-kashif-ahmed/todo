@@ -35,7 +35,7 @@
 
             {/* Header */}
             <div className="mb-6">
-              <h1 className="text-3xl font-semibold text-white">{greeting}</h1>
+              <h1 className="text-3xl font-semibold text-text-primary">{greeting}</h1>
   <p className="text-inactive text-sm pt-1">
     {incidents.length > 0
       ? `${incidents.length} workflow${incidents.length > 1 ? "s" : ""} need attention.`
@@ -55,14 +55,14 @@
                 {/* Workflows section */}
                 <div>
                   <div className="flex items-center justify-between mb-2 px-5">
-                    <h3 className="text-white font-medium">Your workflows</h3>
-                    <Link href="/workflows" className="text-sm text-white hover:underline">
+                    <h3 className="text-text-primary font-medium">Your workflows</h3>
+                    <Link href="/workflows" className="text-sm text-text-primary hover:underline">
                       View all
                     </Link>
                   </div>
 
                   {loading ? (
-    <p className="text-gray-500 text-sm px-5">Loading workflows...</p>
+    <p className="text-text-muted text-sm px-5">Loading workflows...</p>
   ) : (
   <div className="grid grid-cols-2 "> 
                     {[...workflows].slice(0,3)

@@ -82,7 +82,7 @@ export default function WorkflowDetailPage() {
   }));
 
   if (loading) {
-    return <div className="p-8 text-gray-400 text-sm">Loading workflow...</div>;
+    return <div className="p-8 text-text-muted text-sm">Loading workflow...</div>;
   }
 
   if (!workflow) {
@@ -103,14 +103,14 @@ export default function WorkflowDetailPage() {
       <div className="flex-1 p-6 overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-lg font-semibold text-white">{workflow.name}</h1>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <h1 className="text-lg font-semibold text-text-primary">{workflow.name}</h1>
+            <p className="text-xs text-text-muted mt-0.5">
               {workflow.platform} · {snapshots.length} snapshots
             </p>
           </div>
           <a
             href={`/workflows/${workflowId}/compare?from=${snapshots[1]?.id || ""}&to=${selectedSnapshotId}`}
-            className="text-xs bg-surface-2 border border-border rounded-lg px-4 py-2 text-gray-300 hover:text-white hover:border-brand-orange/40 transition-colors"
+            className="text-xs bg-surface-2 border border-border rounded-lg px-4 py-2 text-gray-300 hover:text-text-primary hover:border-brand-orange/40 transition-colors"
           >
             Compare versions
           </a>
@@ -119,7 +119,7 @@ export default function WorkflowDetailPage() {
         {normalisedData ? (
           <WorkflowGraph workflow={normalisedData} />
         ) : (
-          <div className="h-96 flex items-center justify-center text-gray-500 text-sm bg-surface-2 rounded-lg border border-border">
+          <div className="h-96 flex items-center justify-center text-text-muted text-sm bg-surface-2 rounded-lg border border-border">
             No snapshot data available
           </div>
         )}

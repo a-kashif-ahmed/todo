@@ -1,6 +1,7 @@
 // src/app/(dashboard)/layout.tsx
 import Sidebar from "@/components/ui/sidebar/page";
 import Navbar from "@/components/ui/navbar/page";
+import { TitleProvider } from "@/components/providers/Titleproviders";
 
 export default function DashboardLayout({
   children,
@@ -8,6 +9,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
+    <TitleProvider>
     <div className="flex h-screen overflow-hidden bg-surface">
       <Sidebar />
 
@@ -19,5 +21,6 @@ export default function DashboardLayout({
         </main>
       </div>
     </div>
+    </TitleProvider>
   );
 }

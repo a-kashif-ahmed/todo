@@ -26,21 +26,21 @@ export default function RecentActivityFeed({ events }: { events: ActivityEvent[]
   return (
     <div className="bg-surface-2 border border-border rounded-xl overflow-hidden">
       <div className="px-4 py-3 border-b border-border-light">
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Recent Activity</h3>
+        <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wide">Recent Activity</h3>
       </div>
       <div className="divide-y divide-border-light">
         {events.map(e => (
           <div key={e.id} className="flex items-start gap-3 px-4 py-3">
             <div className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 ${activityDot[e.icon]}`} />
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white truncate">{e.title}</p>
-              <p className="text-[11px] text-gray-500 mt-0.5 truncate">{e.subtitle}</p>
+              <p className="text-xs font-medium text-text-primary truncate">{e.title}</p>
+              <p className="text-[11px] text-text-muted mt-0.5 truncate">{e.subtitle}</p>
             </div>
             <span className="text-[11px] text-gray-600 whitespace-nowrap flex-shrink-0">{e.time}</span>
           </div>
         ))}
         {events.length === 0 && (
-          <p className="text-xs text-gray-500 px-4 py-6 text-center">No recent activity</p>
+          <p className="text-xs text-text-muted px-4 py-6 text-center">No recent activity</p>
         )}
       </div>
     </div>

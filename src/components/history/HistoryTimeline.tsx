@@ -24,7 +24,7 @@ function actionLabel(action: string) {
  
 const actorBadge = {
   user:   "bg-brand-blue/15 text-brand-blue",
-  system: "bg-gray-500/15 text-gray-400",
+  system: "bg-gray-500/15 text-text-muted",
   ai:     "bg-purple-500/15 text-purple-300",
 };
  
@@ -39,7 +39,7 @@ export default function HistoryTimeline({ entries }: { entries: HistoryEntry[] }
     <div className="space-y-6">
       {Object.entries(grouped).map(([date, items]) => (
         <div key={date}>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+          <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-3 px-1">
             {date}
           </p>
           <div className="space-y-2">
@@ -48,19 +48,19 @@ export default function HistoryTimeline({ entries }: { entries: HistoryEntry[] }
                 key={entry.id}
                 className="flex items-center gap-4 bg-surface-2 border border-border rounded-lg px-4 py-3 hover:border-brand-blue/30 transition-colors cursor-pointer"
               >
-                <div className="w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center text-gray-400 flex-shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center text-text-muted flex-shrink-0">
                   {actionIcon(entry.action)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-white">{actionLabel(entry.action)}</p>
+                    <p className="text-sm font-medium text-text-primary">{actionLabel(entry.action)}</p>
                     <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${actorBadge[entry.actorType]}`}>
                       {entry.actorType === "ai" ? "FlowLens AI" : entry.actor}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-0.5 truncate">{entry.workflowName}</p>
+                  <p className="text-xs text-text-muted mt-0.5 truncate">{entry.workflowName}</p>
                 </div>
-                <span className="text-[11px] text-gray-500 whitespace-nowrap flex-shrink-0">
+                <span className="text-[11px] text-text-muted whitespace-nowrap flex-shrink-0">
                   {entry.time}
                 </span>
               </div>

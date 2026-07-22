@@ -58,15 +58,15 @@ export default function AIIntelligenceReport({
 
       {/* Root cause card */}
       <div className="bg-surface-2 border border-border rounded-xl p-5 mb-5">
-        <p className="text-[11px] font-semibold tracking-wide text-gray-500 uppercase mb-2">
+        <p className="text-[11px] font-semibold tracking-wide text-text-muted uppercase mb-2">
           Root Cause Identified
         </p>
-        <h2 className="text-xl font-semibold text-white mb-4 leading-snug">
+        <h2 className="text-xl font-semibold text-text-primary mb-4 leading-snug">
           '{rootCause}'
         </h2>
 
         <div className="flex items-center justify-between mb-3">
-          <span className="text-sm text-gray-400">Confidence</span>
+          <span className="text-sm text-text-muted">Confidence</span>
           <div className="flex items-center gap-2">
             <div className="w-28 h-1.5 bg-surface rounded-full overflow-hidden">
               <div
@@ -81,7 +81,7 @@ export default function AIIntelligenceReport({
         </div>
 
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm text-gray-400">Impact</span>
+          <span className="text-sm text-text-muted">Impact</span>
           <span
             className={`text-[11px] font-bold tracking-wide rounded px-2.5 py-1 ${impactStyle[impact]}`}
           >
@@ -95,7 +95,7 @@ export default function AIIntelligenceReport({
       </div>
 
       {/* Recommended actions */}
-      <p className="text-sm font-semibold text-white mb-3">Recommended Actions</p>
+      <p className="text-sm font-semibold text-text-primary mb-3">Recommended Actions</p>
       <div className="space-y-2 mb-5">
         {actions.map((action, i) => (
           <button
@@ -108,8 +108,8 @@ export default function AIIntelligenceReport({
               {actionIcon[action.icon]}
             </span>
             <div>
-              <p className="text-sm font-medium text-white">{action.title}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{action.description}</p>
+              <p className="text-sm font-medium text-text-primary">{action.title}</p>
+              <p className="text-xs text-text-muted mt-0.5">{action.description}</p>
             </div>
           </button>
         ))}
@@ -119,14 +119,14 @@ export default function AIIntelligenceReport({
       <button
         onClick={onApplyFix}
         disabled={applyingFix}
-        className="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-xl py-3.5 mb-3 transition-colors disabled:opacity-60"
+        className="w-full bg-purple-500 hover:bg-purple-600 text-text-primary font-semibold rounded-xl py-3.5 mb-3 transition-colors disabled:opacity-60"
       >
         {applyingFix ? "Applying Fix..." : "Apply Fix"}
       </button>
       <button
         onClick={onRestore}
         disabled={restoring}
-        className="w-full bg-surface-2 border border-border text-white font-semibold rounded-xl py-3.5 hover:border-gray-500 transition-colors disabled:opacity-60"
+        className="w-full bg-surface-2 border border-border text-text-primary font-semibold rounded-xl py-3.5 hover:border-gray-500 transition-colors disabled:opacity-60"
       >
         {restoring ? "Restoring..." : "Restore Yesterday's State"}
       </button>

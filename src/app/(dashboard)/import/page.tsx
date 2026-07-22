@@ -81,8 +81,8 @@ export default function ImportPage() {
 
       {/* Hero */}
       <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-white mb-4">Bring your logic to life</h1>
-        <p className="text-base text-gray-500 max-w-xl mx-auto leading-relaxed">
+        <h1 className="text-5xl font-bold text-text-primary mb-4">Bring your logic to life</h1>
+        <p className="text-base text-text-muted max-w-xl mx-auto leading-relaxed">
           Import your existing automation blueprints. FlowLens supports JSON structures
           and native connections to your favorite orchestration tools.
         </p>

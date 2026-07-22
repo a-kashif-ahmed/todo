@@ -17,7 +17,7 @@ export default function DiffLegend() {
   return (
     <div className="flex items-center gap-4">
       {items.map(item => (
-        <span key={item.label} className="flex items-center gap-1.5 text-xs text-gray-400">
+        <span key={item.label} className="flex items-center gap-1.5 text-xs text-text-muted">
           <span
             className="w-2.5 h-2.5 rounded-sm inline-block"
             style={{ background: item.color }}

@@ -2,23 +2,28 @@
 
 @theme {
   /* Colors */
-  --color-surface: #191919;        /* deep brown-black background */
-  --color-surface-2: #221d18;      /* slightly lifted warm dark surface */
-  --color-surface-3: #2b2420;      /* card / tertiary surface, warm dark brown */
-  --color-inactive: #6b645c;       /* muted warm gray */
-  --color-brand-orange: #DA7756;   /* primary terracotta accent (Crail) */
-  --color-brand-brown: #E8D5B0;    /* warm parchment used as secondary accent on dark */
+  --color-surface: #1B1B1A;         /* Main background */
+  --color-surface-2: #232322;       /* Elevated surface */
+  --color-surface-3: #2C2C2B;       /* Cards */
+
+  --color-inactive: #7B7B76;
+
+  /* Claude accent */
+  --color-brand-orange: #D97757;
+
+  /* Warm secondary */
+  --color-brand-brown: #D8CBB4;
 
   --color-status-success: #22c55e;
   --color-status-warning: #f59e0b;
   --color-status-error: #ef4444;
 
-  --color-border: #3a332c;         /* warm dark border */
-  --color-border-light: #4a4238;   /* subtle warm border */
+  --color-border: #343433;
+  --color-border-light: #454543;
 
   /* Text */
-  --color-text-primary: #F4F3EE;   /* cream text on dark */
-  --color-text-muted: #B1ADA1;     /* cloudy gray — timestamps, descriptions */
+  --color-text-primary: #F3F2EE;
+  --color-text-muted: #AAA79F;
 
   /* Fonts */
   --font-sans: "Inter", system-ui, sans-serif;
@@ -28,12 +33,30 @@
   /* Radius */
   --radius: 8px;
 }
-/* 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+@utility scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 9999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-light);
+  }
 }
 
+/*
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

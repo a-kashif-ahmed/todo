@@ -123,7 +123,7 @@ export default function IncidentAnalysisPage() {
   }
 
   if (loading) {
-    return <div className="p-8 text-gray-400 text-sm">Analyzing incident...</div>;
+    return <div className="p-8 text-text-muted text-sm">Analyzing incident...</div>;
   }
 
   if (!incident) {
@@ -139,8 +139,8 @@ export default function IncidentAnalysisPage() {
 
       {/* Left — Timeline */}
       <div>
-        <h1 className="text-3xl font-bold text-white mb-1">Incident Timeline</h1>
-        <p className="text-sm text-gray-500 mb-8">
+        <h1 className="text-3xl font-bold text-text-primary mb-1">Incident Timeline</h1>
+        <p className="text-sm text-text-muted mb-8">
           Tracing the cascade of failures across your architecture.
         </p>
 
@@ -211,7 +211,7 @@ export default function IncidentAnalysisPage() {
           />
         ) : (
           <div className="bg-surface-2 border border-border rounded-xl p-5">
-            <p className="text-sm text-gray-500">Running AI analysis...</p>
+            <p className="text-sm text-text-muted">Running AI analysis...</p>
           </div>
         )}
       </div>

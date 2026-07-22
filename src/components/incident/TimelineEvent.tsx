@@ -30,7 +30,7 @@ const colorByType: Record<string, string> = {
   change: "text-amber-400 border-amber-400/40 bg-amber-400/10",
   connection: "text-amber-400 border-amber-400/40 bg-amber-400/10",
   error: "text-status-error border-status-error/40 bg-status-error/10",
-  blocked: "text-gray-500 border-gray-600/40 bg-gray-600/10",
+  blocked: "text-text-muted border-gray-600/40 bg-gray-600/10",
 };
 
 export default function TimelineEvent({
@@ -53,7 +53,7 @@ export default function TimelineEvent({
         {iconByType[type]}
       </div>
 
-      <p className="text-xs font-semibold tracking-wide uppercase mb-2 text-gray-500">
+      <p className="text-xs font-semibold tracking-wide uppercase mb-2 text-text-muted">
         {time}
       </p>
 
@@ -63,13 +63,13 @@ export default function TimelineEvent({
         }`}
       >
         <div className="flex items-start justify-between mb-1.5">
-          <h3 className={`text-base font-semibold ${isError ? "text-status-error" : "text-white"}`}>
+          <h3 className={`text-base font-semibold ${isError ? "text-status-error" : "text-text-primary"}`}>
             {title}
           </h3>
           {isError && <span className="text-status-error text-lg">!</span>}
         </div>
 
-        <p className="text-sm text-gray-400 leading-relaxed">{description}</p>
+        <p className="text-sm text-text-muted leading-relaxed">{description}</p>
 
         {badge && (
           <span className="inline-block mt-3 text-[11px] font-semibold tracking-wide text-brand-orange bg-brand-orange/10 border border-brand-orange/20 rounded px-2.5 py-1">

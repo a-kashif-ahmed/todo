@@ -29,7 +29,7 @@ export default function SnapshotTimeline({ snapshots, selectedId, onSelect }: Pr
   return (
     <div className="w-64 border-r border-border bg-surface-2 h-full overflow-y-auto">
       <div className="px-4 py-3 border-b border-border-light">
-        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+        <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wide">
           Snapshot Timeline
         </h3>
       </div>
@@ -52,7 +52,7 @@ export default function SnapshotTimeline({ snapshots, selectedId, onSelect }: Pr
                   {s.label || s.source}
                 </span>
               </div>
-              <p className="text-[11px] text-gray-500">
+              <p className="text-[11px] text-text-muted">
                 {new Date(s.created_at).toLocaleString(undefined, {
                   month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
                 })}
@@ -61,7 +61,7 @@ export default function SnapshotTimeline({ snapshots, selectedId, onSelect }: Pr
           );
         })}
         {snapshots.length === 0 && (
-          <p className="text-xs text-gray-500 px-3 py-4">No snapshots yet.</p>
+          <p className="text-xs text-text-muted px-3 py-4">No snapshots yet.</p>
         )}
       </div>
     </div>

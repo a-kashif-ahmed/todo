@@ -10,7 +10,7 @@ export default function AIInsightCard() {
         <span className="text-purple-300 text-sm">◎</span>
         <span className="text-xs font-bold tracking-wide text-purple-300">AI INSIGHT</span>
       </div>
-      <p className="text-sm text-gray-400 leading-relaxed">
+      <p className="text-sm text-text-muted leading-relaxed">
         I can automatically refactor your n8n or Zapier flows for better observability.
         Just connect your account to begin.
       </p>

@@ -14,7 +14,7 @@ interface Props2 {
 const variantStyle: Record<string, string> = {
   success: "border-brand-orange/50 text-brand-orange",
   error: "border-status-error/50 text-status-error",
-  waiting: "border-border text-gray-500",
+  waiting: "border-border text-text-muted",
 };
 
 export function MiniNode({ label, sublabel, status, variant, className }: Props2) {
@@ -23,7 +23,7 @@ export function MiniNode({ label, sublabel, status, variant, className }: Props2
       <p className="text-[10px] font-semibold tracking-wide uppercase mb-1.5 opacity-80">
         {label}
       </p>
-      <p className="text-base font-semibold text-white mb-1">{sublabel}</p>
+      <p className="text-base font-semibold text-text-primary mb-1">{sublabel}</p>
       <p className="text-[11px] font-mono opacity-70">{status}</p>
     </div>
   );

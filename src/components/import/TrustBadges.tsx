@@ -14,7 +14,7 @@ export default function TrustBadges() {
   return (
     <div className="flex items-center justify-center gap-8 mt-8">
       {badges.map(({ icon: Icon, label }) => (
-        <span key={label} className="flex items-center gap-2 text-xs text-gray-500">
+        <span key={label} className="flex items-center gap-2 text-xs text-text-muted">
           <Icon size={13} />
           {label}
         </span>

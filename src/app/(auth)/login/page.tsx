@@ -21,7 +21,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center text-white">
+    <div className="min-h-screen bg-surface flex items-center justify-center text-text-primary">
       <div className="w-full max-w-sm bg-surface-2 border border-border rounded-lg p-8">
         <h1 className="text-xl font-semibold mb-6">Sign in to FlowLens</h1>
         <form onSubmit={handleLogin} className="space-y-4">
@@ -33,7 +33,7 @@ export default function LoginPage() {
             className="w-full bg-surface border border-border rounded px-3 py-2 text-sm" />
           {error && <p className="text-status-error text-xs">{error}</p>}
           <button type="submit" disabled={loading}
-            className="w-full bg-brand-orange text-white rounded py-2 text-sm font-medium disabled:opacity-60">
+            className="w-full bg-brand-orange text-text-primary rounded py-2 text-sm font-medium disabled:opacity-60">
             {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>

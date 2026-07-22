@@ -106,14 +106,14 @@ export default function AIAssistantPanel({
             ◎
           </span>
           <div>
-            <p className="text-sm font-semibold text-white">Flow Detective</p>
+            <p className="text-sm font-semibold text-text-primary">Flow Detective</p>
             <p className="text-[11px] text-status-success flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
               {streaming ? "Analyzing flow" : "Ready"}
             </p>
           </div>
         </div>
-        <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+        <button onClick={onClose} className="text-text-muted hover:text-text-primary transition-colors">
           <X size={18} />
         </button>
       </div>
@@ -121,7 +121,7 @@ export default function AIAssistantPanel({
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5 space-y-5">
         {messages.length === 0 && (
-          <div className="text-center text-gray-500 text-xs mt-12">
+          <div className="text-center text-text-muted text-xs mt-12">
             Ask anything about this workflow.<br />
             Try "Why did this fail?"
           </div>
@@ -160,7 +160,7 @@ export default function AIAssistantPanel({
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && send()}
             placeholder="Ask FlowLens..."
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
+            className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none"
           />
           <button onClick={send} disabled={streaming || !input.trim()} className="text-brand-orange disabled:opacity-40">
             <ArrowUp size={18} />
@@ -168,10 +168,10 @@ export default function AIAssistantPanel({
         </div>
         <div className="flex items-center justify-between mt-2.5 px-1">
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1 text-[11px] text-gray-500">
+            <span className="flex items-center gap-1 text-[11px] text-text-muted">
               <Paperclip size={11} /> Context
             </span>
-            <span className="flex items-center gap-1 text-[11px] text-gray-500">
+            <span className="flex items-center gap-1 text-[11px] text-text-muted">
               <Mic size={11} /> Voice
             </span>
           </div>

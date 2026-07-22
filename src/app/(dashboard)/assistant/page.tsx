@@ -6,15 +6,15 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Paperclip, GitBranch, Mic, ArrowUp } from "lucide-react";
+import { Paperclip, GitBranch, Mic, ArrowUp,  } from "lucide-react";
 
 interface Workflow { id: string; name: string; status: string; }
 
 const suggestions = [
-  { category: "CRITICAL",    icon: "⚠",  title: "Analyze my last failure",     desc: `Trace the root cause of the JSON parsing error in "Order Processor".` },
-  { category: "DATABASE",    icon: "⬡",  title: "Check schema mismatches",     desc: "Compare active API payloads against your Postgres definitions." },
-  { category: "RECOVERY",    icon: "↺",  title: "How do I rollback?",          desc: "Generate a safe migration path to revert V2.4.1 deployment." },
-  { category: "PERFORMANCE", icon: "⚡", title: "Optimize cold starts",        desc: "Review Lambda execution times and suggest warm-up strategies." },
+  { category: "CRITICAL",    icon: "",  title: "Analyze my last failure",     desc: `Trace the root cause of the JSON parsing error in "Order Processor".` },
+  { category: "DATABASE",    icon: "",  title: "Check schema mismatches",     desc: "Compare active API payloads against your Postgres definitions." },
+  { category: "RECOVERY",    icon: "",  title: "How do I rollback?",          desc: "Generate a safe migration path to revert V2.4.1 deployment." },
+  { category: "PERFORMANCE", icon: "", title: "Optimize cold starts",        desc: "Review Lambda execution times and suggest warm-up strategies." },
 ];
 
 const categoryColor: Record<string, string> = {
@@ -57,10 +57,10 @@ export default function AIAssistantIndexPage() {
           <span className="text-2xl">🤖</span>
         </div>
 
-        <h1 className="text-4xl font-bold text-white mb-3 text-center">
+        <h1 className="text-4xl font-bold text-text-primary mb-3 text-center">
           How can I help you debug today?
         </h1>
-        <p className="text-gray-500 text-center mb-10 max-w-md">
+        <p className="text-text-muted text-center mb-10 max-w-md">
           I'm your system mechanic. I've analyzed{" "}
           <span className="text-brand-blue font-semibold">{totalEvents.toLocaleString()} events</span>{" "}
           across your active workflows in the last hour.
@@ -72,14 +72,13 @@ export default function AIAssistantIndexPage() {
             <button
               key={s.title}
               onClick={() => { setInput(s.title); }}
-              className="bg-surface-2 border border-border rounded-xl p-5 text-left hover:border-brand-blue/30 transition-colors"
-            >
+              className="bg-surface-2 border border-border rounded-xl p-5 text-left text-text-muted hover:border-brand-blue/30 transition-colors">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-lg">{s.icon}</span>
                 <span className={`text-[10px] font-bold tracking-wider ${categoryColor[s.category]}`}>{s.category}</span>
               </div>
-              <h3 className="text-sm font-semibold text-white mb-1">{s.title}</h3>
-              <p className="text-xs text-gray-500 leading-relaxed">{s.desc}</p>
+              <h3 className="text-sm font-semibold text-text-primary mb-1">{s.title}</h3>
+              <p className="text-xs text-text-muted leading-relaxed">{s.desc}</p>
             </button>
           ))}
         </div>
@@ -90,7 +89,7 @@ export default function AIAssistantIndexPage() {
         {/* Workflow selector */}
         {workflows.length > 0 && (
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs text-gray-500">Context:</span>
+            <span className="text-xs text-text-muted">Context:</span>
             <select
               value={selectedWorkflow}
               onChange={e => setSelectedWorkflow(e.target.value)}
@@ -109,19 +108,19 @@ export default function AIAssistantIndexPage() {
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && handleExecute()}
             placeholder="Ask me anything about your infrastructure..."
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
+            className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none"
           />
           <button
             onClick={handleExecute}
             disabled={!input.trim()}
-            className="flex items-center gap-2 bg-brand-blue text-white text-sm font-medium rounded-lg px-4 py-2 disabled:opacity-40 hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 bg-brand-blue text-text-primary text-sm font-medium rounded-lg px-4 py-2 disabled:opacity-40 hover:opacity-90 transition-opacity"
           >
             Execute <ArrowUp size={14} />
           </button>
         </div>
 
         <div className="flex items-center justify-between mt-3 max-w-3xl mx-auto px-1">
-          <div className="flex items-center gap-4 text-xs text-gray-500">
+          <div className="flex items-center gap-4 text-xs text-text-muted">
             <button className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><Paperclip size={11} /></button>
             <button className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><GitBranch size={11} /></button>
             <button className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><Mic size={11} /></button>

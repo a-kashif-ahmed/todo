@@ -54,18 +54,18 @@ export default function ConnectionsPage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-2">
         <div>
-          <h1 className="text-3xl font-bold text-white">Direct Connections</h1>
-          <p className="text-sm text-gray-500 mt-1 max-w-lg">
+          <h1 className="text-3xl font-bold text-text-primary">Direct Connections</h1>
+          <p className="text-sm text-text-muted mt-1 max-w-lg">
             Connect FlowLens to your automation orchestrators for real-time observability and deep trace analysis.
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="flex items-center gap-1.5 text-sm bg-surface-2 border border-border rounded-lg px-4 py-2 text-gray-300 hover:border-gray-500 transition-colors">
-            ⬇ Export Logs
-          </button>
-          <button className="flex items-center gap-1.5 text-sm bg-brand-blue text-white font-medium rounded-lg px-4 py-2 hover:opacity-90 transition-opacity">
+          {/* <button className="flex items-center gap-1.5 text-sm bg-surface-2 border border-border rounded-lg px-4 py-2 text-gray-300 hover:border-gray-500 transition-colors">
+            Export Logs
+          </button> */}
+          <a href="/workflows"><button className="flex items-center gap-1.5 text-sm bg-brand-blue text-text-primary font-medium rounded-lg px-4 py-2 hover:opacity-90 transition-opacity">
             <Plus size={14} /> New Integration
-          </button>
+          </button></a>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function ConnectionsPage() {
         {conns.map(conn => (
           <div key={conn.id} className="bg-surface-2 border border-border rounded-xl p-5">
             <div className="flex items-start justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center text-base font-bold text-gray-400">
+              <div className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center text-base font-bold text-brand-orange">
                 {conn.name.slice(0, 1)}
               </div>
               <span className={`text-[10px] font-bold tracking-wide border rounded px-2 py-0.5 ${statusBadge[conn.status]}`}>
@@ -82,8 +82,8 @@ export default function ConnectionsPage() {
               </span>
             </div>
 
-            <h3 className="text-base font-semibold text-white mb-1">{conn.name}</h3>
-            <p className="text-xs text-gray-500 mb-5 leading-relaxed">{conn.desc}</p>
+            <h3 className="text-base font-semibold text-text-primary mb-1">{conn.name}</h3>
+            <p className="text-xs text-text-muted mb-5 leading-relaxed">{conn.desc}</p>
 
             {conn.status === "connected" && (
               <div className="space-y-2 mb-5">
@@ -93,7 +93,7 @@ export default function ConnectionsPage() {
                   { k: "Latency", v: conn.latency },
                 ].map(r => (
                   <div key={r.k} className="flex justify-between text-xs">
-                    <span className="text-gray-500">{r.k}</span>
+                    <span className="text-text-muted">{r.k}</span>
                     <span className="text-gray-300">{r.v}</span>
                   </div>
                 ))}
@@ -102,19 +102,19 @@ export default function ConnectionsPage() {
 
             {conn.status === "setup_needed" && (
               <div className="bg-surface border border-border rounded-lg p-3 mb-5 space-y-3">
-                <p className="text-xs text-gray-500">Required steps to begin observability ingestion from Zapier ecosystem:</p>
+                <p className="text-xs text-text-muted">Required steps to begin observability ingestion from Zapier ecosystem:</p>
                 <div className="flex items-start gap-2">
-                  <span className="w-5 h-5 rounded-full bg-brand-blue text-white text-[10px] flex items-center justify-center flex-shrink-0">1</span>
+                  <span className="w-5 h-5 rounded-full bg-brand-blue text-text-primary text-[10px] flex items-center justify-center flex-shrink-0">1</span>
                   <div>
-                    <p className="text-xs font-semibold text-white">Connect via API</p>
-                    <p className="text-[11px] text-gray-500">Authorize the FlowLens OAuth app.</p>
+                    <p className="text-xs font-semibold text-text-primary">Connect via API</p>
+                    <p className="text-[11px] text-text-muted">Authorize the FlowLens OAuth app.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-2 opacity-50">
-                  <span className="w-5 h-5 rounded-full bg-surface border border-border text-gray-500 text-[10px] flex items-center justify-center flex-shrink-0">2</span>
+                  <span className="w-5 h-5 rounded-full bg-surface border border-border text-text-muted text-[10px] flex items-center justify-center flex-shrink-0">2</span>
                   <div>
-                    <p className="text-xs font-semibold text-white">Define Listeners</p>
-                    <p className="text-[11px] text-gray-500">Map your Zaps to FlowLens nodes.</p>
+                    <p className="text-xs font-semibold text-text-primary">Define Listeners</p>
+                    <p className="text-[11px] text-text-muted">Map your Zaps to FlowLens nodes.</p>
                   </div>
                 </div>
               </div>
@@ -122,15 +122,15 @@ export default function ConnectionsPage() {
 
             {conn.status === "disconnected" && conn.errorMsg && (
               <div className="bg-status-error/5 border border-status-error/20 rounded-lg p-3 mb-5">
-                <p className="text-xs font-semibold text-status-error mb-1">⚠ Connection Failed</p>
-                <p className="text-[11px] text-gray-400 leading-relaxed">{conn.errorMsg}</p>
+                <p className="text-xs font-semibold text-status-error mb-1">Connection Failed</p>
+                <p className="text-[11px] text-text-muted leading-relaxed">{conn.errorMsg}</p>
               </div>
             )}
 
             <button className={`w-full text-sm font-medium rounded-lg py-2.5 transition-all ${
-              conn.status === "connected"    ? "bg-surface border border-border text-white hover:border-gray-500" :
-              conn.status === "setup_needed" ? "bg-status-warning text-black hover:opacity-90" :
-              "bg-surface border border-border text-white hover:border-gray-500"
+              conn.status === "connected"    ? "bg-surface border border-border text-text-primary hover:border-gray-500" :
+              conn.status === "setup_needed" ? "bg-status-warning text-primary hover:opacity-90" :
+              "bg-surface border border-border text-text-primary hover:border-gray-500"
             }`}>
               {conn.status === "connected" ? "Manage" : conn.status === "setup_needed" ? "Configure" : "Re-Authorize"}
             </button>
@@ -143,28 +143,28 @@ export default function ConnectionsPage() {
         {/* Security & Ingestion */}
         <div className="bg-surface-2 border border-border rounded-xl p-5">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-9 h-9 rounded-xl bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center text-brand-blue">🔒</div>
+            <div className="w-9 h-9 rounded-xl bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center text-brand-orange">S</div>
             <div>
-              <p className="text-sm font-semibold text-white">Security & Ingestion</p>
-              <p className="text-xs text-gray-500">Manage global credentials and secure endpoints.</p>
+              <p className="text-sm font-semibold text-text-primary">Security & Ingestion</p>
+              <p className="text-xs text-text-muted">Manage global credentials and secure endpoints.</p>
             </div>
           </div>
 
-          <label className="text-xs text-gray-400 mb-1.5 block font-semibold">Global Webhook Secret</label>
+          <label className="text-xs text-text-muted mb-1.5 block font-semibold">Global Webhook Secret</label>
           <div className="flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-2.5 mb-1">
             <span className="flex-1 text-xs text-gray-300 font-mono">
               {showSecret ? secret : secret.slice(0, 8) + "••••••••••••••"}
             </span>
-            <button onClick={() => setShowSecret(s => !s)} className="text-gray-500 hover:text-white transition-colors">
+            <button onClick={() => setShowSecret(s => !s)} className="text-text-muted hover:text-text-primary transition-colors">
               {showSecret ? <EyeOff size={13} /> : <Eye size={13} />}
             </button>
-            <button onClick={copySecret} className="text-gray-500 hover:text-white transition-colors">
+            <button onClick={copySecret} className="text-text-muted hover:text-text-primary transition-colors">
               {copied ? <Check size={13} className="text-status-success" /> : <Copy size={13} />}
             </button>
           </div>
           <p className="text-[11px] text-gray-600 mb-4">Use this secret to sign all incoming requests from custom orchestrators.</p>
 
-          <label className="text-xs text-gray-400 mb-1.5 block font-semibold">Whitelisted IP Ranges</label>
+          <label className="text-xs text-text-muted mb-1.5 block font-semibold">Whitelisted IP Ranges</label>
           <div className="space-y-1.5">
             {[
               { ip: "35.236.208.0/24", label: "n8n Cloud" },
@@ -172,7 +172,7 @@ export default function ConnectionsPage() {
             ].map(entry => (
               <div key={entry.ip} className="flex items-center justify-between bg-surface border border-border rounded-lg px-3 py-2">
                 <span className="text-xs text-gray-300 font-mono">{entry.ip}</span>
-                <span className="text-[10px] bg-surface-2 border border-border rounded px-2 py-0.5 text-gray-400">{entry.label}</span>
+                <span className="text-[10px] bg-surface-2 border border-border rounded px-2 py-0.5 text-text-muted">{entry.label}</span>
               </div>
             ))}
             <button className="text-xs text-brand-blue hover:underline mt-1">+ Add entry</button>
@@ -184,22 +184,22 @@ export default function ConnectionsPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-300">✦</div>
-              <p className="text-sm font-semibold text-white">AI Health Monitor</p>
+              <p className="text-sm font-semibold text-text-primary">AI Health Monitor</p>
             </div>
             <span className="text-[10px] font-bold border border-purple-500/30 text-purple-300 rounded px-2 py-0.5">INTELLIGENT</span>
           </div>
-          <p className="text-xs text-gray-400 mb-4 leading-relaxed">
+          <p className="text-xs text-text-muted mb-4 leading-relaxed">
             Our engine has analyzed the last <span className="text-brand-blue font-semibold">14,209 payloads</span> from n8n.
           </p>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="bg-surface border border-border rounded-xl px-3 py-3">
-              <p className="text-[10px] text-gray-500 mb-1">Optimization</p>
-              <p className="text-lg font-bold text-white">94.2%</p>
+              <p className="text-[10px] text-text-muted mb-1">Optimization</p>
+              <p className="text-lg font-bold text-text-primary">94.2%</p>
               <div className="h-1 bg-surface-2 rounded-full mt-2"><div className="h-full bg-brand-blue rounded-full" style={{ width: "94%" }} /></div>
             </div>
             <div className="bg-surface border border-border rounded-xl px-3 py-3">
-              <p className="text-[10px] text-gray-500 mb-1">Data Drift</p>
+              <p className="text-[10px] text-text-muted mb-1">Data Drift</p>
               <p className="text-lg font-bold text-status-success">Low</p>
               <div className="h-1 bg-surface-2 rounded-full mt-2"><div className="h-full bg-status-success rounded-full" style={{ width: "15%" }} /></div>
             </div>
@@ -208,14 +208,14 @@ export default function ConnectionsPage() {
           <div className="bg-surface border border-border rounded-xl p-3 mb-4">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-purple-300">◎</span>
-              <p className="text-xs font-semibold text-white">Recommendation</p>
+              <p className="text-xs font-semibold text-text-primary">Recommendation</p>
             </div>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-text-muted leading-relaxed">
               Enable "Compressed Payloads" in n8n Global Settings to reduce ingestion latency by approximately 14ms.
             </p>
           </div>
 
-          <button className="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-xl py-3 transition-colors">
+          <button className="w-full bg-status-warning hover:bg-brand-orange text-text-primary text-sm font-semibold rounded-xl py-3 transition-colors">
             Apply Auto-Fixes
           </button>
         </div>

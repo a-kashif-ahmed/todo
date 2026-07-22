@@ -24,12 +24,12 @@ export default function HistoryPage() {
       });
   }, []);
 
-  if (loading) return <div className="p-8 text-gray-400 text-sm">Loading history...</div>;
+  if (loading) return <div className="p-8 text-text-muted text-sm">Loading history...</div>;
 
   return (
     <div className="p-8">
-      <h1 className="text-xl font-semibold text-white mb-1">Change History</h1>
-      <p className="text-sm text-gray-500 mb-6">
+      <h1 className="text-xl font-semibold text-text-primary mb-1">Change History</h1>
+      <p className="text-sm text-text-muted mb-6">
         Full audit log across all your workflows.
       </p>
 
@@ -41,18 +41,18 @@ export default function HistoryPage() {
             className="flex items-center justify-between bg-surface-2 border border-border rounded-lg px-4 py-3 hover:border-brand-orange/30 transition-colors"
           >
             <div>
-              <p className="text-sm text-white">{entry.action.replace(/_/g, " ")}</p>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-sm text-text-primary">{entry.action.replace(/_/g, " ")}</p>
+              <p className="text-xs text-text-muted mt-0.5">
                 by {entry.profiles?.display_name || "system"}
               </p>
             </div>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-text-muted">
               {new Date(entry.created_at).toLocaleString()}
             </span>
           </Link>
         ))}
         {history.length === 0 && (
-          <p className="text-sm text-gray-500">No history yet.</p>
+          <p className="text-sm text-text-muted">No history yet.</p>
         )}
       </div>
     </div>

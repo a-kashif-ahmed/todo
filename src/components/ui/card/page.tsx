@@ -77,7 +77,7 @@ export default function Card({
             {icon && <div className="mb-4">{icon}</div>}
 
             {title && (
-                <h2 className="mb-1 text-xl font-semibold text-white">{title}</h2>
+                <h2 className="mb-1 text-xl font-semibold text-text-primary">{title}</h2>
             )}
 
             {description && (
@@ -99,7 +99,7 @@ export default function Card({
                         e.stopPropagation();
                         button.onClick?.();
                     }}
-                    className={`mt-5 w-full flex items-center justify-center gap-2 rounded-md px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90 ${buttonBgClasses[button.color]}`}
+                    className={`mt-5 w-full flex items-center justify-center gap-2 rounded-md px-4 py-3 text-sm font-semibold text-text-primary transition hover:opacity-90 ${buttonBgClasses[button.color]}`}
                 >
                     {button.icon && <span>{button.icon}</span>}
                     {button.label}

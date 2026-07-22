@@ -75,17 +75,17 @@ export default function SettingsPage() {
       <div className="flex items-start justify-between mb-8">
         <div className="flex items-center gap-5">
           <div className="relative">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand-blue to-purple-500 flex items-center justify-center text-2xl font-bold text-white">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand-blue to-purple-500 flex items-center justify-center text-2xl font-bold text-text-primary">
               {(profile?.display_name || "?").slice(0, 1).toUpperCase()}
             </div>
             <button className="absolute bottom-0 right-0 w-6 h-6 bg-brand-blue rounded-full flex items-center justify-center border-2 border-surface">
-              <Edit2 size={10} className="text-white" />
+              <Edit2 size={10} className="text-text-primary" />
             </button>
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">{profile?.display_name || "—"}</h2>
+            <h2 className="text-xl font-bold text-text-primary">{profile?.display_name || "—"}</h2>
             <div className="flex items-center gap-2 mt-1.5">
-              <span className="flex items-center gap-1 text-xs bg-surface border border-border rounded-full px-2.5 py-1 text-gray-400">
+              <span className="flex items-center gap-1 text-xs bg-surface border border-border rounded-full px-2.5 py-1 text-text-muted">
                 <Shield size={11} /> System Admin
               </span>
               <span className="flex items-center gap-1 text-xs bg-brand-blue/15 border border-brand-blue/25 rounded-full px-2.5 py-1 text-brand-blue">
@@ -95,13 +95,13 @@ export default function SettingsPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="text-sm text-gray-400 bg-surface-2 border border-border rounded-lg px-4 py-2 hover:text-white hover:border-gray-500 transition-colors">
+          <button className="text-sm text-text-muted bg-surface-2 border border-border rounded-lg px-4 py-2 hover:text-text-primary hover:border-gray-500 transition-colors">
             Discard
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="text-sm font-medium bg-brand-blue text-white rounded-lg px-4 py-2 hover:opacity-90 transition-opacity disabled:opacity-60"
+            className="text-sm font-medium bg-brand-blue text-text-primary rounded-lg px-4 py-2 hover:opacity-90 transition-opacity disabled:opacity-60"
           >
             {saving ? "Saving..." : saved ? "Saved ✓" : "Save Changes"}
           </button>
@@ -117,8 +117,8 @@ export default function SettingsPage() {
               onClick={() => setTab(t.id)}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                 tab === t.id
-                  ? "bg-surface-2 text-white border border-border"
-                  : "text-gray-500 hover:text-white"
+                  ? "bg-surface-2 text-text-primary border border-border"
+                  : "text-text-muted hover:text-text-primary"
               }`}
             >
               {t.icon} {t.id}
@@ -130,27 +130,27 @@ export default function SettingsPage() {
         <div className="flex-1 max-w-2xl">
           {tab === "General" && (
             <div className="space-y-1">
-              <h3 className="text-sm font-semibold text-gray-400 mb-4">General Information</h3>
+              <h3 className="text-sm font-semibold text-text-muted mb-4">General Information</h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="text-xs text-gray-400 mb-1.5 block">Full Name</label>
+                  <label className="text-xs text-text-muted mb-1.5 block">Full Name</label>
                   <input
                     value={name}
                     onChange={e => setName(e.target.value)}
-                    className="w-full bg-surface-2 border border-border rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-brand-blue/50"
+                    className="w-full bg-surface-2 border border-border rounded-lg px-3 py-2.5 text-sm text-text-primary outline-none focus:border-brand-blue/50"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-400 mb-1.5 block">Email Address</label>
+                  <label className="text-xs text-text-muted mb-1.5 block">Email Address</label>
                   <input
                     value={profile?.email || ""}
                     disabled
-                    className="w-full bg-surface-2 border border-border rounded-lg px-3 py-2.5 text-sm text-gray-400 outline-none cursor-not-allowed opacity-60"
+                    className="w-full bg-surface-2 border border-border rounded-lg px-3 py-2.5 text-sm text-text-muted outline-none cursor-not-allowed opacity-60"
                   />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-gray-400 mb-1.5 block">Workspace Name</label>
+                <label className="text-xs text-text-muted mb-1.5 block">Workspace Name</label>
                 <div className="flex items-center gap-2">
                   <input
                     value={profile?.team_name || ""}
@@ -159,7 +159,7 @@ export default function SettingsPage() {
                   />
                   <button
                     onClick={copyId}
-                    className="flex items-center gap-1.5 text-sm bg-surface-2 border border-border rounded-lg px-3 py-2.5 text-gray-400 hover:text-white hover:border-gray-500 transition-colors whitespace-nowrap"
+                    className="flex items-center gap-1.5 text-sm bg-surface-2 border border-border rounded-lg px-3 py-2.5 text-text-muted hover:text-text-primary hover:border-gray-500 transition-colors whitespace-nowrap"
                   >
                     {copied ? <Check size={13} /> : <Copy size={13} />}
                     Copy ID
@@ -181,22 +181,22 @@ export default function SettingsPage() {
 
           {tab === "Security" && (
             <div className="bg-surface-2 border border-border rounded-xl p-5">
-              <h3 className="text-sm font-semibold text-white mb-3">Security</h3>
-              <p className="text-sm text-gray-500">Password changes and MFA settings coming soon.</p>
+              <h3 className="text-sm font-semibold text-text-primary mb-3">Security</h3>
+              <p className="text-sm text-text-muted">Password changes and MFA settings coming soon.</p>
             </div>
           )}
 
           {tab === "API Keys" && (
             <div className="bg-surface-2 border border-border rounded-xl p-5">
-              <h3 className="text-sm font-semibold text-white mb-3">API Keys</h3>
-              <p className="text-sm text-gray-500">API key management coming soon.</p>
+              <h3 className="text-sm font-semibold text-text-primary mb-3">API Keys</h3>
+              <p className="text-sm text-text-muted">API key management coming soon.</p>
             </div>
           )}
 
           {tab === "Integrations" && (
             <div className="bg-surface-2 border border-border rounded-xl p-5">
-              <h3 className="text-sm font-semibold text-white mb-3">Integrations</h3>
-              <p className="text-sm text-gray-500">
+              <h3 className="text-sm font-semibold text-text-primary mb-3">Integrations</h3>
+              <p className="text-sm text-text-muted">
                 Connect n8n, Zapier, and Make from the{" "}
                 <a href="/connections" className="text-brand-blue hover:underline">Connections page</a>.
               </p>

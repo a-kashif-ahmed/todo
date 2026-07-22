@@ -17,7 +17,7 @@ export default function DirectConnections() {
   return (
     <div className="bg-surface-2 border border-border rounded-xl overflow-hidden">
       <div className="px-4 py-3 border-b border-border-light">
-        <p className="text-[11px] font-semibold tracking-wide text-gray-500 uppercase">
+        <p className="text-[11px] font-semibold tracking-wide text-text-muted uppercase">
           Direct Connections
         </p>
       </div>
@@ -25,12 +25,12 @@ export default function DirectConnections() {
         {connections.map(conn => (
           <div key={conn.id} className="flex items-center justify-between px-4 py-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-surface border border-border flex items-center justify-center text-xs font-bold text-gray-400">
+              <div className="w-8 h-8 rounded-lg bg-surface border border-border flex items-center justify-center text-xs font-bold text-text-muted">
                 {conn.label.slice(0, 1)}
               </div>
               <div>
-                <p className="text-sm font-medium text-white">{conn.label}</p>
-                <p className="text-[11px] text-gray-500">{conn.description}</p>
+                <p className="text-sm font-medium text-text-primary">{conn.label}</p>
+                <p className="text-[11px] text-text-muted">{conn.description}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">

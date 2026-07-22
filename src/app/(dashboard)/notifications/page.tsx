@@ -114,9 +114,9 @@ export default function NotificationsPage() {
     <div className="flex h-full overflow-hidden">
 
       {/* ── LEFT: Notification feed ── */}
-      <div className="flex-1 overflow-y-auto p-8 pr-6">
-        <h1 className="text-3xl font-bold text-white mb-1">Notifications</h1>
-        <p className="text-sm text-gray-500 mb-6 flex items-center gap-1.5">
+      <div className="flex-1 overflow-y-auto p-8 pr-6 scrollbar ">
+        <h1 className="text-3xl font-bold text-text-primary mb-1">Notifications</h1>
+        <p className="text-sm text-text-muted mb-6 flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-status-error" />
           You have {unreadCount} unread alerts requiring attention.
         </p>
@@ -128,7 +128,7 @@ export default function NotificationsPage() {
               key={t}
               onClick={() => setTab(t)}
               className={`text-sm px-5 py-1.5 rounded transition-colors ${
-                tab === t ? "bg-surface text-white font-medium" : "text-gray-500 hover:text-white"
+                tab === t ? "bg-surface text-text-primary font-medium" : "text-text-muted hover:text-text-primary"
               }`}
             >
               {t}
@@ -139,7 +139,7 @@ export default function NotificationsPage() {
         {/* Grouped notifications */}
         {Object.entries(grouped).map(([date, items]) => (
           <div key={date} className="mb-8">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{date}</p>
+            <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-3">{date}</p>
             <div className="space-y-3">
               {items.map(n => (
                 <div
@@ -149,8 +149,8 @@ export default function NotificationsPage() {
                   <div className="flex gap-4 p-5">
                     <div className="flex-shrink-0 mt-0.5">{typeIcon[n.type]}</div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-semibold text-white mb-1">{n.title}</h3>
-                      <p className="text-sm text-gray-400 leading-relaxed mb-4">{n.description}</p>
+                      <h3 className="text-base font-semibold text-text-primary mb-1">{n.title}</h3>
+                      <p className="text-sm text-text-muted leading-relaxed mb-4">{n.description}</p>
                       <div className="flex gap-2 flex-wrap">
                         {n.actions.map((a, i) => (
                           <Link
@@ -158,8 +158,8 @@ export default function NotificationsPage() {
                             href={a.href}
                             className={`text-sm font-medium rounded-lg px-4 py-1.5 transition-colors ${
                               a.href
-                                ? "bg-brand-blue text-white hover:opacity-90"
-                                : "bg-surface border border-border text-white hover:border-gray-500"
+                                ? "bg-brand-blue text-text-primary hover:opacity-90"
+                                : "bg-surface border border-border text-text-primary hover:border-gray-500"
                             }`}
                           >
                             {a.label}
@@ -176,8 +176,8 @@ export default function NotificationsPage() {
       </div>
 
       {/* ── RIGHT: Notification Health sidebar ── */}
-      <div className="w-72 flex-shrink-0 border-l border-border overflow-y-auto p-6 space-y-5">
-        <h2 className="text-base font-semibold text-white">Notification Health</h2>
+      <div className="w-72 flex-shrink-0 border-l border-border overflow-y-auto p-6 space-y-5 scrollbar">
+        <h2 className="text-base font-semibold text-text-primary">Notification Health</h2>
 
         {/* Uptime donut */}
         <div className="bg-surface-2 border border-border rounded-xl flex items-center justify-center py-8">
@@ -190,30 +190,30 @@ export default function NotificationsPage() {
                 transform="rotate(-90 50 50)" />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xl font-bold text-white">92%</span>
-              <span className="text-[10px] text-gray-500 uppercase tracking-wide">UPTIME</span>
+              <span className="text-xl font-bold text-text-primary">92%</span>
+              <span className="text-[10px] text-text-muted uppercase tracking-wide">UPTIME</span>
             </div>
           </div>
         </div>
 
         {/* Summary stats */}
         <div>
-          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">Summary Statistics</p>
+          <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-2">Summary Statistics</p>
           <div className="grid grid-cols-2 gap-2">
             <div className="bg-surface-2 border border-border rounded-lg px-3 py-3">
-              <p className="text-[10px] text-gray-500 uppercase">Total Alerts</p>
-              <p className="text-xl font-bold text-white">1,204</p>
+              <p className="text-[10px] text-text-muted uppercase">Total Alerts</p>
+              <p className="text-xl font-bold text-text-primary">1,204</p>
             </div>
             <div className="bg-surface-2 border border-border rounded-lg px-3 py-3">
-              <p className="text-[10px] text-gray-500 uppercase">Avg Resolve</p>
-              <p className="text-xl font-bold text-white">14m</p>
+              <p className="text-[10px] text-text-muted uppercase">Avg Resolve</p>
+              <p className="text-xl font-bold text-text-primary">14m</p>
             </div>
           </div>
         </div>
 
         {/* Common issues */}
         <div>
-          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">Common Issues</p>
+          <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-2">Common Issues</p>
           <div className="space-y-2">
             {commonIssues.map(issue => (
               <div key={issue.label} className="flex items-center justify-between bg-surface-2 border border-border rounded-lg px-3 py-2.5">
@@ -227,7 +227,7 @@ export default function NotificationsPage() {
         {/* Smart filtering */}
         <div className="bg-purple-900/20 border border-purple-500/25 rounded-xl p-4">
           <p className="text-xs font-semibold text-purple-300 mb-2">✦ Smart Filtering Active</p>
-          <p className="text-xs text-gray-400 leading-relaxed">
+          <p className="text-xs text-text-muted leading-relaxed">
             AI is currently suppressing 12 repetitive noise notifications from the "Staging" environment to keep your focus on production.
           </p>
         </div>

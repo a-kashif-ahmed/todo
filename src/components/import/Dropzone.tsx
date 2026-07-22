@@ -56,7 +56,7 @@ export default function Dropzone({ onFile, onPasteRaw, status, statusMessage }: 
         <UploadCloud size={28} className="text-brand-orange" />
       </div>
 
-      <h2 className="text-2xl font-semibold text-white mb-2">
+      <h2 className="text-2xl font-semibold text-text-primary mb-2">
         {status === "processing"
           ? "Processing..."
           : status === "done"
@@ -66,21 +66,21 @@ export default function Dropzone({ onFile, onPasteRaw, status, statusMessage }: 
           : "Drop your JSON here"}
       </h2>
 
-      <p className="text-sm text-gray-500 mb-8">
+      <p className="text-sm text-text-muted mb-8">
         {statusMessage || "Drag and drop your workflow files or click to browse local storage"}
       </p>
 
       <div className="flex gap-3" onClick={e => e.stopPropagation()}>
         <button
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-white font-medium text-sm rounded-lg px-5 py-2.5 transition-colors"
+          className="flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-text-primary font-medium text-sm rounded-lg px-5 py-2.5 transition-colors"
         >
           <UploadCloud size={15} />
           Browse Files
         </button>
         <button
           onClick={onPasteRaw}
-          className="bg-surface-2 border border-border hover:border-gray-500 text-white font-medium text-sm rounded-lg px-5 py-2.5 transition-colors"
+          className="bg-surface-2 border border-border hover:border-gray-500 text-text-primary font-medium text-sm rounded-lg px-5 py-2.5 transition-colors"
         >
           Paste Raw JSON
         </button>

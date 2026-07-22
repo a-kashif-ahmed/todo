@@ -74,30 +74,30 @@ export default function ActivityPage() {
       <div className="flex-1 overflow-y-auto p-8 pr-6">
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white">Recent Activity</h1>
-            <p className="text-sm text-gray-500 mt-1">Real-time audit log across all active clusters</p>
+            <h1 className="text-3xl font-bold text-text-primary">Recent Activity</h1>
+            <p className="text-sm text-text-muted mt-1">Real-time audit log across all active clusters</p>
           </div>
           <div className="flex flex-wrap gap-2">
             {["Date Range", "User", "Severity"].map(f => (
-              <button key={f} className="text-xs bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-gray-400 hover:text-white hover:border-gray-500 transition-colors flex items-center gap-1">
+              <button key={f} className="text-xs bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-text-muted hover:text-text-primary hover:border-gray-500 transition-colors flex items-center gap-1">
                 {f} ▾
               </button>
             ))}
-            <button className="text-xs bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-gray-400 hover:text-white hover:border-gray-500 transition-colors">
+            <button className="text-xs bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-text-muted hover:text-text-primary hover:border-gray-500 transition-colors">
               ⬇ Export CSV
             </button>
           </div>
         </div>
 
         {loading ? (
-          <p className="text-gray-500 text-sm">Loading...</p>
+          <p className="text-text-muted text-sm">Loading...</p>
         ) : history.length === 0 ? (
-          <p className="text-gray-500 text-sm">No activity yet.</p>
+          <p className="text-text-muted text-sm">No activity yet.</p>
         ) : (
           <div className="space-y-8">
             {Object.entries(grouped).map(([date, entries]) => (
               <div key={date}>
-                <div className="inline-block text-[10px] font-bold tracking-widest text-gray-500 border border-border rounded px-2 py-0.5 mb-4">{date}</div>
+                <div className="inline-block text-[10px] font-bold tracking-widest text-text-muted border border-border rounded px-2 py-0.5 mb-4">{date}</div>
                 <div className="space-y-3">
                   {entries.map(entry => (
                     <div
@@ -110,14 +110,14 @@ export default function ActivityPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
-                            <h3 className="text-sm font-semibold text-white">
+                            <h3 className="text-sm font-semibold text-text-primary">
                               {entry.action.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
                             </h3>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-text-muted">
                               {new Date(entry.created_at).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
                             </span>
                           </div>
-                          <p className="text-xs text-gray-400 mb-3">
+                          <p className="text-xs text-text-muted mb-3">
                             Workflow ID: {entry.workflow_id.slice(0, 8)}...
                           </p>
                           <div className="flex items-center justify-between">
@@ -125,14 +125,14 @@ export default function ActivityPage() {
                               <div className="w-5 h-5 rounded-full bg-surface border border-border flex items-center justify-center text-[10px]">
                                 {entry.actor_type === "ai" ? "✦" : entry.actor_type === "system" ? "⚙" : "👤"}
                               </div>
-                              <span className="text-xs text-gray-400">
+                              <span className="text-xs text-text-muted">
                                 {entry.actor_type === "ai" ? "FlowLens Engine" : entry.profiles?.display_name || "System"}
                               </span>
                             </div>
                             <div className="flex gap-2">
                               <Link
                                 href={`/workflows/${entry.workflow_id}`}
-                                className="text-xs bg-surface border border-border rounded px-2.5 py-1 text-gray-400 hover:text-white transition-colors"
+                                className="text-xs bg-surface border border-border rounded px-2.5 py-1 text-text-muted hover:text-text-primary transition-colors"
                               >
                                 Go to Workflow
                               </Link>
@@ -153,7 +153,7 @@ export default function ActivityPage() {
       <div className="w-72 flex-shrink-0 border-l border-border overflow-y-auto p-6 space-y-6">
         {/* Events per hour bar chart */}
         <div>
-          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-4">Events Per Hour</p>
+          <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wide mb-4">Events Per Hour</p>
           <div className="flex items-end gap-1 h-20">
             {[30, 45, 20, 60, 35, 80, 55, 90, 40, 65, 75, 100].map((h, i) => (
               <div key={i} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: i === 11 ? "#3b82f6" : "#1c2230" }} />
@@ -166,7 +166,7 @@ export default function ActivityPage() {
 
         {/* Top actors */}
         <div>
-          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-3">Top Actors</p>
+          <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wide mb-3">Top Actors</p>
           <div className="space-y-3">
             {topActors.map((actor, i) => (
               <div key={actor.name} className="flex items-center gap-3">
@@ -174,8 +174,8 @@ export default function ActivityPage() {
                   {actor.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-white truncate">{actor.name}</p>
-                  <p className="text-[10px] text-gray-500">{actor.role}</p>
+                  <p className="text-xs font-medium text-text-primary truncate">{actor.name}</p>
+                  <p className="text-[10px] text-text-muted">{actor.role}</p>
                 </div>
                 <span className="text-xs font-semibold text-gray-300">{actor.count}</span>
               </div>
@@ -185,7 +185,7 @@ export default function ActivityPage() {
 
         {/* Most modified */}
         <div>
-          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wide mb-3">Most Modified</p>
+          <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wide mb-3">Most Modified</p>
           <div className="space-y-2">
             {[
               { name: "CRM Sync",       edits: 24, pct: 90, color: "bg-status-error" },
@@ -194,8 +194,8 @@ export default function ActivityPage() {
             ].map(item => (
               <div key={item.name} className="bg-surface-2 border border-border rounded-lg px-3 py-3">
                 <div className="flex justify-between mb-1.5">
-                  <span className="text-xs font-medium text-white">{item.name}</span>
-                  <span className="text-[10px] text-gray-500">{item.edits} edits</span>
+                  <span className="text-xs font-medium text-text-primary">{item.name}</span>
+                  <span className="text-[10px] text-text-muted">{item.edits} edits</span>
                 </div>
                 <div className="h-1 bg-surface rounded-full overflow-hidden">
                   <div className={`h-full ${item.color} rounded-full`} style={{ width: `${item.pct}%` }} />
@@ -211,7 +211,7 @@ export default function ActivityPage() {
             <span className="w-1.5 h-1.5 rounded-full bg-status-success animate-pulse" />
             LIVE AUDIT STREAM ACTIVE
           </p>
-          <p className="text-xs text-gray-500 leading-relaxed">
+          <p className="text-xs text-text-muted leading-relaxed">
             Monitoring 4 active clusters in US-EAST and EU-WEST regions.
           </p>
         </div>

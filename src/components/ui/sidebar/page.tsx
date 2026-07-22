@@ -117,7 +117,7 @@ export default function Sidebar() {
                   flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors
                   ${isActive
                     ? "bg-surface-2 border-l-4 border-brand-orange text-brand-orange"
-                    : "text-inactive hover:bg-surface-2 hover:border-l-4 hover:border-brand-orange hover:text-white"
+                    : "text-inactive hover:bg-surface-2 hover:border-l-4 hover:border-brand-orange hover:text-text-primary"
                   }
                 `}
               >
@@ -130,8 +130,8 @@ export default function Sidebar() {
         </nav>
           <div className="px-4 pb-6">
   <Link
-    href="/workflows/new"
-    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+    href="/workflows"
+    className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-3 text-sm font-semibold text-text-primary transition hover:opacity-90"
   >
     <Plus size={20} strokeWidth={2.5} />
     New Workflow
@@ -142,7 +142,7 @@ export default function Sidebar() {
 
   <Link
     href="/support"
-    className="flex items-center gap-3 rounded-lg px-3 py-2 text-inactive transition hover:bg-surface-2 hover:text-white"
+    className="flex items-center gap-3 rounded-lg px-3 py-2 text-inactive transition hover:bg-surface-2 hover:text-text-primary"
   >
     <CircleQuestionMark size={20} />
     <span>Support</span>
@@ -150,7 +150,7 @@ export default function Sidebar() {
 
   <Link
     href="/profile"
-    className="flex items-center gap-3 rounded-lg px-3 py-2 text-inactive transition hover:bg-surface-2 hover:text-white"
+    className="flex items-center gap-3 rounded-lg px-3 py-2 text-inactive transition hover:bg-surface-2 hover:text-text-primary"
   >
     <UserRound size={20} />
     <span>Account</span>

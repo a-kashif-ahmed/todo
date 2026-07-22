@@ -1,48 +1,65 @@
-// src/components/ui/navbar/page.tsx
-import { Bell, Zap, Search } from "lucide-react";
+"use client";
+
+import { Bell, Zap } from "lucide-react";
+import SearchBar from "../searchbar/page";
+import { createClient } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
+import { User } from "@supabase/supabase-js";
 
 export default function Navbar() {
+  const supabase = createClient();
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    async function load() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      setUser(user);
+    }
+
+    load();
+  }, [supabase]);
+
   return (
-    <div className="flex  w-full">
-      <nav className="w-1/1.5 h-14 bg-surface  text-gray-400 flex items-center px-6 gap-5">
-        <div className="flex items-center gap-3 bg-surface-2 border border-border rounded-full px-5 py-2 flex-1 min-w-0">
-          <Search size={15} className="flex-shrink-0 text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search resources..."
-            className="bg-transparent text-sm text-white placeholder:text-gray-500 outline-none w-full"
-          />
+    <header className="w-full border-b border-border bg-surface">
+      <nav className="flex h-16 w-full items-center justify-between px-6 md:px-8">
+
+        <div className="flex flex-1 items-center">
+          <SearchBar />
         </div>
-        {/* Logo */}
-        {/* <span className="text-white font-semibold tracking-tight whitespace-nowrap">
-          FlowLens
-        </span> */}
 
-        {/* Nav links */}
-        {/* <a href="#" className="text-sm hover:text-white transition-colors whitespace-nowrap">
-          Docs
-        </a>
-        <a href="#" className="text-sm hover:text-white transition-colors whitespace-nowrap">
-          Updates
-        </a> */}
+        <div className="ml-8 flex items-center gap-5">
+          <a href="/notifications">
+            <button className="text-text-muted transition-colors hover:text-text-primary">
+              <Bell size={18} />
+            </button>
+          </a>
 
-        {/* Search — bigger capsule */}
-        
+          <a href="/engine">
+            <button className="text-text-muted transition-colors hover:text-text-primary">
+              <Zap size={18} />
+            </button>
+          </a>
 
-        {/* Icons */}
-        <button className="hover:text-white transition-colors flex-shrink-0">
-          <Bell size={17} />
-        </button>
-        <button className="hover:text-white transition-colors flex-shrink-0">
-          <Zap size={17} />
-        </button>
+          <span className="text-sm text-text-muted">
+            {user?.user_metadata?.full_name ??
+              user?.email ??
+              "Guest"}
+          </span>
 
-        {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-surface-2 border border-border flex items-center justify-center flex-shrink-0">
-          <span className="text-xs text-gray-400">U</span>
+          <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface-2">
+            <span className="text-xs font-medium text-text-primary">
+              {(user?.user_metadata?.full_name ??
+                user?.email ??
+                "G")[0].toUpperCase()}
+            </span>
+          </div>
         </div>
 
       </nav>
-    </div>
+    </header>
   );
 }

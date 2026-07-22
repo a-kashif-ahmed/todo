@@ -50,7 +50,7 @@ export default function RecentActivityFeed() {
 
               {/* Body */}
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-white">{item.title}</p>
+                <p className="text-sm font-medium text-text-primary">{item.title}</p>
                 <p className="text-xs text-inactive">{item.description}</p>
                 <p className="mt-1 text-xs uppercase tracking-wide text-muted">
                   {item.time}
@@ -62,7 +62,7 @@ export default function RecentActivityFeed() {
       </div>
 
       {/* Footer */}
-      <button className="mt-3 flex items-center gap-1 text-xs text-inactive hover:text-white transition-colors">
+      <button className="mt-3 flex items-center gap-1 text-xs text-inactive hover:text-text-primary transition-colors">
         Show full history
         <ChevronDown size={12} />
       </button>

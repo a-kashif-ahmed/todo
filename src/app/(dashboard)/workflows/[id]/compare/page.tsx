@@ -27,7 +27,7 @@ import { Suspense } from "react";
 
 export default function ComparePageWrapper() {
   return (
-    <Suspense fallback={<div className="p-8 text-gray-400 text-sm">Loading...</div>}>
+    <Suspense fallback={<div className="p-8 text-text-muted text-sm">Loading...</div>}>
       <ComparePage />
     </Suspense>
   );
@@ -124,7 +124,7 @@ function ComparePage() {
   }
 
   if (loading) {
-    return <div className="p-8 text-gray-400 text-sm">Loading comparison...</div>;
+    return <div className="p-8 text-text-muted text-sm">Loading comparison...</div>;
   }
 
   if (error) {
@@ -137,8 +137,8 @@ function ComparePage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-lg font-semibold text-white">Visual Compare</h1>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <h1 className="text-lg font-semibold text-text-primary">Visual Compare</h1>
+          <p className="text-xs text-text-muted mt-0.5">
             Last working version vs current broken version
           </p>
         </div>
@@ -148,21 +148,21 @@ function ComparePage() {
       {/* Split graphs */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
-          <p className="text-xs text-gray-500 mb-2 font-medium">Last working</p>
+          <p className="text-xs text-text-muted mb-2 font-medium">Last working</p>
           {snapBefore ? (
             <WorkflowGraph workflow={snapBefore} diff={diff!} height={380} />
           ) : (
-            <div className="h-[380px] bg-surface-2 rounded-lg border border-border flex items-center justify-center text-gray-500 text-sm">
+            <div className="h-[380px] bg-surface-2 rounded-lg border border-border flex items-center justify-center text-text-muted text-sm">
               No data
             </div>
           )}
         </div>
         <div>
-          <p className="text-xs text-gray-500 mb-2 font-medium">Current (broken)</p>
+          <p className="text-xs text-text-muted mb-2 font-medium">Current (broken)</p>
           {snapAfter ? (
             <WorkflowGraph workflow={snapAfter} diff={diff!} height={380} />
           ) : (
-            <div className="h-[380px] bg-surface-2 rounded-lg border border-border flex items-center justify-center text-gray-500 text-sm">
+            <div className="h-[380px] bg-surface-2 rounded-lg border border-border flex items-center justify-center text-text-muted text-sm">
               No data
             </div>
           )}
@@ -175,7 +175,7 @@ function ComparePage() {
           <span className="text-status-success">{diff.summary.added} added</span>
           <span className="text-status-warning">{diff.summary.modified} modified</span>
           <span className="text-status-error">{diff.summary.removed} removed</span>
-          {diff.edgesChanged && <span className="text-gray-400">Connections changed</span>}
+          {diff.edgesChanged && <span className="text-text-muted">Connections changed</span>}
         </div>
       )}
 
@@ -193,7 +193,7 @@ function ComparePage() {
         </div>
       ) : (
         <div className="bg-surface-2 border border-border rounded-xl p-5 mb-6">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-text-muted">
             No AI analysis available for this comparison. This usually means no incident
             is linked to these snapshots yet.
           </p>
