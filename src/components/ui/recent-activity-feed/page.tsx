@@ -52,13 +52,13 @@ export default function RecentActivityFeed() {
       <div className="flex flex-col divide-y divide-default">
         {history.length == 0 ? <p className="text-text-muted">No Recent Activity</p> :
       history.map((item, i) => {
-          const Icon = item.icon;
+          // const Icon = item.icon;
           return (
             <div key={i} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
               {/* Avatar */}
-              <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-surface-3">
+              {/* <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-surface-3">
                 <Icon size={14} className="text-inactive" />
-              </div>
+              </div> */}
 
               {/* Body */}
               <div className="min-w-0 flex-1">
