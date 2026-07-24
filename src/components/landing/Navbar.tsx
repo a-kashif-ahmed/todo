@@ -16,11 +16,11 @@ export default function Navbar() {
           <a href="#" className="flex items-center gap-3">
             <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-black overflow-hidden">
               <img
-  src="/logo.png"
-  alt="FlowLens Logo"
-  width={70}
-  height={70}
-/>
+                src="/logo.png"
+                alt="FlowLens Logo"
+                width={70}
+                height={70}
+              />
             </div>
             <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-text-primary  ">
               FlowLens
@@ -67,9 +67,8 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         <div
-          className={`overflow-hidden transition-all duration-300 lg:hidden ${
-            isOpen ? "max-h-96 border-t border-white/10" : "max-h-0"
-          }`}
+          className={`overflow-hidden transition-all duration-300 lg:hidden ${isOpen ? "max-h-96 border-t border-white/10" : "max-h-0"
+            }`}
         >
           <div className="px-6 py-5">
             <ul className="flex flex-col gap-5 text-gray-300">
