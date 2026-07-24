@@ -3,7 +3,7 @@ import { getAuthContext } from "@/lib/supabase/auth-helper";
 import {
   testN8nConnection,
   getN8nWorkflows,
-} from "@/lib/integrations/n8n";
+} from "@/lib/connections/n8n";
 
 export async function POST(request: Request) {
   try {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
-import { getN8nWorkflows } from "@/lib/integrations/n8n";
+import { getN8nWorkflows } from "@/lib/connections/n8n";
 
 export async function POST() {
 
