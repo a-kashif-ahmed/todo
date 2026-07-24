@@ -175,7 +175,7 @@ export default function AssistantChatPage() {
         {normalisedData ? (
           <WorkflowGraph workflow={normalisedData} height={600} />
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-600 text-sm">
+          <div className="flex-1 flex items-center justify-center text-text-muted text-sm">
             No graph data available
           </div>
         )}
@@ -211,7 +211,7 @@ export default function AssistantChatPage() {
         {/* Messages */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5 space-y-5">
           {messages.length === 0 && (
-            <div className="text-center text-gray-600 text-xs mt-8">
+            <div className="text-center text-text-muted text-xs mt-8">
               Ask anything about this workflow
             </div>
           )}
@@ -224,7 +224,7 @@ export default function AssistantChatPage() {
                     {m.content}
                   </div>
                   {m.timestamp && (
-                    <span className="text-[11px] text-gray-600 mt-1">{m.timestamp}</span>
+                    <span className="text-[11px] text-text-muted mt-1">{m.timestamp}</span>
                   )}
                 </div>
               ) : (
@@ -244,7 +244,7 @@ export default function AssistantChatPage() {
                     {!streaming && i === messages.length - 1 && incident?.root_cause && (
                       <div className="mt-3 bg-brand-orange/10 border border-brand-orange/20 rounded-lg px-3.5 py-3">
                         <p className="text-xs font-semibold text-brand-orange mb-1">⚐ AI Recommendation</p>
-                        <p className="text-xs text-gray-300 leading-relaxed">
+                        <p className="text-xs text-text-muted leading-relaxed">
                           {incident.impact_summary || incident.root_cause}
                         </p>
                       </div>
@@ -295,7 +295,7 @@ export default function AssistantChatPage() {
                     )}
 
                     {!streaming && i === messages.length - 1 && m.role === "assistant" && m.content && (
-                      <p className="text-[11px] text-gray-600 mt-2">
+                      <p className="text-[11px] text-text-muted mt-2">
                         Assistant · AI-Engine v1.0
                       </p>
                     )}
@@ -326,14 +326,14 @@ export default function AssistantChatPage() {
           </div>
           <div className="flex items-center justify-between mt-2 px-1">
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1 text-[11px] text-text-muted cursor-pointer hover:text-gray-300">
+              <span className="flex items-center gap-1 text-[11px] text-text-muted cursor-pointer hover:text-text-muted">
                 <Paperclip size={11} /> CONTEXT
               </span>
-              <span className="flex items-center gap-1 text-[11px] text-text-muted cursor-pointer hover:text-gray-300">
+              <span className="flex items-center gap-1 text-[11px] text-text-muted cursor-pointer hover:text-text-muted">
                 <Mic size={11} /> VOICE
               </span>
             </div>
-            <span className="text-[11px] text-gray-600">Markdown supported</span>
+            <span className="text-[11px] text-text-muted">Markdown supported</span>
           </div>
         </div>
 

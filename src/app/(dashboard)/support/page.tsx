@@ -123,7 +123,7 @@ export default function SupportPage() {
               root cause in seconds.
             </p>
 
-            <button className="mt-8 rounded-xl bg-inactive px-6 py-3 font-medium hover:bg-surface">
+            <button className="mt-8 bg-surface rounded-xl bg- px-6 py-3 font-medium hover:opacity-90">
               Start AI Consultation
             </button>
 
@@ -188,7 +188,7 @@ export default function SupportPage() {
                     {item.title}
                   </h3>
 
-                  <p className="mt-3 text-muted">
+                  <p className="mt-3 text-text-muted">
                     {item.description}
                   </p>
 
@@ -227,25 +227,25 @@ export default function SupportPage() {
 
                     <div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 text-text-primary">
                         <h3 className="font-semibold">
                           {item.title}
                         </h3>
 
                         {item.badge && (
-                          <span className="rounded bg-brand-orange500 px-2 py-0.5 text-xs">
+                          <span className="rounded bg-brand-orange px-2 py-0.5 text-xs">
                             {item.badge}
                           </span>
                         )}
                       </div>
 
-                      <p className="text-sm text-muted">
+                      <p className="text-sm text-text-muted">
                         {item.description}
                       </p>
                     </div>
                   </div>
 
-                  <button className="mt-6 text-brand-brown">
+                  <button className="mt-8 bg-surface rounded-xl bg- px-6 py-3 font-medium hover:opacity-90">
                     {item.action}
                   </button>
                 </div>

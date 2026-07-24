@@ -122,14 +122,14 @@ export default function InvestigatePage() {
                 onClick={() => router.push(`/workflows/${selected.workflow_id}/incidents/${selected.id}`)}
                 className="bg-brand-blue text-text-primary text-sm font-medium rounded-lg px-4 py-2 hover:opacity-90 transition-opacity"
               >
-                Full Analysis →
+                Full Analysis 
               </button>
             </div>
 
             {/* Error message */}
             <div className="bg-status-error/5 border border-status-error/20 rounded-xl p-4 mb-4">
               <p className="text-xs font-semibold text-status-error mb-1">Error</p>
-              <p className="text-sm text-gray-300 font-mono">{selected.error_message || "Unknown error"}</p>
+              <p className="text-sm text-text-muted font-mono">{selected.error_message || "Unknown error"}</p>
             </div>
 
             {/* Root cause if available */}
@@ -137,9 +137,9 @@ export default function InvestigatePage() {
               <div className="bg-surface-2 border border-border rounded-xl p-5 mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">Root Cause</p>
-                  <span className="text-xs text-brand-blue">{Math.round((selected.confidence || 0) * 100)}% confidence</span>
+                  <span className="text-xs text-brand-orange">{Math.round((selected.confidence || 0) * 100)}% confidence</span>
                 </div>
-                <p className="text-sm text-gray-300 leading-relaxed">{selected.root_cause}</p>
+                <p className="text-sm text-text-muted leading-relaxed">{selected.root_cause}</p>
               </div>
             )}
 

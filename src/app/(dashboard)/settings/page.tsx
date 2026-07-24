@@ -14,7 +14,13 @@ type SettingsTab = "General" | "Security" | "API Keys" | "Integrations";
 
 export default function SettingsPage() {
   const [tab, setTab] = useState<SettingsTab>("General");
-  const [profile, setProfile] = useState<{ display_name: string; email: string; role: string; team_name: string } | null>(null);
+  const [profile, setProfile] = useState<{
+  name: string;
+  email: string;
+  role: string;
+  team_name: string;
+  team_id: string;
+} | null>(null);
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -22,34 +28,73 @@ export default function SettingsPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  useEffect(() => {
-    async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const { data: p } = await supabase
-        .from("flowlens_profiles")
-        .select("display_name, role, team_id, flowlens_teams(name)")
-        .eq("id", user.id)
-        .single();
-      if (p) {
-        const teamName = (p as any).flowlens_teams?.name || "My Team";
-        setProfile({ display_name: p.display_name || "", email: user.email || "", role: p.role, team_name: teamName });
-        setName(p.display_name || "");
+ useEffect(() => {
+  async function load() {
+    try {
+      const res = await fetch("/api/profile");
+
+      if (!res.ok) {
+        console.error("Failed to load profile");
+        return;
       }
+
+      const { profile } = await res.json();
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      setProfile({
+        ...profile,
+        email: user?.email || "",
+      });
+
+      setName(profile.name);
+    } catch (err) {
+      console.error(err);
     }
-    load();
-  }, []);
+  }
+
+  load();
+}, []);
 
   async function handleSave() {
-    setSaving(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      await supabase.from("flowlens_profiles").update({ display_name: name }).eq("id", user.id);
+  setSaving(true);
+
+  try {
+    const res = await fetch("/api/profile", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Update failed");
     }
-    setSaving(false);
+
+    const { profile: updated } = await res.json();
+
+    setProfile((prev) =>
+      prev
+        ? {
+            ...prev,
+            name: updated.name,
+          }
+        : prev
+    );
+
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  } catch (err) {
+    console.error(err);
   }
+
+  setSaving(false);
+}
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -76,19 +121,19 @@ export default function SettingsPage() {
         <div className="flex items-center gap-5">
           <div className="relative">
             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand-blue to-purple-500 flex items-center justify-center text-2xl font-bold text-text-primary">
-              {(profile?.display_name || "?").slice(0, 1).toUpperCase()}
+              {(profile?.name || "?").slice(0, 1).toUpperCase()}
             </div>
             <button className="absolute bottom-0 right-0 w-6 h-6 bg-brand-blue rounded-full flex items-center justify-center border-2 border-surface">
               <Edit2 size={10} className="text-text-primary" />
             </button>
           </div>
           <div>
-            <h2 className="text-xl font-bold text-text-primary">{profile?.display_name || "—"}</h2>
+            <h2 className="text-xl font-bold text-text-primary">{profile?.name || "—"}</h2>
             <div className="flex items-center gap-2 mt-1.5">
               <span className="flex items-center gap-1 text-xs bg-surface border border-border rounded-full px-2.5 py-1 text-text-muted">
                 <Shield size={11} /> System Admin
               </span>
-              <span className="flex items-center gap-1 text-xs bg-brand-blue/15 border border-brand-blue/25 rounded-full px-2.5 py-1 text-brand-blue">
+              <span className="flex items-center gap-1 text-xs bg-brand-blue/15 border border-brand-blue/25 rounded-full px-2.5 py-1 text-brand-orange">
                 ● Pro Plan
               </span>
             </div>
@@ -155,7 +200,7 @@ export default function SettingsPage() {
                   <input
                     value={profile?.team_name || ""}
                     disabled
-                    className="flex-1 bg-surface-2 border border-border rounded-lg px-3 py-2.5 text-sm text-gray-300 outline-none cursor-not-allowed"
+                    className="flex-1 bg-surface-2 border border-border rounded-lg px-3 py-2.5 text-sm text-text-muted outline-none cursor-not-allowed"
                   />
                   <button
                     onClick={copyId}
@@ -198,7 +243,7 @@ export default function SettingsPage() {
               <h3 className="text-sm font-semibold text-text-primary mb-3">Integrations</h3>
               <p className="text-sm text-text-muted">
                 Connect n8n, Zapier, and Make from the{" "}
-                <a href="/connections" className="text-brand-blue hover:underline">Connections page</a>.
+                <a href="/connections" className="text-brand-orange hover:underline">Connections page</a>.
               </p>
             </div>
           )}

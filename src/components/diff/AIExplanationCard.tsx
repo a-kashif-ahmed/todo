@@ -36,7 +36,7 @@ export default function AIExplanationCard({
         </span>
       </div>
 
-      <p className="text-sm text-gray-300 leading-relaxed mb-3">
+      <p className="text-sm text-text-muted leading-relaxed mb-3">
         {rootCause}
       </p>
 

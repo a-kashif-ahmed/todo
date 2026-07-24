@@ -13,7 +13,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
   try {
-    const { userId, displayName, teamName } = await request.json();
+    const { userId, displayName, teamName, password, email, role } = await request.json();
 
     if (!userId || !teamName) {
       return NextResponse.json(
@@ -35,17 +35,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: teamErr.message }, { status: 500 });
     }
 
-    // Create profile
+    console.log("trying_profiles");
+    console.log(team);
     const { error: profileErr } = await db.from("flowlens_profiles").insert({
-      id: userId,
+      id:userId,
       team_id: team.id,
-      display_name: displayName || "",
-      role: "owner",
+      name: displayName,
+      role: role,
+      password:password,
+      email:email,  
+
     });
 
     if (profileErr) {
-      return NextResponse.json({ error: profileErr.message }, { status: 500 });
-    }
+  console.error(profileErr);
+
+  return NextResponse.json(
+    { error: profileErr.message },
+    { status: 500 }
+  );
+}
 
     return NextResponse.json({ team }, { status: 201 });
   } catch (e) {

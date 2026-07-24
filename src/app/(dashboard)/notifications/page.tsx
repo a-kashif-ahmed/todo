@@ -80,7 +80,7 @@ const typeIcon = {
   error:   <div className="w-8 h-8 rounded-full bg-status-error/15 border border-status-error/30 flex items-center justify-center"><AlertTriangle size={14} className="text-status-error" /></div>,
   warning: <div className="w-8 h-8 rounded-full bg-status-warning/15 border border-status-warning/30 flex items-center justify-center"><AlertTriangle size={14} className="text-status-warning" /></div>,
   info:    <div className="w-8 h-8 rounded-full bg-brand-blue/15 border border-brand-blue/30 flex items-center justify-center"><Zap size={14} className="text-purple-400" /></div>,
-  success: <div className="w-8 h-8 rounded-full bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center"><Info size={14} className="text-brand-blue" /></div>,
+  success: <div className="w-8 h-8 rounded-full bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center"><Info size={14} className="text-brand-orange" /></div>,
 };
 
 const borderByType = {
@@ -93,7 +93,7 @@ const borderByType = {
 const commonIssues = [
   { label: "API Rate Limits",  badge: "Frequent", badgeColor: "bg-status-warning/20 text-status-warning" },
   { label: "Schema Mismatches", badge: "Critical", badgeColor: "bg-status-error/20 text-status-error" },
-  { label: "Auth Token Expiry", badge: "Occasional", badgeColor: "bg-brand-blue/20 text-brand-blue" },
+  { label: "Auth Token Expiry", badge: "Occasional", badgeColor: "bg-brand-blue/20 text-brand-orange" },
 ];
 
 export default function NotificationsPage() {
@@ -217,7 +217,7 @@ export default function NotificationsPage() {
           <div className="space-y-2">
             {commonIssues.map(issue => (
               <div key={issue.label} className="flex items-center justify-between bg-surface-2 border border-border rounded-lg px-3 py-2.5">
-                <span className="text-sm text-gray-300">{issue.label}</span>
+                <span className="text-sm text-text-muted">{issue.label}</span>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${issue.badgeColor}`}>{issue.badge}</span>
               </div>
             ))}

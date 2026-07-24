@@ -1,8 +1,7 @@
-"use client";
-
 import { CheckCircle2, XCircle } from "lucide-react";
+import Eyebrow from "./Eyebrow";
 
-const before = [
+const before: string[] = [
   "Reading logs",
   "Comparing JSON files",
   "Manual debugging",
@@ -10,7 +9,7 @@ const before = [
   "Hours of investigation",
 ];
 
-const after = [
+const after: string[] = [
   "Know exactly what changed",
   "Understand why it failed",
   "See which systems are affected",
@@ -20,16 +19,12 @@ const after = [
 
 export default function BeforeAfter() {
   return (
-    <section className="py-32" id="bfaf">
+    <section className="py-20 sm:py-24 md:py-32" id="bfaf">
       <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center ">
+          <Eyebrow ><p className="text-brand-orange">Without vs With FlowLens</p></Eyebrow>
 
-        <div className="text-center">
-
-          <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-orange-400">
-            Without vs With Flowlens
-          </span>
-
-          <h2 className="mt-8 text-5xl font-bold">
+          <h2 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold">
             Stop wasting hours
             <br />
             finding one tiny mistake.
@@ -38,61 +33,41 @@ export default function BeforeAfter() {
           <p className="mt-6 text-gray-400">
             See the difference FlowLens makes.
           </p>
-
         </div>
 
-        <div className="mt-20 grid lg:grid-cols-2 gap-8">
-
+        <div className="mt-12 sm:mt-16 md:mt-20 grid gap-6 sm:gap-8 lg:grid-cols-2">
           {/* Before */}
-
-          <div className="rounded-3xl border border-red-500/20 bg-[#161222] p-10">
-
-            <h3 className="text-3xl font-bold text-red-400">
+          <div className="rounded-3xl border border-danger/20 bg-surface p-6 sm:p-8 md:p-10">
+            <h3 className="text-2xl sm:text-3xl font-bold text-danger">
               Without FlowLens
             </h3>
 
             <div className="mt-10 space-y-6">
-
               {before.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-4 text-lg"
-                >
-                  <XCircle className="text-red-400" />
+                <div key={item} className="flex items-center gap-3 sm:gap-4 text-base sm:text-lg">
+                  <XCircle className="text-status-error shrink-0" />
                   {item}
                 </div>
               ))}
-
             </div>
-
           </div>
 
           {/* After */}
-
-          <div className="rounded-3xl border border-green-500/20 bg-[#161222] p-10">
-
-            <h3 className="text-3xl font-bold text-green-400">
+          <div className="rounded-3xl border border-success/20 bg-surface p-6 sm:p-8 md:p-10">
+            <h3 className="text-2xl sm:text-3xl font-bold text-success">
               With FlowLens
             </h3>
 
             <div className="mt-10 space-y-6">
-
               {after.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-4 text-lg"
-                >
-                  <CheckCircle2 className="text-green-400" />
+                <div key={item} className="flex items-center gap-3 sm:gap-4 text-base sm:text-lg">
+                  <CheckCircle2 className="text-status-success shrink-0" />
                   {item}
                 </div>
               ))}
-
             </div>
-
           </div>
-
         </div>
-
       </div>
     </section>
   );

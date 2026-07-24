@@ -4,41 +4,109 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-  const [form, setForm] = useState({ name: "", email: "", password: "", team: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirmpassword: "", team: "", role: "owner" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
   async function handleSignup(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  e.preventDefault();
 
+  setError("");
+
+  // Name validation
+  if (!form.name.trim()) {
+    setError("Please enter your name.");
+    return;
+  }
+
+  // Team validation
+  if (!form.team.trim()) {
+    setError("Please enter a team name.");
+    return;
+  }
+
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(form.email)) {
+    setError("Please enter a valid email address.");
+    return;
+  }
+
+  // Password length
+  if (form.password.length < 6) {
+    setError("Password must be at least 6 characters.");
+    return;
+  }
+
+  // Password confirmation
+  if (form.password !== form.confirmpassword) {
+    setError("Passwords do not match.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
     const { data, error: authErr } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
     });
 
-    if (authErr || !data.user) {
-      setError(authErr?.message || "Signup failed");
-      setLoading(false);
-      return;
+    if (authErr) {
+      throw new Error(authErr.message);
     }
 
-    await fetch("/api/onboard", {
+    if (!data) {
+      throw new Error("Unable to create user.");
+    }
+
+    const onboardRes = await fetch("/api/onboard", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        userId: data.user.id,
+        userId: data.user?.id,
         displayName: form.name,
         teamName: form.team,
+        email: form.email,
+        password: form.password,
+        role: form.role,
       }),
     });
 
-    setLoading(false);
+    if (!onboardRes.ok) {
+      throw new Error("Failed to create workspace.");
+    }
+
     router.push("/");
+  } catch (err: any) {
+    switch (err.message) {
+      case "User already registered":
+        setError("An account with this email already exists.");
+        break;
+
+      case "Email rate limit exceeded":
+        setError("Too many signup attempts. Please try again later.");
+        break;
+
+      case "Password should be at least 6 characters":
+        setError("Password must be at least 6 characters.");
+        break;
+
+      case "Invalid login credentials":
+        setError("Invalid email or password.");
+        break;
+
+      default:
+        setError(err.message || "Something went wrong. Please try again.");
+    }
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center">
@@ -55,6 +123,7 @@ export default function SignupPage() {
             required
             className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-brand-orange/50"
           />
+
           <input
             type="text"
             placeholder="Team name"
@@ -63,6 +132,16 @@ export default function SignupPage() {
             required
             className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-brand-orange/50"
           />
+          <select
+            value={form.role}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, role: e.target.value }))
+            }
+            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-text-primary outline-none focus:border-brand-orange/50"
+          >
+            <option value="member">Member</option>
+            <option value="owner">Owner</option>
+          </select>
           <input
             type="email"
             placeholder="Email"
@@ -79,8 +158,20 @@ export default function SignupPage() {
             required
             className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-brand-orange/50"
           />
+          <input
+            type="password"
+            placeholder="Confirm password"
+            value={form.confirmpassword}
+            onChange={e => setForm(prev => ({ ...prev, confirmpassword: e.target.value }))}
+            required
+            className="w-full bg-surface border border-border rounded px-3 py-2 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-brand-orange/50"
+          />
 
-          {error && <p className="text-status-error text-xs">{error}</p>}
+          {error && (
+            <div className="rounded border border-status-error/30 bg-status-error/10 px-3 py-2 text-xs text-status-error">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"

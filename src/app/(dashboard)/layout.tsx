@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
     <TitleProvider>
-    <div className="flex h-screen overflow-hidden bg-surface">
+    <div className="flex h-screen overflow-hidden bg-surface scrollbar">
       <Sidebar />
 
       <div className="flex flex-1 flex-col overflow-hidden">

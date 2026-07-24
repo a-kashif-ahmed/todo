@@ -146,7 +146,7 @@ export default function AIAssistantPanel({
           </div>
         ))}
         {!streaming && messages.length > 0 && messages[messages.length - 1].role === "assistant" && (
-          <p className="text-[11px] text-gray-600 -mt-2">
+          <p className="text-[11px] text-text-muted -mt-2">
             Assistant · AI-Engine v1.0
           </p>
         )}
@@ -175,7 +175,7 @@ export default function AIAssistantPanel({
               <Mic size={11} /> Voice
             </span>
           </div>
-          <span className="text-[11px] text-gray-600">Markdown supported</span>
+          <span className="text-[11px] text-text-muted">Markdown supported</span>
         </div>
       </div>
     </div>

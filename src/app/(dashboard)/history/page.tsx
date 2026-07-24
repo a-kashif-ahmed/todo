@@ -20,12 +20,12 @@ interface HistoryEntry {
 function actionIcon(action: string) {
   if (action.includes("restore")) return <RotateCcw size={13} className="text-status-success" />;
   if (action.includes("import"))  return <Upload size={13} className="text-status-warning" />;
-  if (action.includes("snapshot")) return <GitBranch size={13} className="text-brand-blue" />;
+  if (action.includes("snapshot")) return <GitBranch size={13} className="text-brand-orange" />;
   return <Zap size={13} className="text-purple-400" />;
 }
 
 const actorBadge = {
-  user:   "bg-brand-blue/15 text-brand-blue",
+  user:   "bg-brand-blue/15 text-brand-orange",
   system: "bg-gray-500/15 text-text-muted",
   ai:     "bg-purple-500/15 text-purple-300",
 };
@@ -72,7 +72,7 @@ export default function HistoryPage() {
               <Link href="/workflows" className="flex items-center gap-2 bg-brand-blue text-text-primary text-sm font-medium rounded-lg px-5 py-2.5 hover:opacity-90 transition-opacity">
                 <GitBranch size={14} /> Go to Workflows
               </Link>
-              <Link href="/import" className="flex items-center gap-2 bg-surface-2 border border-border text-text-primary text-sm font-medium rounded-lg px-5 py-2.5 hover:border-gray-500 transition-colors">
+              <Link href="/workflows" className="flex items-center gap-2 bg-surface-2 border border-border text-text-primary text-sm font-medium rounded-lg px-5 py-2.5 hover:border-gray-500 transition-colors">
                 Import JSON
               </Link>
             </div>
@@ -131,7 +131,7 @@ export default function HistoryPage() {
         <p className="text-xs text-text-muted">Maximize your automation visibility</p>
 
         <div className="bg-surface-2 border border-border rounded-xl p-4">
-          <p className="text-[10px] font-bold text-brand-blue tracking-wider mb-2">✦ AUTO-VERSIONING</p>
+          <p className="text-[10px] font-bold text-brand-orange tracking-wider mb-2">✦ AUTO-VERSIONING</p>
           <p className="text-xs text-text-muted leading-relaxed">
             Every single logic node update or trigger change is automatically snapshot. You can roll back to any point in time with 100% state persistence.
           </p>
@@ -147,9 +147,7 @@ export default function HistoryPage() {
         {/* Version engine banner */}
         <div className="bg-surface-2 border border-border rounded-xl overflow-hidden">
           <div className="bg-gradient-to-br from-surface-3 to-surface-2 h-24 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-3xl mb-1">⚙</div>
-            </div>
+           
           </div>
           <div className="px-4 py-3">
             <p className="text-xs font-semibold text-text-primary">Version Engine Active</p>

@@ -89,7 +89,7 @@ export default function AIIntelligenceReport({
           </span>
         </div>
 
-        <p className="text-sm text-gray-300 leading-relaxed italic">
+        <p className="text-sm text-text-muted leading-relaxed italic">
           "{explanation}"
         </p>
       </div>

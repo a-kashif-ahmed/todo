@@ -16,7 +16,7 @@ export default function ChatMessageBubble({ role, content, timestamp, streaming 
         <div className="bg-surface-3 text-text-primary text-sm rounded-2xl rounded-tr-md px-4 py-2.5 max-w-[85%]">
           {content}
         </div>
-        {timestamp && <span className="text-[11px] text-gray-600 mt-1">{timestamp}</span>}
+        {timestamp && <span className="text-[11px] text-text-muted mt-1">{timestamp}</span>}
       </div>
     );
   }

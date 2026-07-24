@@ -48,7 +48,7 @@ export default function SnapshotTimeline({ snapshots, selectedId, onSelect }: Pr
             >
               <div className="flex items-center gap-2 mb-1">
                 <span className={`w-1.5 h-1.5 rounded-full ${statusDot[s.execution_status || "unknown"]}`} />
-                <span className="text-xs text-gray-300 font-medium">
+                <span className="text-xs text-text-muted font-medium">
                   {s.label || s.source}
                 </span>
               </div>

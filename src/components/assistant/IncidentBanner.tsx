@@ -18,7 +18,7 @@ export default function IncidentBanner({ incidentId, statusLabel }: Props) {
     <div className="absolute top-6 left-6 bg-surface-2 border border-status-error/30 rounded-xl px-5 py-3.5 max-w-xs">
       <p className="text-sm font-semibold text-status-error">Incident: {incidentId}</p>
       <p className="text-xs text-text-muted mt-0.5">{statusLabel}</p>
-      <p className="text-[11px] text-gray-600 mt-2">Just now</p>
+      <p className="text-[11px] text-text-muted mt-2">Just now</p>
     </div>
   );
 }
@@ -40,7 +40,7 @@ const [assistantOpen, setAssistantOpen] = useState(false);
 // Add a trigger button somewhere in your header:
 <button
   onClick={() => setAssistantOpen(true)}
-  className="text-xs bg-surface-2 border border-border rounded-lg px-4 py-2 text-gray-300 hover:text-text-primary hover:border-brand-orange/40 transition-colors"
+  className="text-xs bg-surface-2 border border-border rounded-lg px-4 py-2 text-text-muted hover:text-text-primary hover:border-brand-orange/40 transition-colors"
 >
   Ask AI Assistant
 </button>

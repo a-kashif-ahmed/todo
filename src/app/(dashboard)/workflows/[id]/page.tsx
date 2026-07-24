@@ -110,7 +110,7 @@ export default function WorkflowDetailPage() {
           </div>
           <a
             href={`/workflows/${workflowId}/compare?from=${snapshots[1]?.id || ""}&to=${selectedSnapshotId}`}
-            className="text-xs bg-surface-2 border border-border rounded-lg px-4 py-2 text-gray-300 hover:text-text-primary hover:border-brand-orange/40 transition-colors"
+            className="text-xs bg-surface-2 border border-border rounded-lg px-4 py-2 text-text-muted hover:text-text-primary hover:border-brand-orange/40 transition-colors"
           >
             Compare versions
           </a>

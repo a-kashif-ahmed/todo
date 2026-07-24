@@ -84,7 +84,7 @@ export default function AIEngineStatusPage() {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-gray-600 z-10">Live graph rendering...</p>
+            <p className="text-xs text-text-muted z-10">Live graph rendering...</p>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function AIEngineStatusPage() {
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-border">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center text-brand-blue">⚡</div>
+              <div className="w-9 h-9 rounded-xl bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center text-brand-orange">⚡</div>
               <div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-semibold text-text-primary">AI Engine</p>
@@ -111,7 +111,7 @@ export default function AIEngineStatusPage() {
           <div className="px-5 py-4 border-b border-border">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">AI Confidence</p>
-              <span className="text-sm font-bold text-brand-blue">98.4%</span>
+              <span className="text-sm font-bold text-brand-orange">98.4%</span>
             </div>
             <div className="flex gap-1">
               {Array.from({ length: 12 }).map((_, i) => (

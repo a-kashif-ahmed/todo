@@ -184,7 +184,7 @@ export default function SearchBar() {
                         }`}
                       >
                         <div className="w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center flex-shrink-0">
-                          <GitBranch size={12} className="text-brand-blue" />
+                          <GitBranch size={12} className="text-brand-orange" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-text-primary truncate">{r.label}</p>
@@ -229,7 +229,7 @@ export default function SearchBar() {
               )}
 
               {/* Footer hint */}
-              <div className="px-4 py-2 border-t border-border-light flex items-center gap-3 text-[10px] text-gray-600">
+              <div className="px-4 py-2 border-t border-border-light flex items-center gap-3 text-[10px] text-text-muted">
                 <span><kbd className="bg-surface border border-border rounded px-1">↑↓</kbd> navigate</span>
                 <span><kbd className="bg-surface border border-border rounded px-1">↵</kbd> open</span>
                 <span><kbd className="bg-surface border border-border rounded px-1">esc</kbd> close</span>

@@ -33,7 +33,7 @@ const leftBorder: Record<string, string> = {
 };
 
 const iconBg: Record<string, string> = {
-  user:   "bg-brand-blue/10 text-brand-blue",
+  user:   "bg-brand-blue/10 text-brand-orange",
   system: "bg-status-warning/10 text-status-warning",
   ai:     "bg-purple-500/10 text-purple-400",
 };
@@ -159,7 +159,7 @@ export default function ActivityPage() {
               <div key={i} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: i === 11 ? "#3b82f6" : "#1c2230" }} />
             ))}
           </div>
-          <div className="flex justify-between text-[10px] text-gray-600 mt-1">
+          <div className="flex justify-between text-[10px] text-text-muted mt-1">
             <span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function ActivityPage() {
                   <p className="text-xs font-medium text-text-primary truncate">{actor.name}</p>
                   <p className="text-[10px] text-text-muted">{actor.role}</p>
                 </div>
-                <span className="text-xs font-semibold text-gray-300">{actor.count}</span>
+                <span className="text-xs font-semibold text-text-muted">{actor.count}</span>
               </div>
             ))}
           </div>

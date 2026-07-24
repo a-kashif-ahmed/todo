@@ -36,7 +36,7 @@ export default function RecentActivityFeed({ events }: { events: ActivityEvent[]
               <p className="text-xs font-medium text-text-primary truncate">{e.title}</p>
               <p className="text-[11px] text-text-muted mt-0.5 truncate">{e.subtitle}</p>
             </div>
-            <span className="text-[11px] text-gray-600 whitespace-nowrap flex-shrink-0">{e.time}</span>
+            <span className="text-[11px] text-text-muted whitespace-nowrap flex-shrink-0">{e.time}</span>
           </div>
         ))}
         {events.length === 0 && (

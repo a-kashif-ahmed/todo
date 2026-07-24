@@ -60,7 +60,7 @@ export default function AIInsightsPanel({
             {dependencies.map(dep => (
               <span
                 key={dep}
-                className="text-[11px] bg-surface border border-border rounded px-2 py-1 text-gray-300"
+                className="text-[11px] bg-surface border border-border rounded px-2 py-1 text-text-muted"
               >
                 {dep}
               </span>
@@ -77,7 +77,7 @@ export default function AIInsightsPanel({
             )}
             {recentChanges.map((c, i) => (
               <div key={i} className="text-xs">
-                <p className="text-gray-300">{c.label}</p>
+                <p className="text-text-muted">{c.label}</p>
                 <p className="text-text-muted text-[11px]">{c.time}</p>
               </div>
             ))}

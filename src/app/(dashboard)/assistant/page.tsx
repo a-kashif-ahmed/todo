@@ -19,7 +19,7 @@ const suggestions = [
 
 const categoryColor: Record<string, string> = {
   CRITICAL:    "text-status-error",
-  DATABASE:    "text-brand-blue",
+  DATABASE:    "text-brand-orange",
   RECOVERY:    "text-status-warning",
   PERFORMANCE: "text-purple-400",
 };
@@ -53,16 +53,12 @@ export default function AIAssistantIndexPage() {
       {/* Center hero */}
       <div className="flex-1 flex flex-col items-center justify-center px-8 pb-4">
         {/* Icon */}
-        <div className="w-16 h-16 rounded-2xl bg-surface-2 border border-border flex items-center justify-center mb-6">
-          <span className="text-2xl">🤖</span>
-        </div>
-
         <h1 className="text-4xl font-bold text-text-primary mb-3 text-center">
           How can I help you debug today?
         </h1>
         <p className="text-text-muted text-center mb-10 max-w-md">
           I'm your system mechanic. I've analyzed{" "}
-          <span className="text-brand-blue font-semibold">{totalEvents.toLocaleString()} events</span>{" "}
+          <span className="text-brand-orange font-semibold">{totalEvents.toLocaleString()} events</span>{" "}
           across your active workflows in the last hour.
         </p>
 
@@ -93,7 +89,7 @@ export default function AIAssistantIndexPage() {
             <select
               value={selectedWorkflow}
               onChange={e => setSelectedWorkflow(e.target.value)}
-              className="text-xs bg-surface-2 border border-border rounded-lg px-2 py-1 text-gray-300 outline-none"
+              className="text-xs bg-surface-2 border border-border rounded-lg px-2 py-1 text-text-muted outline-none"
             >
               {workflows.map(w => (
                 <option key={w.id} value={w.id}>{w.name}</option>
@@ -121,14 +117,14 @@ export default function AIAssistantIndexPage() {
 
         <div className="flex items-center justify-between mt-3 max-w-3xl mx-auto px-1">
           <div className="flex items-center gap-4 text-xs text-text-muted">
-            <button className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><Paperclip size={11} /></button>
-            <button className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><GitBranch size={11} /></button>
-            <button className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><Mic size={11} /></button>
+            <button className="flex items-center gap-1.5 hover:text-text-muted transition-colors"><Paperclip size={11} /></button>
+            <button className="flex items-center gap-1.5 hover:text-text-muted transition-colors"><GitBranch size={11} /></button>
+            <button className="flex items-center gap-1.5 hover:text-text-muted transition-colors"><Mic size={11} /></button>
             <span className="bg-surface border border-border rounded px-2 py-0.5 text-[10px] text-status-success flex items-center gap-1">
               <span className="w-1 h-1 rounded-full bg-status-success" /> Auto-pilot Context Active
             </span>
           </div>
-          <span className="text-xs text-gray-600">CMD + ENTER TO SEND</span>
+          <span className="text-xs text-text-muted">CMD + ENTER TO SEND</span>
         </div>
       </div>
     </div>

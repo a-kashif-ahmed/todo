@@ -5,7 +5,7 @@ export default function SystemHealthCard(){
                 <h2 className="mb-1 text-xl font-semibold text-text-primary">SYSTEM HEALTH</h2>
                 <div className="flex">
                     <span className="text-brand-orange">99.8%</span>
-                    <span className="text-gray-700 pl-2">uptime this month</span>
+                    <span className="text-text-muted pl-2">uptime this month</span>
                 </div>
                 <div className="border-b-5 border-brand-orange">
 

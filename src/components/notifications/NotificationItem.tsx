@@ -22,7 +22,7 @@ export function NotificationItem({ type, title, description, time, unread }: Not
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <p className={`text-sm font-medium ${unread ? "text-text-primary" : "text-gray-300"}`}>{title}</p>
+          <p className={`text-sm font-medium ${unread ? "text-text-primary" : "text-text-muted"}`}>{title}</p>
           <span className="text-[11px] text-text-muted whitespace-nowrap flex-shrink-0">{time}</span>
         </div>
         <p className="text-xs text-text-muted mt-0.5 leading-relaxed">{description}</p>

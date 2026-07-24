@@ -25,7 +25,7 @@ export default function PasteJsonModal({ open, onClose, onSubmit }: Props) {
           onChange={e => setValue(e.target.value)}
           placeholder="Paste your workflow JSON here..."
           rows={12}
-          className="w-full bg-surface border border-border-light rounded-lg px-3 py-2.5 text-xs font-mono text-gray-300 placeholder:text-gray-600 outline-none focus:border-brand-orange/50 resize-none"
+          className="w-full bg-surface border border-border-light rounded-lg px-3 py-2.5 text-xs font-mono text-text-muted placeholder:text-text-muted outline-none focus:border-brand-orange/50 resize-none"
         />
         <div className="flex justify-end gap-2 mt-4">
           <button

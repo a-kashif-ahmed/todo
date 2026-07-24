@@ -5,6 +5,7 @@ import SearchBar from "../searchbar/page";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
+import LogoutButton from "../logout/page";
 
 export default function Navbar() {
   const supabase = createClient();
@@ -57,6 +58,7 @@ export default function Navbar() {
                 "G")[0].toUpperCase()}
             </span>
           </div>
+          <span><LogoutButton/></span>
         </div>
 
       </nav>

@@ -23,7 +23,7 @@ function actionLabel(action: string) {
 }
  
 const actorBadge = {
-  user:   "bg-brand-blue/15 text-brand-blue",
+  user:   "bg-brand-blue/15 text-brand-orange",
   system: "bg-gray-500/15 text-text-muted",
   ai:     "bg-purple-500/15 text-purple-300",
 };
