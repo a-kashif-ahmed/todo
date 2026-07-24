@@ -62,10 +62,10 @@ export default function RecentActivityFeed() {
 
               {/* Body */}
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-text-primary">{item.title}</p>
-                <p className="text-xs text-inactive">{item.description}</p>
+                <p className="text-sm font-medium text-text-primary">{item.action}</p>
+                <p className="text-xs text-inactive">{item.actor_type}</p>
                 <p className="mt-1 text-xs uppercase tracking-wide text-text-muted">
-                  {item.time}
+                  {item.created_at}
                 </p>
               </div>
             </div>
