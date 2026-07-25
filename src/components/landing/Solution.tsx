@@ -52,7 +52,7 @@ export default function Solution() {
             Today debugging looks like Logs, Backups, Trial and Error.
           </h2>
 
-          <p className="mx-auto mt-6 sm:mt-8 max-w-3xl text-base sm:text-lg md:text-xl leading-7 sm:leading-8 text-gray-400">
+          <p className="mx-auto mt-6 sm:mt-8 max-w-3xl text-base sm:text-lg md:text-xl leading-7 sm:leading-8 text-text-muted">
             Instead: FlowLens investigates <span className="text-brand-orange">automatically</span>.
           </p>
         </div>

@@ -33,7 +33,7 @@ export default function Card({
       </h3>
 
       {description && (
-        <p className="mt-4 text-sm sm:text-base leading-7 text-gray-400">
+        <p className="mt-4 text-sm sm:text-base leading-7 text-text-muted">
           {description}
         </p>
       )}

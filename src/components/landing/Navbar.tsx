@@ -9,12 +9,12 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-3 sm:top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50">
-      <nav className="rounded-2xl border border-border bg-white/5 backdrop-blur-xl shadow-2xl">
+      <nav className="rounded-2xl border border-border bg-surface/40 backdrop-blur-xl shadow-2xl">
         {/* Top Row */}
         <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-black overflow-hidden">
+          <a href="/" className="flex items-center gap-3">
+            <div className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-surface overflow-hidden">
               <img
                 src="/logo.png"
                 alt="FlowLens Logo"
@@ -28,7 +28,7 @@ export default function Navbar() {
           </a>
 
           {/* Desktop Menu */}
-          <ul className="hidden lg:flex items-center gap-10 text-gray-300">
+          <ul className="hidden lg:flex items-center gap-10 text-text-muted">
             <li>
               <a href="#problem" className="transition hover:text-text-primary  ">
                 Problem
@@ -48,11 +48,15 @@ export default function Navbar() {
 
           {/* Desktop Button */}
           <div className="hidden lg:block">
-            <a href="#cta">
-              <button className="rounded-xl bg-gradient-to-br from-brand-orange to-brand-brown px-6 py-3 lg:px-8 lg:py-4 font-semibold text-text-primary   transition hover:scale-105">
-                Join Waitlist
+            <a href="/login">
+                <button
+                
+                
+                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
+              >
+                Get Started
               </button>
-            </a>
+              </a>
           </div>
 
           {/* Mobile Button */}
@@ -67,11 +71,11 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         <div
-          className={`overflow-hidden transition-all duration-300 lg:hidden ${isOpen ? "max-h-96 border-t border-white/10" : "max-h-0"
+          className={`overflow-hidden transition-all duration-300 lg:hidden ${isOpen ? "max-h-96 border-t border-border" : "max-h-0"
             }`}
         >
           <div className="px-6 py-5">
-            <ul className="flex flex-col gap-5 text-gray-300">
+            <ul className="flex flex-col gap-5 text-text-muted">
               <li>
                 <a
                   href="#problem"

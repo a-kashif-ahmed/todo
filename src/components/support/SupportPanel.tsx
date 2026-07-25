@@ -67,7 +67,7 @@ export default function SupportPanel() {
         </p>
         <div className="space-y-2 text-xs text-text-muted">
           <p>→ Import your first workflow from the <a href="/workflows" className="text-brand-brand-orangehover:underline">Import page</a></p>
-          <p>→ View failing workflows on the <a href="/" className="text-brand-brand-orangehover:underline">Dashboard</a></p>
+          <p>→ View failing workflows on the <a href="/dashboard" className="text-brand-brand-orangehover:underline">Dashboard</a></p>
           <p>→ Run AI analysis from any <a href="/investigate" className="text-brand-brand-orangehover:underline">open incident</a></p>
         </div>
       </div>

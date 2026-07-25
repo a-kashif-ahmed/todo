@@ -1,6 +1,6 @@
 export default function SystemHealthCard(){
     return (
-        <div className="m-5 flex flex-col rounded-lg border border-default bg-surface-2 p-6 shadow-xs transition-colors hover:bg-surface-3">
+        <div className="m-5 flex flex-col rounded-lg border border-border bg-surface-2 p-6 shadow-xs transition-colors hover:bg-surface-3">
             
                 <h2 className="mb-1 text-xl font-semibold text-text-primary">SYSTEM HEALTH</h2>
                 <div className="flex">

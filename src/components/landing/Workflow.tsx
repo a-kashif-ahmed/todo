@@ -18,7 +18,7 @@ export default function Workflow() {
               <span className="text-brand-orange"> visually</span>
             </h2>
 
-            <p className="mt-6 sm:mt-8 text-base sm:text-lg leading-7 sm:leading-8 text-gray-400">
+            <p className="mt-6 sm:mt-8 text-base sm:text-lg leading-7 sm:leading-8 text-text-muted">
               Connect AI, databases, APIs and your favorite tools using an
               intuitive visual editor. Deploy anywhere in seconds.
             </p>

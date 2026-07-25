@@ -10,9 +10,15 @@ export default function Footer() {
             </p>
           </div>
 
-          <div>
-            <h3 className="font-semibold mb-6">Join Waitlist Now</h3>
-          </div>
+          <a href="/login">
+                <button
+                
+                
+                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
+              >
+                Get Started
+              </button>
+              </a>
         </div>
 
         <div className="mt-12 sm:mt-16 md:mt-20 border-t border-border pt-8 flex flex-col md:flex-row gap-3 justify-between items-center text-center md:text-left">

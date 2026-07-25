@@ -43,7 +43,7 @@ export default function Audience() {
             on automation.
           </h2>
 
-          <p className="mt-6 text-gray-400">
+          <p className="mt-6 text-text-muted">
             Whether you&apos;re shipping AI agents, automating operations, or
             running production workflows, FlowLens helps you debug faster.
           </p>

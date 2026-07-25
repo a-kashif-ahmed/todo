@@ -56,21 +56,23 @@ export default function CallTA() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-4 max-w-md sm:max-w-none mx-auto">
-              <input
+              {/* <input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full sm:w-80 rounded-xl border border-border bg-surface px-4 py-3 text-text-primary placeholder:text-text-muted outline-none transition focus:border-brand-orange"
-              />
+              /> */}
 
-              <button
-                onClick={joinWaitlist}
+              <a href="/login">
+                <button
+                
                 disabled={loading}
                 className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
               >
-                {loading ? "Joining..." : "Join Waitlist"}
+                {loading ? "Joining..." : "Get Started"}
               </button>
+              </a>
             </div>
 
             {message && (

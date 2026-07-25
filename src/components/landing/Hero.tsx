@@ -17,7 +17,7 @@ export default function Hero() {
           <span className="text-brand-orange">broke.</span>
         </h1>
 
-        <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-gray-400">
+        <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-text-muted">
           FlowLens watches every version of your automation and tells you,
           in plain English, what changed and why it failed &mdash; before
           your customers notice.
@@ -40,8 +40,8 @@ export default function Hero() {
         {/* Signature element: a live-looking failed execution card */}
         <div className="mt-16 sm:mt-20 mx-auto max-w-xl rounded-2xl border border-border bg-surface p-5 sm:p-6 text-left">
           <div className="flex items-center justify-between border-b border-border pb-4">
-            <span className="text-sm text-gray-400">Workflow Execution</span>
-            <span className="flex items-center gap-1.5 text-xs text-danger">
+            <span className="text-sm text-text-muted">Workflow Execution</span>
+            <span className="flex items-center gap-1.5 text-xs text-status-error">
               <AlertTriangle size={14} /> Failed
             </span>
           </div>

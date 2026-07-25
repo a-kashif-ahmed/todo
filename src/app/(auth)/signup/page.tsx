@@ -81,7 +81,7 @@ export default function SignupPage() {
       throw new Error("Failed to create workspace.");
     }
 
-    router.push("/");
+    router.push("/dashboard");
   } catch (err: any) {
     switch (err.message) {
       case "User already registered":

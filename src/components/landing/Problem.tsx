@@ -14,14 +14,14 @@ export default function Problem() {
             <span className="text-brand-orange">detective work.</span>
           </h2>
 
-          <div className="mt-8 sm:mt-10 space-y-4 sm:space-y-5 text-base sm:text-lg text-gray-300">
+          <div className="mt-8 sm:mt-10 space-y-4 sm:space-y-5 text-base sm:text-lg text-text-muted">
             <p>Your automation suddenly stops working.</p>
             <p>Customers stop receiving emails.</p>
             <p>Orders stop syncing.</p>
             <p>Your AI agent starts returning errors.</p>
           </div>
 
-          <div className="mt-8 sm:mt-10 rounded-2xl border border-danger/20 bg-danger/10 p-5 sm:p-6">
+          <div className="mt-8 sm:mt-10 rounded-2xl border border-status-error/20 bg-status-error/10 p-5 sm:p-6">
             <p className="text-status-error font-semibold text-lg sm:text-xl flex items-center gap-2">
               <AlertTriangle size={20} /> Execution Failed
             </p>
@@ -51,7 +51,7 @@ export default function Problem() {
 
           <p className="mt-8 sm:mt-10 text-xl sm:text-2xl font-semibold">Hours later...</p>
 
-          <p className="mt-4 text-lg sm:text-xl text-gray-400">
+          <p className="mt-4 text-lg sm:text-xl text-text-muted">
             You discover someone renamed
             <span className="text-brand-orange"> one field yesterday.</span>
           </p>
@@ -63,7 +63,7 @@ export default function Problem() {
 
         {/* Right */}
         <div className="relative">
-          <div className="absolute inset-0 bg-danger/10 blur-[100px]" />
+          <div className="absolute inset-0 bg-status-error/10 blur-[100px]" />
 
           <div className="relative rounded-3xl border border-border bg-surface p-6 sm:p-8">
             <img

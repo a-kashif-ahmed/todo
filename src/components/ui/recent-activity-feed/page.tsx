@@ -41,7 +41,7 @@ export default function RecentActivityFeed() {
         .then(data => { setHistory(data.history || []); setLoading(false); });
     }, []);
   return (
-    <div className="rounded-lg border border-default bg-surface-2 p-5">
+    <div className="rounded-lg border border-border bg-surface-2 p-5">
 
       {/* Header */}
       <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-inactive">

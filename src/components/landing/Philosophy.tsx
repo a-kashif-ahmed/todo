@@ -12,7 +12,7 @@ export default function Philosophy() {
           <span className="text-brand-orange">save time.</span>
         </h2>
 
-        <h2 className="mt-6 sm:mt-8 md:mt-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-300">
+        <h2 className="mt-6 sm:mt-8 md:mt-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-text-muted">
           Debugging shouldn&apos;t.
         </h2>
 

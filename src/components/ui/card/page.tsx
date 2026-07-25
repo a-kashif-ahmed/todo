@@ -53,7 +53,7 @@ export default function Card({
     if (variant === "create") {
         return (
             <Link href={href || "/workflows"}>
-                <div className="m-5 flex flex-col items-center justify-center rounded-lg border border-dashed border-default bg-transparent cursor-pointer hover:bg-surface-2 transition-colors min-h-[200px]">
+                <div className="m-5 flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-transparent cursor-pointer hover:bg-surface-2 transition-colors min-h-[200px]">
                     <div className="flex flex-col items-center gap-3 text-inactive">
                         <span className="text-4xl font-light leading-none">⊕</span>
                         <span className="text-sm font-medium">Create New</span>
@@ -64,7 +64,7 @@ export default function Card({
     }
 
     const cardContent = (
-        <div className="m-5 flex flex-col rounded-lg border border-default bg-surface-2 p-6 shadow-xs transition-colors hover:bg-surface-3 cursor-pointer">
+        <div className="m-5 flex flex-col rounded-lg border border-border bg-surface-2 p-6 shadow-xs transition-colors hover:bg-surface-3 cursor-pointer">
             {status && (
                 <div className="mb-4 flex items-center gap-2">
                     <span className={`h-2 w-2 rounded-full flex-shrink-0 ${statusDotClasses[status.color]}`} />

@@ -16,7 +16,7 @@ import { SvgIcon } from "../svgIcon/page";
 
 const navigation = [
   {
-    name: "Dashboard", href: "/", icon: SvgIcon({
+    name: "Dashboard", href: "/dashboard", icon: SvgIcon({
       svg:
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M10 6V0H18V6H10ZM0 10V0H8V10H0ZM10 18V8H18V18H10ZM0 18V12H8V18H0ZM2 8H6V2H2V8ZM12 16H16V10H12V16ZM12 4H16V2H12V4ZM2 16H6V14H2V16Z" fill="#ADC6FF" />
@@ -92,11 +92,19 @@ export default function Sidebar() {
       `}>
 
         {/* Header / Logo */}
-        <div className="border-b border-default px-6 py-6">
+        <div className="border-b border-border px-6 py-6">
           <Link
-            href="/"
-            className="text-2xl font-bold tracking-tight text-brand-orange"
+            href="/dashboard"
+            className=" flex text-2xl font-bold tracking-tight text-brand-orange"
           >
+            <div className="flex h-9 w-9  sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-surface overflow-hidden ">
+              <img
+                src="/logo.png"
+                alt="FlowLens Logo"
+                width={70}
+                height={70}
+              />
+            </div>
             FlowLens
           </Link>
 
@@ -139,7 +147,7 @@ export default function Sidebar() {
           </Link>
         </div>
         {/* Profile Footer */}
-        <div className="border-t border-default p-4 space-y-1 text-sm">
+        <div className="border-t border-border p-4 space-y-1 text-sm">
 
           <Link
             href="/support"

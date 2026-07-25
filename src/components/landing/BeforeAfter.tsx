@@ -30,15 +30,15 @@ export default function BeforeAfter() {
             finding one tiny mistake.
           </h2>
 
-          <p className="mt-6 text-gray-400">
+          <p className="mt-6 text-text-muted">
             See the difference FlowLens makes.
           </p>
         </div>
 
         <div className="mt-12 sm:mt-16 md:mt-20 grid gap-6 sm:gap-8 lg:grid-cols-2">
           {/* Before */}
-          <div className="rounded-3xl border border-danger/20 bg-surface p-6 sm:p-8 md:p-10">
-            <h3 className="text-2xl sm:text-3xl font-bold text-danger">
+          <div className="rounded-3xl border border-status-error/20 bg-surface-2 p-6 sm:p-8 md:p-10">
+            <h3 className="text-2xl sm:text-3xl font-bold text-status-error">
               Without FlowLens
             </h3>
 
@@ -53,7 +53,7 @@ export default function BeforeAfter() {
           </div>
 
           {/* After */}
-          <div className="rounded-3xl border border-success/20 bg-surface p-6 sm:p-8 md:p-10">
+          <div className="rounded-3xl border border-success/20 bg-surface-2 p-6 sm:p-8 md:p-10">
             <h3 className="text-2xl sm:text-3xl font-bold text-success">
               With FlowLens
             </h3>

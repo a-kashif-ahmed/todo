@@ -45,7 +45,7 @@ export default function Audience() {
             on automation.
           </h2>
 
-          <p className="mt-6 text-gray-400">
+          <p className="mt-6 text-text-muted">
             Whether you&apos;re shipping AI agents, automating operations, or
             running production workflows, FlowLens helps you debug faster.
           </p>
@@ -58,7 +58,7 @@ export default function Audience() {
             return (
               <div
                 key={item.title}
-                className="group rounded-3xl border border-border bg-[#161222] p-6 sm:p-8 transition hover:-translate-y-2 hover:border-brand-orange/40"
+                className="group rounded-3xl border border-border bg-surface p-6 sm:p-8 transition hover:-translate-y-2 hover:border-brand-orange/40"
               >
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-orange-orange/10">
                   <Icon className="text-brand-orange" size={28} />

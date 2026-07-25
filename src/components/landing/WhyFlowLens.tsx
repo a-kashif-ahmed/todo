@@ -36,14 +36,14 @@ export default function WhyFlowLens() {
           {rows.map((row) => (
             <div
               key={row[0]}
-              className="grid grid-cols-2 border-t border-white/10"
+              className="grid grid-cols-2 border-t border-border"
             >
-              <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-6 text-sm sm:text-base bg-surface">
+              <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-6 text-sm sm:text-base bg-surface-2">
                 <XCircle className="text-status-error shrink-0" />
                 {row[0]}
               </div>
 
-              <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-6 text-sm sm:text-base bg-surface-alt">
+              <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-6 text-sm sm:text-base bg-surface-2">
                 <CheckCircle2 className="text-status-success shrink-0" />
                 {row[1]}
               </div>
