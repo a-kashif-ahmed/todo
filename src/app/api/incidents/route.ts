@@ -9,13 +9,13 @@ import { getAuthContext } from "@/lib/supabase/auth-helper";
 export async function GET(request: Request) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
-  const { teamId, supabase } = ctx;
+  const { teamId, db } = ctx;
 
   const { searchParams } = new URL(request.url);
   const workflowId = searchParams.get("workflow_id");
   const status = searchParams.get("status") || "open";
 
-  let query = supabase
+  let query = db
     .from("flowlens_incidents")
     .select("*")
     .eq("team_id", teamId)

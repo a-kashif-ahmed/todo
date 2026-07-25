@@ -9,12 +9,12 @@ import { getAuthContext } from "@/lib/supabase/auth-helper";
 export async function GET(request: Request) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
-  const { teamId, supabase } = ctx;
+  const { teamId, db } = ctx;
 
   const { searchParams } = new URL(request.url);
   const workflowId = searchParams.get("workflow_id");
 
-  let query = supabase
+  let query = db
     .from("change_log")
     .select("*, profiles(display_name)")
     .eq("team_id", teamId)

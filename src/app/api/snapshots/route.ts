@@ -9,7 +9,7 @@ import { getAuthContext } from "@/lib/supabase/auth-helper";
 export async function GET(request: Request) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
-  const { teamId, supabase } = ctx;
+  const { teamId, db } = ctx;
 
   const { searchParams } = new URL(request.url);
   const workflowId = searchParams.get("workflow_id");
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "workflow_id is required" }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("flowlens_snapshots")
     .select("id, created_at, source, execution_status, error_message, label, created_by")
     .eq("workflow_id", workflowId)

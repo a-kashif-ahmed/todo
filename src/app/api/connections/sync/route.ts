@@ -177,7 +177,7 @@ async function syncN8n(db: any, integration: any) {
       "n8n",
       wf.id,
       wf.name,
-      wf.active ? "healthy" : "disabled"
+      wf.active ? "healthy" : "unknown"
     );
     if (id) workflowIdByExternalId.set(wf.id, id);
     workflowsImported++;
@@ -229,7 +229,7 @@ async function syncMake(db: any, integration: any) {
       "make",
       String(sc.id),
       sc.name,
-      sc.isActive ? "healthy" : "disabled"
+      sc.isActive ? "healthy" : ""
     );
     if (id) workflowIdByExternalId.set(String(sc.id), id);
     workflowsImported++;

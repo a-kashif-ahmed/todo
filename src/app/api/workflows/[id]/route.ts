@@ -14,9 +14,9 @@ export async function GET(
 ) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
-  const { teamId, supabase } = ctx;
+  const { teamId, db } = ctx;
 
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("flowlens_workflows")
     .select("*")
     .eq("id", (await params).id)

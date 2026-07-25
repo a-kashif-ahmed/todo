@@ -11,9 +11,9 @@ import { getAuthContext } from "@/lib/supabase/auth-helper";
 export async function GET() {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
-  const { teamId, supabase } = ctx;
+  const { teamId, db } = ctx;
 
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("flowlens_workflows")
     .select("*, flowlens_snapshots(count)")
     .eq("team_id", teamId)

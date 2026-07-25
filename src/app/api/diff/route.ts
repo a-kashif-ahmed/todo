@@ -11,7 +11,7 @@ import { diffWorkflows } from "@/lib/services/diff";
 export async function GET(request: Request) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
-  const { teamId, supabase } = ctx;
+  const { teamId, db } = ctx;
 
   const { searchParams } = new URL(request.url);
   const from = searchParams.get("from");
@@ -25,13 +25,13 @@ export async function GET(request: Request) {
   }
 
   const [{ data: snapA }, { data: snapB }] = await Promise.all([
-    supabase
+    db
       .from("flowlens_snapshots")
       .select("normalised")
       .eq("id", from)
       .eq("team_id", teamId)
       .single(),
-    supabase
+    db
       .from("flowlens_snapshots")
       .select("normalised")
       .eq("id", to)

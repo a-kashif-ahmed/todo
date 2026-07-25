@@ -173,7 +173,7 @@ export default function AIEngineStatusPage() {
                 No snapshot data yet for this workflow — connect an integration or import one.
               </div>
             ) : (
-              <WorkflowGraph workflow={graphSnapshot.normalised} height={256} />
+              // <WorkflowGraph workflow={graphSnapshot.normalised} height={256} />
             )}
           </div>
         </div>

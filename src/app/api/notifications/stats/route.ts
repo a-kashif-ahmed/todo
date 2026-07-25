@@ -22,29 +22,29 @@ const CATEGORY_LABELS: Record<string, string> = {
 export async function GET() {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
-  const { teamId, supabase } = ctx;
+  const { teamId, db } = ctx;
 
   const since = new Date(Date.now() - WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString();
 
   const [snapsRes, alertsRes, resolvedRes, categoryRes] = await Promise.all([
-    supabase
+    db
       .from("flowlens_snapshots")
       .select("execution_status")
       .eq("team_id", teamId)
       .gte("created_at", since),
-    supabase
+    db
       .from("flowlens_notifications")
       .select("id", { count: "exact", head: true })
       .eq("team_id", teamId)
       .gte("created_at", since),
-    supabase
+    db
       .from("flowlens_incidents")
       .select("detected_at, resolved_at")
       .eq("team_id", teamId)
       .eq("status", "resolved")
       .not("resolved_at", "is", null)
       .gte("detected_at", since),
-    supabase
+    db
       .from("flowlens_notifications")
       .select("category, type")
       .eq("team_id", teamId)

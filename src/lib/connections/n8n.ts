@@ -61,7 +61,10 @@ export async function getN8nWorkflows(
 
   const json = await response.json();
 
-  return json.data || [];
+console.log("N8N RESPONSE:");
+console.log(JSON.stringify(json, null, 2));
+
+return json.data || []; 
 }
 export async function getN8nExecutions(
   baseUrl: string,

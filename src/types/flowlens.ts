@@ -17,7 +17,7 @@ export interface FlowEdge {
 export interface NormalisedWorkFlow {
     nodes: FlowNode[];
     edges: FlowEdge[];
-    meta : {
+    meta? : {
         platform: "n8n" | "zapier" | "make" | "manual" ;
         name: string;
         version?: string;
