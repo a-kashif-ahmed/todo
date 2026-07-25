@@ -24,12 +24,15 @@ export default function Hero() {
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
-          <a href="#cta" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-brand-orange to-brand-brown px-8 py-4 font-semibold text-text-primary   transition hover:scale-105">
-              Join the waitlist
-              <ArrowRight size={18} />
-            </button>
-          </a>
+          <a href="/login">
+                <button
+                
+                
+                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
+              >
+                Get Started
+              </button>
+              </a>
           <a href="#problem" className="w-full sm:w-auto">
             <button className="w-full sm:w-auto rounded-xl border border-brand-orange/40 px-8 py-4 font-semibold text-text-primary   transition hover:border-white/30">
               See the problem
