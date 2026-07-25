@@ -13,8 +13,9 @@ import { ZapierWebhookPayload } from "@/lib/connections/zapier";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { teamId: string } }
+  { params }: { params: Promise<{ teamId: string }> }
 ) {
+  const { teamId } = await params;
   const db = createServiceClient();
 
   const secret = request.nextUrl.searchParams.get("secret");
@@ -22,7 +23,7 @@ export async function POST(
   const { data: integration } = await db
     .from("flowlens_platforms")
     .select("*")
-    .eq("team_id", params.teamId)
+    .eq("team_id", teamId)
     .eq("platform", "zapier")
     .single();
 
@@ -48,7 +49,7 @@ export async function POST(
     .from("flowlens_workflows")
     .upsert(
       {
-        team_id: params.teamId,
+        team_id: teamId,
         external_id: payload.zap_id,
         platform: "zapier",
         name: payload.zap_name || payload.zap_id,
@@ -66,7 +67,7 @@ export async function POST(
 
   await db.from("flowlens_snapshots").insert({
     workflow_id: workflow.id,
-    team_id: params.teamId,
+    team_id: teamId,
     source: "zapier",
     execution_status: payload.status,
     error_message: payload.error_message ?? null,
@@ -84,7 +85,7 @@ export async function POST(
     if (!existing?.length) {
       await db.from("flowlens_incidents").insert({
         workflow_id: workflow.id,
-        team_id: params.teamId,
+        team_id: teamId,
         status: "open",
         detected_at: new Date(),
         error_message: payload.error_message ?? "Unknown error",

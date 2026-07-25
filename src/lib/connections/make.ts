@@ -1,4 +1,4 @@
-// src/lib/integrations/make.ts
+// src/lib/connections/make.ts
 //
 // Make (formerly Integromat) API v2. Docs: https://developers.make.com/api-documentation
 //

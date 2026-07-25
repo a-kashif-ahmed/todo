@@ -1,4 +1,4 @@
-// src/app/api/integrations/sync/route.ts
+// src/app/api/connections/sync/route.ts
 // REPLACES your current file entirely.
 
 import { NextResponse } from "next/server";

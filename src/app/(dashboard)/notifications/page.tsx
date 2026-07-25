@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────────────────────
 
 "use client";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, JSX } from "react";
 import { AlertTriangle, Info, Zap } from "lucide-react";
 import Link from "next/link";
 

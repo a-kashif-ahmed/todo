@@ -1,5 +1,6 @@
-// src/app/api/integrations/connect/route.ts
-// Full replacement — merges your existing n8n logic with make/zapier branches.
+// src/app/api/connections/connect/route.ts
+// REPLACES your current file entirely. Only the final return block changed —
+// everything else is identical to what you already have.
 
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
@@ -19,7 +20,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // baseUrl/apiKey are required for n8n and make, not for zapier
     if (platform !== "zapier" && (!baseUrl || !apiKey)) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
@@ -38,7 +38,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    // --- test connection (nothing to test for zapier, it's push-based) ---
     if (platform === "n8n") {
       await testN8nConnection(baseUrl, apiKey);
     } else if (platform === "make") {
@@ -47,7 +46,6 @@ export async function POST(request: Request) {
 
     const webhookSecret = platform === "zapier" ? generateWebhookSecret() : null;
 
-    // --- save the connection ---
     const { data: integration, error } = await db
       .from("flowlens_platforms")
       .insert({
@@ -68,7 +66,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // --- import workflows up front (n8n, make only — zapier workflows appear lazily via webhook) ---
     if (platform === "n8n") {
       const workflows = await getN8nWorkflows(baseUrl, apiKey);
 
@@ -99,9 +96,17 @@ export async function POST(request: Request) {
       }
     }
 
+    // FIX: was `integration` (full row — includes api_key, base_url,
+    // webhook_secret). Only return what the UI actually needs.
     return NextResponse.json({
       success: true,
-      integration,
+      integration: {
+        id: integration.id,
+        platform: integration.platform,
+        name: integration.name,
+        status: integration.status,
+        last_sync: integration.last_sync,
+      },
       webhookUrl:
         platform === "zapier"
           ? buildZapierWebhookUrl(profile.team_id, webhookSecret!)

@@ -84,7 +84,7 @@ export async function getN8nExecutions(
   return json.data || [];
 }
 
-// src/lib/integrations/n8n.ts
+// src/lib/connections/n8n.ts
 // EXTEND your existing file with this — keep testN8nConnection and
 // getN8nWorkflows exactly as they are, just add the two pieces below.
 

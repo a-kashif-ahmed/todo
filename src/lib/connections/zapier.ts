@@ -1,4 +1,4 @@
-// src/lib/integrations/zapier.ts
+// src/lib/connections/zapier.ts
 //
 // Zapier has no pull API equivalent to n8n's /api/v1/workflows or Make's
 // /scenarios for a third party to list a user's Zaps or run history with an
