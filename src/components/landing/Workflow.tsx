@@ -77,11 +77,15 @@ export default function Workflow() {
                   <ArrowRight />
                 </div>
 
-                <a href="#cta">
-                  <button className="w-full rounded-xl bg-gradient-to-br from-brand-orange to-brand-brown px-8 py-4 font-semibold text-text-primary   transition hover:scale-105">
-                    Join Waitlist
-                  </button>
-                </a>
+                <a href="/login">
+                <button
+                
+                
+                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
+              >
+                Get Started
+              </button>
+              </a>
               </div>
             </div>
           </div>
