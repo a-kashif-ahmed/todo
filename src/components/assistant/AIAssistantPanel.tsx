@@ -106,7 +106,7 @@ export default function AIAssistantPanel({
             ◎
           </span>
           <div>
-            <p className="text-sm font-semibold text-text-primary">Flow Detective</p>
+            <p className="text-sm font-semibold text-text-primary">FlowLens</p>
             <p className="text-[11px] text-status-success flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
               {streaming ? "Analyzing flow" : "Ready"}

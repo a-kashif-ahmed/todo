@@ -143,7 +143,7 @@ export default function Sidebar() {
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-3 text-sm font-semibold text-text-primary transition hover:opacity-90"
           >
             <Plus size={20} strokeWidth={2.5} />
-            New Workflow
+            Import New
           </Link>
         </div>
         {/* Profile Footer */}

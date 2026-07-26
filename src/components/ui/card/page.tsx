@@ -56,7 +56,7 @@ export default function Card({
                 <div className="m-5 flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-transparent cursor-pointer hover:bg-surface-2 transition-colors min-h-[200px]">
                     <div className="flex flex-col items-center gap-3 text-inactive">
                         <span className="text-4xl font-light leading-none">⊕</span>
-                        <span className="text-sm font-medium">Create New</span>
+                        <span className="text-sm font-medium">Import New</span>
                     </div>
                 </div>
             </Link>

@@ -191,7 +191,7 @@ export default function AssistantChatPage() {
               ◎
             </div>
             <div>
-              <p className="text-sm font-semibold text-text-primary">Flow Detective</p>
+              <p className="text-sm font-semibold text-text-primary">FlowLens</p>
               <p className="text-[11px] flex items-center gap-1.5">
                 <span className={`w-1.5 h-1.5 rounded-full ${streaming ? "bg-status-success animate-pulse" : "bg-status-success"}`} />
                 <span className="text-status-success">
@@ -313,7 +313,7 @@ export default function AssistantChatPage() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}
-              placeholder="Ask FollowLens..."
+              placeholder="Ask FlowLens..."
               className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none"
             />
             <button

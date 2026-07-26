@@ -51,7 +51,7 @@ export default function CallTA() {
 
             <p className="mx-auto mt-6 max-w-xl text-sm sm:text-base text-text-muted">
               Every minute spent debugging is a minute your automation
-              isn&apos;t working. Join the FlowLens waitlist and be among the
+              isn&apos;t working. Join the FlowLens and be among the
               first to debug AI workflows.
             </p>
 
