@@ -8,7 +8,7 @@ export default function Hero() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand-orange/10 px-4 py-2 text-sm text-brand">
           <Sparkles size={16} />
-          Now debugging n8n workflows
+          AI Powered Workflow Debugging
         </span>
 
         <h1 className="mt-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
