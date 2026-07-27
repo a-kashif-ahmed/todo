@@ -26,7 +26,7 @@ export default function IncidentBanner({ incidentId, statusLabel }: Props) {
 
 
 // ─────────────────────────────────────────────────────────────
-// USAGE EXAMPLE — how to drop this into the workflow detail page
+// USAGE EXAMPLE,how to drop this into the workflow detail page
 // Add this inside src/app/(dashboard)/workflows/[id]/page.tsx
 // ─────────────────────────────────────────────────────────────
 

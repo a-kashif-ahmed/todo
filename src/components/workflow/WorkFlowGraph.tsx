@@ -1,5 +1,5 @@
 // ============================================================
-// WORKFLOW DETAIL PAGE — the toughest piece
+// WORKFLOW DETAIL PAGE,the toughest piece
 // Copy each block to its file path
 // ============================================================
 

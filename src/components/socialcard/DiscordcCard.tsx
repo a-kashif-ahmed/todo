@@ -12,7 +12,7 @@ const feedbackOptions: { type: FeedbackType; icon: React.ReactNode; label: strin
   { type: "general", icon: <MessageSquare size={14} />, label: "General",      color: "text-brand-blue border-brand-blue/30 bg-brand-blue/10 hover:bg-brand-blue/20" },
 ];
 
-const DISCORD_INVITE = "https://discord.gg/your-invite-here"; // replace this
+const DISCORD_INVITE = "https://discord.gg/f2B6hamNMX"; // replace this
 
 export default function DiscordFeedbackCard() {
   // 

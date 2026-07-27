@@ -17,7 +17,7 @@ const connections: ConnectionItem[] = [
 
 export default function DirectConnections() {
   function handleConnect(id: string) {
-    // UI placeholder for now — wire up OAuth flow in a later phase
+    // UI placeholder for now,wire up OAuth flow in a later phase
     console.log(`Connect clicked: ${id}`);
   }
 

@@ -2,7 +2,7 @@
 
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/workflows/[id]/page.tsx
-// Main workflow detail page — wires everything together
+// Main workflow detail page,wires everything together
 // ─────────────────────────────────────────────────────────────
 
 "use client";

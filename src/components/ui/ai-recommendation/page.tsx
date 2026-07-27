@@ -1,6 +1,6 @@
 // ============================================================
 // FILE 3: src/components/ui/ai-recommendation/page.tsx
-// Dynamic — fetches latest open incident and shows it
+// Dynamic,fetches latest open incident and shows it
 // ============================================================
  
 "use client";

@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/notifications/page.tsx
-// Figma: Notifications screen — left feed + right health panel
+// Figma: Notifications screen,left feed + right health panel
 // ─────────────────────────────────────────────────────────────
 
 "use client";

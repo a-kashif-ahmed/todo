@@ -50,7 +50,7 @@ export default function ConnectionModal({ platform, open, onClose, onConnected }
       }
 
       if (isZapier && json.webhookUrl) {
-        // Zapier has nothing to "test" — show the webhook URL to paste into
+        // Zapier has nothing to "test",show the webhook URL to paste into
         // their Zap instead of closing immediately.
         setWebhookUrl(json.webhookUrl);
         return;
@@ -161,7 +161,7 @@ export default function ConnectionModal({ platform, open, onClose, onConnected }
 
               {isZapier && (
                 <p className="text-sm text-text-muted">
-                  No credentials needed — we&apos;ll generate a webhook URL for you
+                  No credentials needed,we&apos;ll generate a webhook URL for you
                   to paste into your Zaps after you click Connect.
                 </p>
               )}

@@ -1,7 +1,7 @@
 
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/settings/page.tsx
-// Figma: Profile Settings — left tab nav + right form
+// Figma: Profile Settings,left tab nav + right form
 // ─────────────────────────────────────────────────────────────
 
 "use client";

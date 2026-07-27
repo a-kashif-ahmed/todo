@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/investigate/page.tsx
-// Figma: Investigate — left incident list + right empty/active state
+// Figma: Investigate,left incident list + right empty/active state
 // ─────────────────────────────────────────────────────────────
 
 "use client";

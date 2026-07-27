@@ -137,7 +137,7 @@ export default function IncidentAnalysisPage() {
   return (
     <div className="grid grid-cols-[1fr_420px] gap-8 p-8 max-w-7xl">
 
-      {/* Left — Timeline */}
+      {/* Left,Timeline */}
       <div>
         <h1 className="text-3xl font-bold text-text-primary mb-1">Incident Timeline</h1>
         <p className="text-sm text-text-muted mb-8">
@@ -145,7 +145,7 @@ export default function IncidentAnalysisPage() {
         </p>
 
         <div className="relative pl-[52px] space-y-8 border-l border-border-light ml-[18px]">
-          {/* Healthy state — most recent successful run before incident */}
+          {/* Healthy state,most recent successful run before incident */}
           <TimelineEvent
             time="Before incident"
             title="Workflow healthy"
@@ -180,7 +180,7 @@ export default function IncidentAnalysisPage() {
         </div>
       </div>
 
-      {/* Right — AI Intelligence Report */}
+      {/* Right,AI Intelligence Report */}
       <div>
         {incident.root_cause ? (
           <AIIntelligenceReport

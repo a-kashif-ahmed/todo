@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/assistant/page.tsx
-// Figma: AI Assistant — center hero + 4 suggestion cards + bottom input
+// Figma: AI Assistant,center hero + 4 suggestion cards + bottom input
 // ─────────────────────────────────────────────────────────────
 
 "use client";

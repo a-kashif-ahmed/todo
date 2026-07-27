@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/workflows/[id]/compare/page.tsx
-// Main visual compare page — wires everything together
+// Main visual compare page,wires everything together
 // ─────────────────────────────────────────────────────────────
 
 "use client";
@@ -72,7 +72,7 @@ function ComparePage() {
         setSnapBefore(snapARes.snapshot?.normalised || null);
         setSnapAfter(snapBRes.snapshot?.normalised || null);
 
-        // Find or trigger AI analysis — look for an incident linking these snapshots
+        // Find or trigger AI analysis,look for an incident linking these snapshots
         const incidentsRes = await fetch(
           `/api/incidents?workflow_id=${workflowId}&status=open`
         ).then(r => r.json());

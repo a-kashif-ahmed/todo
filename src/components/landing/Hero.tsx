@@ -24,21 +24,22 @@ export default function Hero() {
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
-          <a href="/login">
-                <button
-                
-                
-                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
-              >
-                Get Started
-              </button>
-              </a>
-          <a href="#problem" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto rounded-xl border border-brand-orange/40 px-8 py-4 font-semibold text-text-primary   transition hover:border-white/30">
-              See the problem
-            </button>
-          </a>
-        </div>
+  <a href="/login" className="w-full sm:w-auto">
+    <button
+      className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-4 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
+    >
+      Get Started
+    </button>
+  </a>
+
+  <a href="#problem" className="w-full sm:w-auto">
+    <button
+      className="w-full sm:w-auto rounded-xl border border-brand-orange/40 bg-transparent px-8 py-4 font-semibold text-text-primary transition hover:border-white/30"
+    >
+      See the problem
+    </button>
+  </a>
+</div>
 
         {/* Signature element: a live-looking failed execution card */}
         <div className="mt-16 sm:mt-20 mx-auto max-w-xl rounded-2xl border border-border bg-surface p-5 sm:p-6 text-left">

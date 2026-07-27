@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/engine/page.tsx
-// Figma: AI Engine Status — left metrics + right engine card
+// Figma: AI Engine Status,left metrics + right engine card
 // ─────────────────────────────────────────────────────────────
 
 "use client";
@@ -146,7 +146,7 @@ export default function AIEngineStatusPage() {
           </div>
         </div>
 
-        {/* Active Logic Canvas — real graph from the latest snapshot of the selected workflow */}
+        {/* Active Logic Canvas,real graph from the latest snapshot of the selected workflow */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm font-semibold text-text-muted">Active Logic Canvas</p>
@@ -170,7 +170,7 @@ export default function AIEngineStatusPage() {
               </div>
             ) : !graphSnapshot?.normalised ? (
               <div className="absolute inset-0 flex items-center justify-center text-xs text-text-muted">
-                No snapshot data yet for this workflow — connect an integration or import one.
+                No snapshot data yet for this workflow,connect an integration or import one.
               </div>
             ) : (
               <div></div>

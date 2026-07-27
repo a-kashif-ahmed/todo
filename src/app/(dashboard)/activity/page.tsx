@@ -1,7 +1,7 @@
 
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/activity/page.tsx
-// Figma: Recent Activity Feed — main feed + right stats sidebar
+// Figma: Recent Activity Feed,main feed + right stats sidebar
 // ─────────────────────────────────────────────────────────────
 
 "use client";

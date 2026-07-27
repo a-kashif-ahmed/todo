@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // src/app/(dashboard)/history/page.tsx
-// Figma: History — left timeline + right Builder Insights sidebar
+// Figma: History,left timeline + right Builder Insights sidebar
 // ─────────────────────────────────────────────────────────────
 
 "use client";

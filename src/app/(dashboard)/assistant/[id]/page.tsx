@@ -159,7 +159,7 @@ export default function AssistantChatPage() {
       {/* ── LEFT: Workflow graph area ── */}
       <div className="flex-1 flex flex-col overflow-hidden">
 
-        {/* Incident banner — top left */}
+        {/* Incident banner,top left */}
         {incident && (
           <div className="absolute top-6 left-6 z-10 bg-surface-2 border border-status-error/30 rounded-xl px-5 py-3.5 max-w-xs">
             <p className="text-sm font-semibold text-status-error">
@@ -240,7 +240,7 @@ export default function AssistantChatPage() {
                       )}
                     </p>
 
-                    {/* AI Recommendation box — shown on last assistant message if incident exists */}
+                    {/* AI Recommendation box,shown on last assistant message if incident exists */}
                     {!streaming && i === messages.length - 1 && incident?.root_cause && (
                       <div className="mt-3 bg-brand-orange/10 border border-brand-orange/20 rounded-lg px-3.5 py-3">
                         <p className="text-xs font-semibold text-brand-orange mb-1">⚐ AI Recommendation</p>
@@ -250,7 +250,7 @@ export default function AssistantChatPage() {
                       </div>
                     )}
 
-                    {/* Action buttons — shown after last assistant message */}
+                    {/* Action buttons,shown after last assistant message */}
                     {!streaming && i === messages.length - 1 && m.role === "assistant" && m.content && (
                       <div className="flex flex-wrap gap-2 mt-3">
                         <button

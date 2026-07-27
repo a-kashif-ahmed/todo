@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // src/components/workflow/SnapshotTimeline.tsx
-// Left sidebar — historical record of execution states
+// Left sidebar,historical record of execution states
 // ─────────────────────────────────────────────────────────────
 
 "use client";

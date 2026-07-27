@@ -1,5 +1,5 @@
 // ============================================================
-// VISUAL COMPARE PAGE — the hero "Diff" feature
+// VISUAL COMPARE PAGE,the hero "Diff" feature
 // Copy each block to its file path
 // ============================================================
 

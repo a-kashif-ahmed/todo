@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────
 // src/components/workflow/AIInsightsPanel.tsx
-// Right panel — real-time node logic + performance metrics
+// Right panel,real-time node logic + performance metrics
 // ─────────────────────────────────────────────────────────────
 
 "use client";
