@@ -19,7 +19,7 @@ export default function DiscordFeedbackCard() {
 
   return (
     
-    <div id="#feedback" className="mb-10  bg-surface rounded-2xl border border-border overflow-hidden max-w-3xl mx-auto">
+    <div id="feedback" className="mb-10  bg-surface rounded-2xl border border-border overflow-hidden max-w-3xl mx-auto">
 
   {/* Header */}
   <div className="px-16 py-16 text-center border-b border-border">
