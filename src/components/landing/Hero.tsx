@@ -19,7 +19,7 @@ export default function Hero() {
 
         <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-text-muted">
           FlowLens watches every version of your automation and tells you,
-          in plain English, what changed and why it failed &mdash; before
+          in plain English, what changed and why it failed , before
           your customers notice.
         </p>
 
