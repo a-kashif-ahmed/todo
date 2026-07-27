@@ -44,6 +44,15 @@ export default function Navbar() {
                 Why Flowlens
               </a>
             </li>
+            <li>
+                <a
+                  href="#feedback"
+                  onClick={() => setIsOpen(false)}
+                  className="block hover:text-text-primary  "
+                >
+                  Feedback
+                </a>
+              </li>
           </ul>
 
           {/* Desktop Button */}
@@ -101,6 +110,15 @@ export default function Navbar() {
                   className="block hover:text-text-primary  "
                 >
                   Why Flowlens
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#feedback"
+                  onClick={() => setIsOpen(false)}
+                  className="block hover:text-text-primary  "
+                >
+                  Feedback
                 </a>
               </li>
             </ul>

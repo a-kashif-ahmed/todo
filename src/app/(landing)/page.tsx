@@ -7,6 +7,7 @@ import BeforeAfter from "@/components/landing/BeforeAfter";
 import WhyFlowLens from "@/components/landing/WhyFlowLens";
 import CallTA from "@/components/landing/CallTA";
 import Solution from "@/components/landing/Solution";
+import DiscordFeedbackCard from "@/components/socialcard/DiscordcCard";
 
 export default function LandingPage() {
   return (
@@ -17,7 +18,10 @@ export default function LandingPage() {
       <Solution/>  
       <BeforeAfter/>
       <WhyFlowLens/>
+       
       <CallTA/>
+      
+      <DiscordFeedbackCard />
       
 
       <Footer />
