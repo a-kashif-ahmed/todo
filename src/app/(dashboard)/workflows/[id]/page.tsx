@@ -10,11 +10,13 @@ import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import type { NormalisedWorkFlow } from "@/types/flowlens";
+import {MessageCircleCode} from 'lucide-react';
 
 const WorkflowGraph = dynamic(() => import("@/components/workflow/WorkFlowGraph"), { ssr: false });
 
 import SnapshotTimeline from "@/components/workflow/SnapshotTimeline";
 import AIInsightsPanel from "@/components/workflow/AIInsightsPanel";
+import AIAssistantPanel from "@/components/assistant/AIAssistantPanel";
 
 interface Snapshot {
   id: string;
@@ -34,7 +36,7 @@ interface Workflow {
 export default function WorkflowDetailPage() {
   const params = useParams();
   const workflowId = params.id as string;
-
+  const [showAssistant, setShowAssistant] = useState(false);
   const [workflow, setWorkflow] = useState<Workflow | null>(null);
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [selectedSnapshotId, setSelectedSnapshotId] = useState<string>("");
@@ -114,6 +116,13 @@ export default function WorkflowDetailPage() {
           >
             Compare versions
           </a>
+          <button
+            onClick={()=> setShowAssistant(true)}
+            className="flex w-10 items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-3 text-sm font-semibold text-text-primary transition hover:opacity-90"
+          >
+            <MessageCircleCode size={20} strokeWidth={2.5} />
+            Chat Flowlens AI 
+          </button>
         </div>
 
         {normalisedData ? (
@@ -133,7 +142,24 @@ export default function WorkflowDetailPage() {
         dependencies={dependencies}
         recentChanges={recentChanges}
       />
+      {showAssistant && (
+  <AIAssistantPanel
+    workflowId={workflow.id}
+    incidentContext=""
+    onClose={() => setShowAssistant(false)}
+    onApplyFix={() => {
+      console.log("Apply Fix clicked");
+    }}
+    onRestore={() => {
+      console.log("Restore clicked");
+    }}
+    onOpenCompare={() => {
+      window.location.href = `/workflows/${workflow.id}/compare?from=${snapshots[1]?.id || ""}&to=${selectedSnapshotId}`;
+    }}
+  />
+)}
+      
 
     </div>
   );
-}
+} 

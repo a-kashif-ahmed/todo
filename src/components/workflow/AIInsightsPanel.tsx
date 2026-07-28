@@ -28,7 +28,7 @@ export default function AIInsightsPanel({
   recentChanges,
 }: Props) {
   return (
-    <div className="w-72 border-l border-border bg-surface-2 h-full overflow-y-auto">
+    <div className="w-60 border-l border-border bg-surface-2 h-full overflow-y-auto">
       <div className="px-4 py-3 border-b border-border-light">
         <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wide">
           AI Insights
@@ -82,6 +82,9 @@ export default function AIInsightsPanel({
               </div>
             ))}
           </div>
+        </div>
+        <div className=" px-2 pb-3">
+          
         </div>
 
       </div>

@@ -27,7 +27,7 @@ const statusDot: Record<string, string> = {
 
 export default function SnapshotTimeline({ snapshots, selectedId, onSelect }: Props) {
   return (
-    <div className="w-64 border-r border-border bg-surface-2 h-full overflow-y-auto">
+    <div className="w-50 border-r border-border bg-surface-2 h-full overflow-y-auto">
       <div className="px-4 py-3 border-b border-border-light">
         <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wide">
           Snapshot Timeline

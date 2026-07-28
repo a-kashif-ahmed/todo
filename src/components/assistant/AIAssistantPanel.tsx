@@ -40,10 +40,64 @@ export default function AIAssistantPanel({
   const [applyingFix, setApplyingFix] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [includeContext, setIncludeContext] = useState(true);
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) return;
+
+    const recognition = new SpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+      console.log("Speech started");
+      setListening(true);
+    };
+
+    recognition.onend = () => {
+      console.log("Speech ended");
+      setListening(false);
+    };
+
+    recognition.onresult = (event: any) => {
+      console.log(event);
+
+      let transcript = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+
+      console.log("Transcript:", transcript);
+
+      setInput(transcript);
+    };
+
+    recognition.onerror = (e: any) => {
+      console.log("Speech error:", e.error);
+
+      setListening(false);
+    };
+
+    recognitionRef.current = recognition;
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+
   }, [messages]);
+
 
   async function send() {
     if (!input.trim() || streaming) return;
@@ -57,9 +111,14 @@ export default function AIAssistantPanel({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        messages: history.map(m => ({ role: m.role, content: m.content })),
-        context: incidentContext,
-      }),
+        messages: history.map(m => ({
+          role: m.role,
+          content: m.content
+        })),
+        workflowId,
+        includeContext,
+        context: includeContext ? incidentContext : "",
+      })
     });
 
     if (!res.body) { setStreaming(false); return; }
@@ -80,7 +139,7 @@ export default function AIAssistantPanel({
             text += parsed.text;
             setMessages(prev => [...prev.slice(0, -1), { role: "assistant", content: text }]);
           }
-        } catch {}
+        } catch { }
       }
     }
     setStreaming(false);
@@ -96,8 +155,21 @@ export default function AIAssistantPanel({
     try { await onRestore?.(); } finally { setRestoring(false); }
   }
 
+  async function toggleMic() {
+    if (!recognitionRef.current) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    if (listening) {
+      recognitionRef.current.stop();
+    } else {
+      recognitionRef.current.start();
+    }
+  }
+
   return (
-    <div className="fixed right-0 top-0 h-screen w-[480px] bg-surface-2 border-l border-border flex flex-col z-40">
+    <div className="fixed right-0 top-0 h-screen w-72 bg-surface-2 border-l border-border flex flex-col z-40">
 
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-border-light">
@@ -168,12 +240,27 @@ export default function AIAssistantPanel({
         </div>
         <div className="flex items-center justify-between mt-2.5 px-1">
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1 text-[11px] text-text-muted">
-              <Paperclip size={11} /> Context
-            </span>
-            <span className="flex items-center gap-1 text-[11px] text-text-muted">
-              <Mic size={11} /> Voice
-            </span>
+            <button
+              onClick={() => setIncludeContext(!includeContext)}
+              className={`flex items-center gap-1 text-[11px] transition
+    ${includeContext
+                  ? "text-brand-orange"
+                  : "text-text-muted"
+                }`}
+            >
+              <Paperclip size={11} />
+              {includeContext ? "Context On" : "Context Off"}
+            </button>
+            <button
+              onClick={toggleMic}
+              className={`flex items-center gap-1 text-[11px] transition-colors ${listening
+                  ? "text-status-error"
+                  : "text-text-muted hover:text-brand-orange"
+                }`}
+            >
+              <Mic size={11} />
+              {listening ? "Listening..." : "Voice"}
+            </button>
           </div>
           <span className="text-[11px] text-text-muted">Markdown supported</span>
         </div>
