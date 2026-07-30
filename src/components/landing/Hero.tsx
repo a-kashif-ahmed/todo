@@ -11,7 +11,7 @@ export default function Hero() {
           AI Powered Workflow Debugging
         </span>
 
-        <h1 className="mt-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+        <h1 className="mt-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-text-primary">
           Know exactly why your
           <br className="hidden sm:block " /> workflow{" "}
           <span className="text-brand-orange">broke.</span>

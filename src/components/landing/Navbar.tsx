@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import ThemeToggle from "../ui/theme-toggle/page";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,6 +54,9 @@ export default function Navbar() {
                   Feedback
                 </a>
               </li>
+              <li>
+                <ThemeToggle/>
+              </li>
           </ul>
 
           {/* Desktop Button */}
@@ -69,13 +73,23 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden text-text-primary   shrink-0"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
-          </button>
+          
+          {/* Mobile Controls */}
+<div className="flex items-center gap-3 lg:hidden">
+  <span className="text-text-primary shrink-0"><ThemeToggle /></span>
+
+  <button
+    onClick={() => setIsOpen(!isOpen)}
+    className="text-text-primary shrink-0"
+    aria-label="Toggle menu"
+  >
+    {isOpen ? (
+      <X className="h-7 w-7" />
+    ) : (
+      <Menu className="h-7 w-7" />
+    )}
+  </button>
+</div>
         </div>
 
         {/* Mobile Menu */}
@@ -121,6 +135,7 @@ export default function Navbar() {
                   Feedback
                 </a>
               </li>
+              
             </ul>
             <br />
             <a href="/login">

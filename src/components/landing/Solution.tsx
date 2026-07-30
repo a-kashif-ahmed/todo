@@ -45,10 +45,10 @@ export default function Solution() {
   return (
     <section className="py-20 sm:py-24 md:py-32" id="solution">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center">
-          <Eyebrow tone="success"><p className="text-status-success">The Solution</p></Eyebrow>
+              <div className="text-center text-text-primary">
+                <Eyebrow ><p className="text-brand-orange">The Solution</p></Eyebrow>
 
-          <h2 className="mt-8 text-2xl sm:text-3xl md:text-5xl font-bold leading-tight">
+          <h2 className="mt-8 text-2xl sm:text-3xl md:text-5xl font-bold leading-tight text-text-primary">
             Today debugging looks like Logs, Backups, Trial and Error.
           </h2>
 
@@ -57,7 +57,7 @@ export default function Solution() {
           </p>
         </div>
 
-        <div className="mt-12 sm:mt-16 md:mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 sm:mt-16 md:mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-4 text-text-primary" >
           {items.map((item) => (
             <Card
               key={item.title}
@@ -69,7 +69,7 @@ export default function Solution() {
           ))}
         </div>
 
-        <div className="mt-12 sm:mt-16 md:mt-20 rounded-3xl border border-success/20 bg-gradient-to-r from-success/10 to-transparent p-6 sm:p-8 md:p-10">
+        <div className="mt-12 sm:mt-16 md:mt-20 rounded-3xl border border-success/20 bg-gradient-to-r from-success/10 to-transparent p-6 sm:p-8 md:p-10 text-text-primary">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">
             No guessing.
           </h3>

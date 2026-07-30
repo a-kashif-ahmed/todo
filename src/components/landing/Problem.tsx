@@ -6,7 +6,7 @@ export default function Problem() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-16 items-center">
         {/* Left */}
         <div>
-          <h2 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+          <h2 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-text-primary">
             Debugging workflows
             <br />
             shouldn&apos;t feel like
@@ -27,7 +27,7 @@ export default function Problem() {
             </p>
           </div>
 
-          <div className="mt-10 space-y-5">
+          <div className="mt-10 space-y-5 text-text-primary">
             <div className="flex gap-4">
               <FileText className="text-brand-orange mt-1" />
               <span>Read hundreds of log lines</span>
@@ -49,14 +49,14 @@ export default function Problem() {
             </div>
           </div>
 
-          <p className="mt-8 sm:mt-10 text-xl sm:text-2xl font-semibold">Hours later...</p>
+          <p className="mt-8 sm:mt-10 text-xl sm:text-2xl font-semibold text-text-primary">Hours later...</p>
 
           <p className="mt-4 text-lg sm:text-xl text-text-muted">
             You discover someone renamed
             <span className="text-brand-orange"> one field yesterday.</span>
           </p>
 
-          <p className="mt-6 sm:mt-8 text-2xl sm:text-3xl font-bold">
+          <p className="mt-6 sm:mt-8 text-2xl sm:text-3xl font-bold text-text-primary">
             There has to be a better way.
           </p>
         </div>

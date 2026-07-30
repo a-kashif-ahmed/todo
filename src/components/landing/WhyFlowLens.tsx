@@ -16,7 +16,7 @@ export default function WhyFlowLens() {
         <div className="text-center">
           <Eyebrow><p className="text-status-warning">Why FlowLens</p></Eyebrow>
 
-          <h2 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold">
+          <h2 className="mt-8 text-3xl sm:text-4xl md:text-5xl font-bold text-text-primary">
             Most debugging tools
             <br />
             tell you what failed.
@@ -27,7 +27,7 @@ export default function WhyFlowLens() {
           </h2>
         </div>
 
-        <div className="mt-12 sm:mt-16 md:mt-20 rounded-3xl border border-border overflow-hidden">
+        <div className="mt-12 sm:mt-16 md:mt-20 rounded-3xl border border-border overflow-hidden text-text-primary">
           <div className="grid grid-cols-2 bg-surface-2 p-3 sm:p-6 text-sm sm:text-base font-semibold">
             <div>Traditional Tools</div>
             <div>FlowLens</div>

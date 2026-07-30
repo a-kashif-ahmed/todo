@@ -1,3 +1,5 @@
+import { ThemeProvider } from "@/components/ui/theme-provider/page";
+
 export default function LandingLayout({
   children,
 }: {
@@ -5,7 +7,9 @@ export default function LandingLayout({
 }) {
   return (
     <div className="bg-surface text-white min-h-screen">
-      {children}
+        <ThemeProvider>
+              {children}
+              </ThemeProvider>
     </div>
   );
 }
