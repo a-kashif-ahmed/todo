@@ -26,7 +26,7 @@ export default function Hero() {
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
   <a href="/login" className="w-full sm:w-auto">
     <button
-      className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-4 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
+      className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-4 font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
     >
       Get Started
     </button>

@@ -73,7 +73,7 @@ export default function Dropzone({ onFile, onPasteRaw, status, statusMessage }: 
       <div className="flex gap-3" onClick={e => e.stopPropagation()}>
         <button
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-text-primary font-medium text-sm rounded-lg px-5 py-2.5 transition-colors"
+          className="flex items-center gap-2 bg-brand-orange hover:bg-brand-orange/90 text-white font-medium text-sm rounded-lg px-5 py-2.5 transition-colors"
         >
           <UploadCloud size={15} />
           Browse Files

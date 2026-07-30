@@ -68,7 +68,7 @@ export default function CallTA() {
                 <button
                 
                 disabled={loading}
-                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
+                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
               >
                 {loading ? "Joining..." : "Get Started"}
               </button>

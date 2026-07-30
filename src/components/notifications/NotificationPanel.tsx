@@ -36,7 +36,7 @@ export default function NotificationsPanel({ notifications, onClose, onMarkAllRe
         </div>
         <div className="flex items-center gap-3">
           {unreadCount > 0 && (
-            <button onClick={onMarkAllRead} className="text-xs text-brand-brand-orangehover:underline">
+            <button onClick={onMarkAllRead} className="text-xs text-brand-orange hover:underline">
               Mark all read
             </button>
           )}

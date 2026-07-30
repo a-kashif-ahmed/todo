@@ -159,7 +159,7 @@ export default function SupportPage() {
               />
             </div>
 
-            <button className="mt-10 text-brand-orange hover:text-brand-orange300">
+            <button className="mt-10 text-brand-orange hover:text-brand-orange">
               Full Incident Report →
             </button>
           </div>

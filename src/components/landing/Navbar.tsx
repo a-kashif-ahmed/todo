@@ -29,48 +29,40 @@ export default function Navbar() {
           </a>
 
           {/* Desktop Menu */}
-          <ul className="hidden lg:flex items-center gap-10 text-text-muted">
-            <li>
-              <a href="#problem" className="transition hover:text-text-primary  ">
-                Problem
-              </a>
-            </li>
-            <li>
-              <a href="#solution" className="transition hover:text-text-primary  ">
-                Solution
-              </a>
-            </li>
-            <li>
-              <a href="#whyus" className="transition hover:text-text-primary  ">
-                Why Flowlens
-              </a>
-            </li>
-            <li>
-                <a
-                  href="#feedback"
-                  onClick={() => setIsOpen(false)}
-                  className="block hover:text-text-primary  "
-                >
-                  Feedback
-                </a>
-              </li>
-              <li>
-                <ThemeToggle/>
-              </li>
-          </ul>
+         {/* Desktop Menu */}
+<ul className="hidden lg:flex items-center gap-10 text-text-muted">
+  <li>
+    <a href="#problem" className="transition hover:text-text-primary">
+      Problem
+    </a>
+  </li>
+  <li>
+    <a href="#solution" className="transition hover:text-text-primary">
+      Solution
+    </a>
+  </li>
+  <li>
+    <a href="#whyus" className="transition hover:text-text-primary">
+      Why FlowLens
+    </a>
+  </li>
+  <li>
+    <a href="#feedback" className="transition hover:text-text-primary">
+      Feedback
+    </a>
+  </li>
+</ul>
 
-          {/* Desktop Button */}
-          <div className="hidden lg:block">
-            <a href="/login">
-                <button
-                
-                
-                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
-              >
-                Get Started
-              </button>
-              </a>
-          </div>
+{/* Desktop Actions */}
+<div className="hidden lg:flex items-center gap-3">
+  <a href="/login">
+    <button className="rounded-xl bg-brand-orange px-8 py-3 font-semibold text-white transition hover:brightness-110">
+      Get Started
+    </button>
+  </a>
+
+  <span className="text-brand-orange"><ThemeToggle /></span>
+</div>
 
           {/* Mobile Button */}
           
@@ -142,7 +134,7 @@ export default function Navbar() {
                 <button
                 
                 
-                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-text-primary transition hover:brightness-110 disabled:opacity-50"
+                className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
               >
                 Get Started
               </button>

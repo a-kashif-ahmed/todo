@@ -40,7 +40,7 @@ export default function DirectConnections() {
                   Connected
                 </span>
               ) : (
-                <button className="text-xs text-brand-brand-orangehover:underline">
+                <button className="text-xs text-brand-orange hover:underline">
                   Connect ›
                 </button>
               )}
