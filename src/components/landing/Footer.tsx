@@ -19,6 +19,7 @@ export default function Footer() {
                 Get Started
               </button>
               </a>
+              {/* <span>hahskdhkasd</span> */}
         </div>
 
         <div className="mt-12 sm:mt-16 md:mt-20 border-t border-border pt-8 flex flex-col md:flex-row gap-3 justify-between items-center text-center md:text-left">
