@@ -18,7 +18,7 @@ const activityDot: Record<string, string> = {
   snapshot: "bg-brand-blue",
   incident: "bg-status-error",
   restore:  "bg-status-success",
-  ai:       "bg-purple-400",
+  ai:       "bg-brand-orange",
   import:   "bg-status-warning",
 };
  

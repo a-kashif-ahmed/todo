@@ -23,9 +23,9 @@ function actionLabel(action: string) {
 }
  
 const actorBadge = {
-  user:   "bg-brand-blue/15 text-brand-orange",
+  user:   "bg-brand-orange/15 text-brand-orange",
   system: "bg-gray-500/15 text-text-muted",
-  ai:     "bg-purple-500/15 text-purple-300",
+  ai:     "bg-text-primary/15 text-brand-orange",
 };
  
 export default function HistoryTimeline({ entries }: { entries: HistoryEntry[] }) {

@@ -71,8 +71,8 @@ export default function InvestigatePage() {
             <div className="bg-surface-2 border border-border rounded-xl p-3.5">
               <p className="text-[10px] text-text-muted uppercase mb-1">AI Confidence Score</p>
               <div className="flex items-center justify-between">
-                <p className="text-2xl font-bold text-purple-400">94%</p>
-                <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-purple-400">✦</div>
+                <p className="text-2xl font-bold text-brand-orange">94%</p>
+                <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-brand-orange">✦</div>
               </div>
             </div>
           </div>
@@ -144,8 +144,8 @@ export default function InvestigatePage() {
             )}
 
             {/* AI tip */}
-            <div className="bg-purple-900/20 border border-purple-500/25 rounded-xl p-4 mt-4">
-              <p className="text-xs font-semibold text-purple-300 mb-1">✦ AI Tip</p>
+            <div className="bg-brand-orange border border-brand-orange/25 rounded-xl p-4 mt-4">
+              <p className="text-xs font-semibold text-brand-orange mb-1">✦ AI Tip</p>
               <p className="text-xs text-text-muted leading-relaxed">
                 Click "Full Analysis" to see the complete incident timeline and apply an automated fix.
               </p>
@@ -156,9 +156,9 @@ export default function InvestigatePage() {
             <div className="text-center max-w-sm">
               <div className="relative mx-auto mb-6 w-24 h-24">
                 <div className="w-24 h-24 rounded-2xl bg-surface-2 border border-border flex items-center justify-center">
-                  <Search size={32} className="text-purple-400" />
+                  <Search size={32} className="text-brand-orange" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-brand-orange flex items-center justify-center">
                   <Search size={12} className="text-text-primary" />
                 </div>
               </div>
@@ -175,8 +175,8 @@ export default function InvestigatePage() {
 
               {/* AI tip */}
               {incidents.length > 0 && (
-                <div className="mt-6 bg-purple-900/20 border border-purple-500/25 rounded-xl p-4 text-left">
-                  <p className="text-xs font-semibold text-purple-300 mb-1">✦ AI Tip</p>
+                <div className="mt-6 bg-brand-orange border border-brand-orange/25 rounded-xl p-4 text-left">
+                  <p className="text-xs font-semibold text-brand-orange mb-1">✦ AI Tip</p>
                   <p className="text-xs text-text-muted leading-relaxed">
                     {incidents.length} incident{incidents.length > 1 ? "s" : ""} detected. Select one from the list to begin investigation.
                   </p>

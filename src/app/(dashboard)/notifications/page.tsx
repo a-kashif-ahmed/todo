@@ -45,14 +45,14 @@ const tabFilter: Record<Tab, NotifType[]> = {
 const typeIcon: Record<NotifType, JSX.Element> = {
   error: <div className="w-8 h-8 rounded-full bg-status-error/15 border border-status-error/30 flex items-center justify-center"><AlertTriangle size={14} className="text-status-error" /></div>,
   warning: <div className="w-8 h-8 rounded-full bg-status-warning/15 border border-status-warning/30 flex items-center justify-center"><AlertTriangle size={14} className="text-status-warning" /></div>,
-  info: <div className="w-8 h-8 rounded-full bg-brand-blue/15 border border-brand-blue/30 flex items-center justify-center"><Zap size={14} className="text-purple-400" /></div>,
+  info: <div className="w-8 h-8 rounded-full bg-brand-blue/15 border border-brand-blue/30 flex items-center justify-center"><Zap size={14} className="text-brand-orange" /></div>,
   success: <div className="w-8 h-8 rounded-full bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center"><Info size={14} className="text-brand-orange" /></div>,
 };
 
 const borderByType: Record<NotifType, string> = {
   error: "border-l-4 border-l-status-error",
   warning: "border-l-4 border-l-status-warning",
-  info: "border-l-4 border-l-purple-500",
+  info: "border-l-4 border-l-brand-orange",
   success: "border-l-4 border-l-transparent",
 };
 

@@ -29,13 +29,13 @@ function actionIcon(action: string) {
 const leftBorder: Record<string, string> = {
   user:   "border-l-brand-blue",
   system: "border-l-status-warning",
-  ai:     "border-l-purple-500",
+  ai:     "border-l-brand-orange",
 };
 
 const iconBg: Record<string, string> = {
-  user:   "bg-brand-blue/10 text-brand-orange",
+  user:   "bg-brand-orange/10 text-brand-orange",
   system: "bg-status-warning/10 text-status-warning",
-  ai:     "bg-purple-500/10 text-purple-400",
+  ai:     "bg-brand-orange text-brand-orange",
 };
 
 function groupByDate(entries: HistoryEntry[]) {

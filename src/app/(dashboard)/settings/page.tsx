@@ -120,7 +120,7 @@ export default function SettingsPage() {
       <div className="flex items-start justify-between mb-8">
         <div className="flex items-center gap-5">
           <div className="relative">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand-blue to-purple-500 flex items-center justify-center text-2xl font-bold text-text-primary">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-brand-blue to-brand-orange flex items-center justify-center text-2xl font-bold text-text-primary">
               {(profile?.name || "?").slice(0, 1).toUpperCase()}
             </div>
             <button className="absolute bottom-0 right-0 w-6 h-6 bg-brand-blue rounded-full flex items-center justify-center border-2 border-surface">

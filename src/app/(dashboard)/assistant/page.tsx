@@ -21,7 +21,7 @@ const categoryColor: Record<string, string> = {
   CRITICAL:    "text-status-error",
   DATABASE:    "text-brand-orange",
   RECOVERY:    "text-status-warning",
-  PERFORMANCE: "text-purple-400",
+  PERFORMANCE: "text-brand-orange",
 };
 
 export default function AIAssistantIndexPage() {

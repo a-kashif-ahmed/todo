@@ -21,13 +21,13 @@ function actionIcon(action: string) {
   if (action.includes("restore")) return <RotateCcw size={13} className="text-status-success" />;
   if (action.includes("import"))  return <Upload size={13} className="text-status-warning" />;
   if (action.includes("snapshot")) return <GitBranch size={13} className="text-brand-orange" />;
-  return <Zap size={13} className="text-purple-400" />;
+  return <Zap size={13} className="text-brand-orange" />;
 }
 
 const actorBadge = {
   user:   "bg-brand-blue/15 text-brand-orange",
   system: "bg-gray-500/15 text-text-muted",
-  ai:     "bg-purple-500/15 text-purple-300",
+  ai:     "bg-brand-orange/15 text-brand-orange",
 };
 
 function groupByDate(entries: HistoryEntry[]) {
@@ -125,7 +125,7 @@ export default function HistoryPage() {
       {/* ── RIGHT: Builder Insights sidebar ── */}
       <div className="w-72 flex-shrink-0 border-l border-border overflow-y-auto p-6 space-y-5 scrollbar">
         <div className="flex items-center gap-2">
-          <span className="text-purple-300">◎</span>
+          <span className="text-brand-orange">◎</span>
           <h2 className="text-base font-semibold text-text-primary">Builder Insights</h2>
         </div>
         <p className="text-xs text-text-muted">Maximize your automation visibility</p>

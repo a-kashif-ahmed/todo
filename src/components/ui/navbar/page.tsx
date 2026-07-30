@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import LogoutButton from "../logout/page";
+import ThemeToggle from "../theme-toggle/page";
 
 export default function Navbar() {
   const supabase = createClient();
@@ -58,6 +59,7 @@ export default function Navbar() {
                 "G")[0].toUpperCase()}
             </span>
           </div>
+          <ThemeToggle/>
           <span><LogoutButton/></span>
         </div>
 

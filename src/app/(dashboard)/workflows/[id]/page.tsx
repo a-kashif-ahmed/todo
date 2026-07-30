@@ -118,7 +118,7 @@ export default function WorkflowDetailPage() {
           </a>
           <button
             onClick={()=> setShowAssistant(true)}
-            className="flex w-10 items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-3 text-sm font-semibold text-text-primary transition hover:opacity-90"
+            className="flex w items-center justify-center gap-2 rounded-xl bg-brand-orange px-4 py-3 text-sm font-semibold text-text-primary transition hover:opacity-90"
           >
             <MessageCircleCode size={20} strokeWidth={2.5} />
             Chat Flowlens AI 

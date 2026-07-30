@@ -104,7 +104,7 @@ export default function SupportPage() {
 
           {/* AI */}
 
-          <div className="relative overflow-hidden rounded-3xl border border-purple-500/30 bg-gradient-to-br bg-brand-orange  p-8 lg:col-span-2">
+          <div className="relative overflow-hidden rounded-3xl border border-brand-orange/30 bg-gradient-to-br bg-brand-orange  p-8 lg:col-span-2">
 
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs">
               <Sparkles size={12} />
@@ -117,7 +117,7 @@ export default function SupportPage() {
               Assistant
             </h2>
 
-            <p className="mt-5 max-w-md text-purple-100">
+            <p className="mt-5 max-w-md text-brand-orange">
               Our AI detective has analyzed over two million workflow errors.
               Paste your logs or describe the behavior, and it will find the
               root cause in seconds.

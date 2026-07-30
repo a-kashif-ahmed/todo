@@ -49,9 +49,9 @@ export default function AIIntelligenceReport({
   return (
     <div className="w-full">
       {/* Header badge */}
-      <div className="flex items-center gap-2 bg-purple-500/15 border border-purple-500/25 rounded-lg px-3.5 py-2 mb-5 w-fit">
-        <span className="text-purple-300">◎</span>
-        <span className="text-xs font-bold tracking-wider text-purple-300">
+      <div className="flex items-center gap-2 bg-brand-orange border border-brand-orange rounded-lg px-3.5 py-2 mb-5 w-fit">
+        <span className="text-brand-orange">◎</span>
+        <span className="text-xs font-bold tracking-wider text-brand-orange">
           AI INTELLIGENCE REPORT
         </span>
       </div>
@@ -119,7 +119,7 @@ export default function AIIntelligenceReport({
       <button
         onClick={onApplyFix}
         disabled={applyingFix}
-        className="w-full bg-purple-500 hover:bg-purple-600 text-text-primary font-semibold rounded-xl py-3.5 mb-3 transition-colors disabled:opacity-60"
+        className="w-full bg-brand-orange hover:bg-brand-orange text-text-primary font-semibold rounded-xl py-3.5 mb-3 transition-colors disabled:opacity-60"
       >
         {applyingFix ? "Applying Fix..." : "Apply Fix"}
       </button>
