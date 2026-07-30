@@ -5,13 +5,13 @@ export default function Hero() {
     <section className="relative pt-40 pb-20 sm:pt-44 sm:pb-24 md:pt-56 md:pb-32">
       <div className="absolute inset-x-0 top-0 h-[500px] bg-brand-orange/10 blur-[140px] -z-10" />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center text-text-primary">
         <span className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand-orange/10 px-4 py-2 text-sm text-brand">
           <Sparkles size={16} />
           AI Powered Workflow Debugging
         </span>
 
-        <h1 className="mt-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-text-primary">
+        <h1 className="mt-8 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
           Know exactly why your
           <br className="hidden sm:block " /> workflow{" "}
           <span className="text-brand-orange">broke.</span>
