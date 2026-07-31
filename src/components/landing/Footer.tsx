@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid gap-8 sm:gap-10">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold">FlowLens</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-text-primary">FlowLens</h2>
             <p className="mt-5 text-text-muted leading-7">
               Automation observability made easy.
             </p>

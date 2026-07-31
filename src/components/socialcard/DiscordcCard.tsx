@@ -4,6 +4,12 @@ import { MessageSquare, Mail, ExternalLink } from "lucide-react";
 
 const DISCORD_INVITE = "https://discord.gg/f2B6hamNMX";
 const EMAIL = "flowlensaas@gmail.com"; 
+const SUBJECT = "FlowLens Feedback";
+const BODY = `Hi FlowLens Team,
+
+I'd like to share the following feedback:
+
+`;
 
 export default function DiscordFeedbackCard() {
   return (
@@ -40,7 +46,7 @@ export default function DiscordFeedbackCard() {
           </a>
 
           <a
-            href={`mailto:${EMAIL}`}
+            href={`mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(BODY)}`}
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface-2 px-6 py-3 font-medium text-text-primary transition hover:bg-surface-3"
           >
             <Mail size={18} />
