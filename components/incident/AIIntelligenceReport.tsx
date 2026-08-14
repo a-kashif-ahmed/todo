@@ -1,8 +1,13 @@
 // ─────────────────────────────────────────────────────────────
 // src/components/incident/AIIntelligenceReport.tsx
+// Central incident view: Problem → Root Cause → Business Impact →
+// What Changed → Fix → Recovery.
 // ─────────────────────────────────────────────────────────────
 
 "use client";
+import Image from "next/image";
+import type { ReactNode } from "react";
+import logo from "@/public/logo.png";
 
 interface RecommendedAction {
   icon: "fix" | "rollback";
@@ -13,10 +18,15 @@ interface RecommendedAction {
 }
 
 interface Props {
+  problem?: string;
   rootCause: string;
   confidence: number;
   impact: "low" | "medium" | "high";
+  businessImpact?: string;
+  whatChanged?: string;
   explanation: string;
+  executionEvidence?: string;
+  recoverySteps?: string[];
   actions: RecommendedAction[];
   onApplyFix: () => void;
   onRestore: () => void;
@@ -35,11 +45,30 @@ const actionIcon: Record<string, string> = {
   rollback: "↺",
 };
 
+// Small, reused section shell for the Problem / Business Impact / What
+// Changed rows so the framing stays visually consistent without repeating
+// the same header markup four times.
+function InfoRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="mb-3">
+      <p className="text-[11px] font-semibold tracking-wide text-text-muted uppercase mb-1">
+        {label}
+      </p>
+      <p className="text-sm text-text-muted leading-relaxed">{children}</p>
+    </div>
+  );
+}
+
 export default function AIIntelligenceReport({
+  problem,
   rootCause,
   confidence,
   impact,
+  businessImpact,
+  whatChanged,
   explanation,
+  executionEvidence,
+  recoverySteps = [],
   actions,
   onApplyFix,
   onRestore,
@@ -50,14 +79,23 @@ export default function AIIntelligenceReport({
     <div className="w-full">
       {/* Header badge */}
       <div className="flex items-center gap-2 bg-brand-orange border border-brand-orange rounded-lg px-3.5 py-2 mb-5 w-fit">
-        <span className="text-brand-orange">◎</span>
+        <span className="text-brand-orange">
+          <Image src={logo} alt="FlowLens" />
+        </span>
         <span className="text-xs font-bold tracking-wider text-brand-orange">
           AI INTELLIGENCE REPORT
         </span>
       </div>
 
+      {/* Problem */}
+      {problem && (
+        <div className="bg-surface-2 border border-border rounded-xl p-5 mb-4">
+          <InfoRow label="Problem">{problem}</InfoRow>
+        </div>
+      )}
+
       {/* Root cause card */}
-      <div className="bg-surface-2 border border-border rounded-xl p-5 mb-5">
+      <div className="bg-surface-2 border border-border rounded-xl p-5 mb-4">
         <p className="text-[11px] font-semibold tracking-wide text-text-muted uppercase mb-2">
           Root Cause Identified
         </p>
@@ -94,6 +132,21 @@ export default function AIIntelligenceReport({
         </p>
       </div>
 
+      {/* Business impact + what changed */}
+      {(businessImpact || whatChanged) && (
+        <div className="bg-surface-2 border border-border rounded-xl p-5 mb-4">
+          {businessImpact && <InfoRow label="Business Impact">{businessImpact}</InfoRow>}
+          {whatChanged && <InfoRow label="What Changed">{whatChanged}</InfoRow>}
+        </div>
+      )}
+
+      {/* Execution evidence */}
+      {executionEvidence && (
+        <div className="bg-surface rounded-lg border border-border-light px-4 py-3 mb-5 font-mono text-xs text-text-muted">
+          {executionEvidence}
+        </div>
+      )}
+
       {/* Recommended actions */}
       <p className="text-sm font-semibold text-text-primary mb-3">Recommended Actions</p>
       <div className="space-y-2 mb-5">
@@ -115,6 +168,23 @@ export default function AIIntelligenceReport({
         ))}
       </div>
 
+      {/* Recovery */}
+      {recoverySteps.length > 0 && (
+        <div className="bg-surface-2 border border-border rounded-xl p-5 mb-5">
+          <p className="text-[11px] font-semibold tracking-wide text-text-muted uppercase mb-2.5">
+            Recovery
+          </p>
+          <ol className="space-y-1.5">
+            {recoverySteps.map((step, i) => (
+              <li key={i} className="flex gap-2 text-sm text-text-muted leading-relaxed">
+                <span className="text-brand-orange font-medium flex-shrink-0">{i + 1}.</span>
+                {step}
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+
       {/* Primary actions */}
       <button
         onClick={onApplyFix}
@@ -133,5 +203,3 @@ export default function AIIntelligenceReport({
     </div>
   );
 }
-
-

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Search, GitBranch, AlertTriangle, X } from "lucide-react";
+import { Search, GitBranch, AlertTriangle, X, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Workflow {
@@ -26,6 +26,12 @@ interface Result {
   status?: string;
 }
 
+interface SemanticMatch {
+  workflow_id: string;
+  workflow_name: string;
+  reason: string;
+}
+
 const statusDot: Record<string, string> = {
   healthy:  "bg-status-success",
   failing:  "bg-status-error",
@@ -43,6 +49,29 @@ export default function SearchBar() {
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  // Semantic (AI) search — separate from the local filter above. Triggered
+  // explicitly via the "Ask AI" row so a plain keyword search never incurs
+  // an AI call unless the person actually wants one.
+  const [semanticLoading, setSemanticLoading] = useState(false);
+  const [semanticAnswer, setSemanticAnswer] = useState<string | null>(null);
+  const [semanticMatches, setSemanticMatches] = useState<SemanticMatch[]>([]);
+
+  async function askAI(q: string) {
+    if (!q.trim()) return;
+    setSemanticLoading(true);
+    setSemanticAnswer(null);
+    setSemanticMatches([]);
+    try {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`).then(r => r.json());
+      setSemanticAnswer(res.answer || "No answer found.");
+      setSemanticMatches(res.matches || []);
+    } catch {
+      setSemanticAnswer("AI search is unavailable right now.");
+    } finally {
+      setSemanticLoading(false);
+    }
+  }
 
   // Load all data once on mount
   useEffect(() => {
@@ -80,6 +109,8 @@ export default function SearchBar() {
 
   // Filter on query change
   useEffect(() => {
+    setSemanticAnswer(null);
+    setSemanticMatches([]);
     if (!query.trim()) {
       setResults([]);
       setOpen(false);
@@ -161,10 +192,51 @@ export default function SearchBar() {
       {open && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-surface-2 border border-border rounded-xl shadow-xl overflow-hidden z-50">
 
-          {results.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-text-muted">
-              No results for "{query}"
+          {/* Ask AI — natural-language queries like "Where is Stripe used?" */}
+          {query.trim() && !semanticAnswer && !semanticLoading && (
+            <button
+              onClick={() => askAI(query)}
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-left text-xs text-brand-orange hover:bg-surface-3/50 transition-colors border-b border-border-light"
+            >
+              <Sparkles size={12} />
+              Ask AI: "{query}"
+            </button>
+          )}
+
+          {semanticLoading && (
+            <div className="px-4 py-3 border-b border-border-light">
+              <div className="h-3 w-3/4 bg-surface-3 rounded animate-pulse" />
             </div>
+          )}
+
+          {semanticAnswer && (
+            <div className="px-4 py-3 border-b border-border-light">
+              <p className="flex items-center gap-1.5 text-[10px] font-semibold text-brand-orange uppercase tracking-wide mb-1.5">
+                <Sparkles size={11} /> AI Answer
+              </p>
+              <p className="text-xs text-text-muted leading-relaxed mb-2">{semanticAnswer}</p>
+              {semanticMatches.map(m => (
+                <button
+                  key={m.workflow_id}
+                  onClick={() => navigate(`/workflows/${m.workflow_id}`)}
+                  className="w-full flex items-center justify-between bg-surface border border-border rounded-lg px-3 py-2 text-left hover:border-brand-orange/30 transition-colors mt-1.5"
+                >
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-text-primary truncate">{m.workflow_name}</p>
+                    <p className="text-[11px] text-text-muted truncate">{m.reason}</p>
+                  </div>
+                  <span className="text-text-muted flex-shrink-0">›</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {results.length === 0 ? (
+            !semanticAnswer && !semanticLoading && (
+              <div className="px-4 py-6 text-center text-sm text-text-muted">
+                No results for "{query}"
+              </div>
+            )
           ) : (
             <>
               {/* Workflows group */}

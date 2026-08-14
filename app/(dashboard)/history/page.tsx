@@ -7,6 +7,8 @@
 import { useState, useEffect } from "react";
 import { GitBranch, RotateCcw, Upload, Zap, Clock } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "@/public/logo.png";
 
 interface HistoryEntry {
   id: string;
@@ -125,7 +127,9 @@ export default function HistoryPage() {
       {/* ── RIGHT: Builder Insights sidebar ── */}
       <div className="w-72 flex-shrink-0 border-l border-border overflow-y-auto p-6 space-y-5 scrollbar">
         <div className="flex items-center gap-2">
-          <span className="text-brand-orange">◎</span>
+          <span className="text-brand-orange">
+
+<Image src={logo} alt="FlowLens" width={20} height={20}/></span>
           <h2 className="text-base font-semibold text-text-primary">Builder Insights</h2>
         </div>
         <p className="text-xs text-text-muted">Maximize your automation visibility</p>

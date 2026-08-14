@@ -11,17 +11,17 @@ import { Paperclip, GitBranch, Mic, ArrowUp,  } from "lucide-react";
 interface Workflow { id: string; name: string; status: string; }
 
 const suggestions = [
-  { category: "CRITICAL",    icon: "",  title: "Analyze my last failure",     desc: `Trace the root cause of the JSON parsing error in "Order Processor".` },
-  { category: "DATABASE",    icon: "",  title: "Check schema mismatches",     desc: "Compare active API payloads against your Postgres definitions." },
-  { category: "RECOVERY",    icon: "",  title: "How do I rollback?",          desc: "Generate a safe migration path to revert V2.4.1 deployment." },
-  { category: "PERFORMANCE", icon: "", title: "Optimize cold starts",        desc: "Review Lambda execution times and suggest warm-up strategies." },
+  { category: "UNDERSTAND", icon: "",  title: "Summarize a workflow",        desc: `Get a plain-language summary, complexity score, and risk list for any workflow.` },
+  { category: "REVIEW",     icon: "",  title: "Review my last change",       desc: "Explain what changed between two snapshots and why it matters." },
+  { category: "DEPLOY",     icon: "",  title: "Am I ready to deploy?",       desc: "Check blocking issues and warnings before pushing to production." },
+  { category: "OPTIMIZE",   icon: "",  title: "Find optimization opportunities", desc: "Spot redundant steps, missing error handling, and slow sequential calls." },
 ];
 
 const categoryColor: Record<string, string> = {
-  CRITICAL:    "text-status-error",
-  DATABASE:    "text-brand-orange",
-  RECOVERY:    "text-status-warning",
-  PERFORMANCE: "text-brand-orange",
+  UNDERSTAND: "text-brand-orange",
+  REVIEW:     "text-status-warning",
+  DEPLOY:     "text-status-error",
+  OPTIMIZE:   "text-brand-orange",
 };
 
 export default function AIAssistantIndexPage() {
@@ -54,10 +54,11 @@ export default function AIAssistantIndexPage() {
       <div className="flex-1 flex flex-col items-center justify-center px-8 pb-4">
         {/* Icon */}
         <h1 className="text-4xl font-bold text-text-primary mb-3 text-center">
-          How can I help you debug today?
+          What can FlowLens Copilot help with today?
         </h1>
         <p className="text-text-muted text-center mb-10 max-w-md">
-          I'm your system mechanic. I've analyzed{" "}
+          Your AI Workflow Copilot — I understand, review, document, and optimize your
+          automations, not just debug failures. I've analyzed{" "}
           <span className="text-brand-orange font-semibold">{totalEvents.toLocaleString()} events</span>{" "}
           across your active workflows in the last hour.
         </p>
@@ -103,7 +104,7 @@ export default function AIAssistantIndexPage() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && handleExecute()}
-            placeholder="Ask me anything about your infrastructure..."
+            placeholder="Ask FlowLens Copilot about your workflows..."
             className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none"
           />
           <button

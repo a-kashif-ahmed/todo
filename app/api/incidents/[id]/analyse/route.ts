@@ -39,10 +39,15 @@ export async function POST(
     return NextResponse.json({
       cached: true,
       analysis: {
+        problem: incident.problem,
         root_cause: incident.root_cause,
         confidence: incident.confidence,
+        business_impact: incident.business_impact,
         impact_summary: incident.impact_summary,
+        what_changed: incident.what_changed,
         suggested_fix: incident.suggested_fix,
+        execution_evidence: incident.execution_evidence,
+        recovery_steps: incident.recovery_steps,
       },
     });
   }
@@ -61,16 +66,36 @@ export async function POST(
 
   const analysis = await analyseRootCause(diff, incident.error_message);
 
-  // Store result on incident
-  await db
-    .from("flowlens_incidents")
-    .update({
-      root_cause: analysis.root_cause,
-      confidence: analysis.confidence,
-      impact_summary: analysis.impact_summary,
-      suggested_fix: analysis.suggested_fix,
-    })
-    .eq("id", id);
+  // Store result on incident. The four original columns always exist; the
+  // new business-impact fields are best-effort until a migration adds them
+  // (problem, business_impact, what_changed, execution_evidence, recovery_steps).
+  try {
+    await db
+      .from("flowlens_incidents")
+      .update({
+        problem: analysis.problem,
+        root_cause: analysis.root_cause,
+        confidence: analysis.confidence,
+        business_impact: analysis.business_impact,
+        impact_summary: analysis.impact_summary,
+        what_changed: analysis.what_changed,
+        suggested_fix: analysis.suggested_fix,
+        execution_evidence: analysis.execution_evidence,
+        recovery_steps: analysis.recovery_steps,
+      })
+      .eq("id", id);
+  } catch (e) {
+    console.error("Storing extended incident analysis failed, retrying with legacy columns only:", e);
+    await db
+      .from("flowlens_incidents")
+      .update({
+        root_cause: analysis.root_cause,
+        confidence: analysis.confidence,
+        impact_summary: analysis.impact_summary,
+        suggested_fix: analysis.suggested_fix,
+      })
+      .eq("id", id);
+  }
 
   return NextResponse.json({ cached: false, analysis, diff });
 }

@@ -10,6 +10,12 @@ interface Props3 {
   onOpenCompare: () => void;
   applyingFix?: boolean;
   restoring?: boolean;
+  // Optional Copilot actions — only rendered when a handler is passed in,
+  // so existing usages of this component (without these props) are unaffected.
+  onViewDocumentation?: () => void;
+  onCheckDeploymentReadiness?: () => void;
+  loadingDocumentation?: boolean;
+  loadingDeploymentCheck?: boolean;
 }
 
 export default function AssistantActions({
@@ -18,6 +24,10 @@ export default function AssistantActions({
   onOpenCompare,
   applyingFix,
   restoring,
+  onViewDocumentation,
+  onCheckDeploymentReadiness,
+  loadingDocumentation,
+  loadingDeploymentCheck,
 }: Props3) {
   return (
     <div className="flex flex-wrap gap-2 mt-3">
@@ -41,8 +51,24 @@ export default function AssistantActions({
       >
         ⇗ Open Compare
       </button>
+      {onViewDocumentation && (
+        <button
+          onClick={onViewDocumentation}
+          disabled={loadingDocumentation}
+          className="flex items-center gap-1.5 bg-surface-3 border border-border rounded-lg px-3.5 py-2 text-xs font-medium text-text-primary hover:border-gray-500 transition-colors disabled:opacity-60"
+        >
+          📄 {loadingDocumentation ? "Generating..." : "View Documentation"}
+        </button>
+      )}
+      {onCheckDeploymentReadiness && (
+        <button
+          onClick={onCheckDeploymentReadiness}
+          disabled={loadingDeploymentCheck}
+          className="flex items-center gap-1.5 bg-surface-3 border border-border rounded-lg px-3.5 py-2 text-xs font-medium text-text-primary hover:border-gray-500 transition-colors disabled:opacity-60"
+        >
+          🚀 {loadingDeploymentCheck ? "Checking..." : "Check Deployment Readiness"}
+        </button>
+      )}
     </div>
   );
 }
-
-

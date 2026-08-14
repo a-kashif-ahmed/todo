@@ -23,25 +23,33 @@ interface Props {
   workflow: NormalisedWorkFlow;
   diff?: WorkflowDiff;
   height?: number;
+  // Node IDs the AI review has flagged as risky — highlighted independently
+  // of diff status so a risk is visible even on an unchanged snapshot.
+  riskNodeIds?: string[];
 }
 
-export default function WorkflowGraph({ workflow, diff, height = 460 }: Props) {
+export default function WorkflowGraph({ workflow, diff, height = 460, riskNodeIds = [] }: Props) {
   const diffMap = new Map(diff?.nodes.map(n => [n.nodeId, n.status]) || []);
+  const riskSet = new Set(riskNodeIds);
 
-  const nodes: Node[] = workflow.nodes.map((n, i) => ({
-    id: n.id,
-    position: n.position || { x: (i % 4) * 220, y: Math.floor(i / 4) * 140 },
-    data: { label: n.label },
-    style: {
-      background: "#161b22",
-      border: `1.5px solid ${statusColor[diffMap.get(n.id) || "unchanged"]}`,
-      borderRadius: 8,
-      color: "#e6edf3",
-      fontSize: 12,
-      padding: "10px 16px",
-      minWidth: 130,
-    },
-  }));
+  const nodes: Node[] = workflow.nodes.map((n, i) => {
+    const isRisk = riskSet.has(n.id);
+    return {
+      id: n.id,
+      position: n.position || { x: (i % 4) * 220, y: Math.floor(i / 4) * 140 },
+      data: { label: isRisk ? `⚠ ${n.label}` : n.label },
+      style: {
+        background: isRisk ? "#2a1a0f" : "#161b22",
+        border: `1.5px solid ${isRisk ? "#f59e0b" : statusColor[diffMap.get(n.id) || "unchanged"]}`,
+        borderRadius: 8,
+        color: isRisk ? "#f59e0b" : "#e6edf3",
+        fontSize: 12,
+        padding: "10px 16px",
+        minWidth: 130,
+        boxShadow: isRisk ? "0 0 0 1px rgba(245, 158, 11, 0.25)" : undefined,
+      },
+    };
+  });
 
   const edges: Edge[] = workflow.edges.map(e => ({
     id: e.id,

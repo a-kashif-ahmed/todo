@@ -19,6 +19,13 @@ interface CardProps {
     variant?: "default" | "create";
     onClick?: () => void;
     href?: string; // ← add this
+    // AI score/complexity/review-status badges — optional so existing
+    // callers without AI data render exactly as before.
+    aiBadges?: {
+        complexity?: "low" | "medium" | "high";
+        reviewStatus?: string;
+        summary?: string;
+    };
 }
 
 const statusDotClasses = {
@@ -39,6 +46,12 @@ const buttonBgClasses = {
     error: "bg-status-error",
 };
 
+const complexityBadgeClasses: Record<string, string> = {
+    low: "text-status-success border-status-success/30 bg-status-success/10",
+    medium: "text-status-warning border-status-warning/30 bg-status-warning/10",
+    high: "text-status-error border-status-error/30 bg-status-error/10",
+};
+
 export default function Card({
     title,
     description,
@@ -49,6 +62,7 @@ export default function Card({
     variant = "default",
     onClick,
     href,
+    aiBadges,
 }: CardProps) {
     if (variant === "create") {
         return (
@@ -82,6 +96,24 @@ export default function Card({
 
             {description && (
                 <p className="text-sm text-inactive">{description}</p>
+            )}
+
+            {aiBadges && (aiBadges.complexity || aiBadges.reviewStatus) && (
+                <div className="flex items-center gap-1.5 mt-2">
+                    {aiBadges.complexity && (
+                        <span className={`text-[10px] font-medium uppercase border rounded-full px-2 py-0.5 ${complexityBadgeClasses[aiBadges.complexity]}`}>
+                            {aiBadges.complexity}
+                        </span>
+                    )}
+                    {aiBadges.reviewStatus && (
+                        <span className="text-[10px] font-medium text-brand-orange border border-brand-orange/25 bg-brand-orange/10 rounded-full px-2 py-0.5">
+                            {aiBadges.reviewStatus}
+                        </span>
+                    )}
+                </div>
+            )}
+            {aiBadges?.summary && (
+                <p className="text-xs text-text-muted mt-1.5 line-clamp-2">{aiBadges.summary}</p>
             )}
 
             <div className="flex-1" />

@@ -7,6 +7,8 @@ import { useParams, useRouter } from "next/navigation";
 import { X, ArrowUp, Mic, Paperclip } from "lucide-react";
 import dynamic from "next/dynamic";
 import type { NormalisedWorkFlow } from "@/types/flowlens";
+import Image from "next/image";
+import logo from "@/public/logo.png";
 
 const WorkflowGraph = dynamic(
   () => import("@/components/workflow/WorkFlowGraph"),
@@ -81,13 +83,15 @@ export default function AssistantChatPage() {
   }, [messages]);
 
   function buildContext(): string {
-    if (!workflow) return "";
-    let ctx = `Workflow: "${workflow.name}" (${workflow.platform}). Status: ${workflow.status}.`;
-    if (incident) {
-      if (incident.error_message) ctx += ` Error: ${incident.error_message}.`;
-      if (incident.root_cause) ctx += ` Root cause: ${incident.root_cause}.`;
-      if (incident.impact_summary) ctx += ` Impact: ${incident.impact_summary}.`;
-    }
+    // Workflow name/platform/status and node/edge details are now built
+    // server-side by /api/chat's buildWorkflowContext (keyed off workflowId
+    // sent in the request body below) — this only adds incident-specific
+    // context the server doesn't already know about.
+    if (!incident) return "";
+    let ctx = "";
+    if (incident.error_message) ctx += `Error: ${incident.error_message}.`;
+    if (incident.root_cause) ctx += ` Root cause: ${incident.root_cause}.`;
+    if (incident.impact_summary) ctx += ` Impact: ${incident.impact_summary}.`;
     return ctx;
   }
 
@@ -108,6 +112,7 @@ export default function AssistantChatPage() {
         body: JSON.stringify({
           messages: history.map(m => ({ role: m.role, content: m.content })),
           context: buildContext(),
+          workflowId,
         }),
       });
 
@@ -188,14 +193,16 @@ export default function AssistantChatPage() {
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-brand-orange/15 border border-brand-orange/25 flex items-center justify-center text-brand-orange text-sm">
-              ◎
+
+
+<Image src={logo} alt="FlowLens" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-text-primary">FlowLens</p>
+              <p className="text-sm font-semibold text-text-primary">FlowLens Copilot</p>
               <p className="text-[11px] flex items-center gap-1.5">
                 <span className={`w-1.5 h-1.5 rounded-full ${streaming ? "bg-status-success animate-pulse" : "bg-status-success"}`} />
                 <span className="text-status-success">
-                  {streaming ? "ANALYZING FLOW" : "READY"}
+                  {streaming ? "THINKING" : "READY"}
                 </span>
               </p>
             </div>
@@ -212,7 +219,7 @@ export default function AssistantChatPage() {
         <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5 space-y-5">
           {messages.length === 0 && (
             <div className="text-center text-text-muted text-xs mt-8">
-              Ask anything about this workflow
+              Ask about this workflow — summary, review, deployment readiness, or debugging.
             </div>
           )}
 
@@ -296,7 +303,7 @@ export default function AssistantChatPage() {
 
                     {!streaming && i === messages.length - 1 && m.role === "assistant" && m.content && (
                       <p className="text-[11px] text-text-muted mt-2">
-                        Assistant · AI-Engine v1.0
+                        FlowLens Copilot · workflow-aware
                       </p>
                     )}
                   </div>
@@ -313,7 +320,7 @@ export default function AssistantChatPage() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}
-              placeholder="Ask FlowLens..."
+              placeholder="Ask FlowLens Copilot..."
               className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none"
             />
             <button

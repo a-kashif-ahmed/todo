@@ -4,6 +4,9 @@ import AiRecommendation from "@/components/ui/ai-recommendation/page";
 import Card from "@/components/ui/card/page";
 import SystemHealthCard from "@/components/ui/system-health-card/page";
 import RecentActivityFeed from "@/components/ui/recent-activity-feed/page";
+import AIFindings from "@/components/dashboard/AIFindings";
+import WorkflowHealthSummary from "@/components/dashboard/WorkflowHealthSummary";
+import RecentReviews from "@/components/dashboard/RecentReviews";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { History, CheckCircle, AlertTriangle } from "lucide-react";
@@ -52,6 +55,10 @@ export default function Home() {
               {/* AI Recommendation banner */}
               <AiRecommendation />
 
+              {/* Workflow health summary — AI value front and center,
+                  replacing a single generic uptime stat */}
+              <WorkflowHealthSummary workflows={workflows} incidentCount={incidents.length} loading={loading} />
+
               {/* Workflows section */}
               <div>
                 <div className="flex items-center justify-between mb-2 px-5">
@@ -71,6 +78,7 @@ export default function Home() {
                         return (priority[a.status] ?? 2) - (priority[b.status] ?? 2);
                       }).map(wf => {
                         const hasIncident = incidents.some(i => i.workflow_id === wf.id);
+                        const complexity = wf.latest_ai_summary?.complexity;
                         return (
                           <Card
                             key={wf.id}
@@ -92,14 +100,21 @@ export default function Home() {
                                 {wf.last_snapshot_at
                                   ? `Last seen ${new Date(wf.last_snapshot_at).toLocaleString()}`
                                   : "No snapshots yet"}
+                                {complexity && ` · ${complexity} complexity`}
                               </span>
                             ) : undefined}
                           />
                         );
                       })}
-                    <Card variant="create" href="/workflows" />
+                    <Card variant="create" href="/import" />
                   </div>
                 )}
+              </div>
+
+              {/* AI Findings + Recent Reviews — replaces generic monitoring */}
+              <div className="grid grid-cols-2 gap-4 px-5">
+                <AIFindings workflows={workflows} loading={loading} />
+                <RecentReviews workflows={workflows} loading={loading} />
               </div>
             </div>
 

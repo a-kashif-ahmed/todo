@@ -51,6 +51,11 @@ export default function AllWorkflows() {
                                           label: wf.status === "failing" ? "Needs Attention" : "Healthy",
                                           color: wf.status === "failing" ? "error" : "success",
                                         }}
+                                        aiBadges={{
+                                          complexity: wf.latest_ai_summary?.complexity,
+                                          reviewStatus: wf.latest_ai_review ? `${wf.latest_ai_review.overall_risk} risk` : undefined,
+                                          summary: wf.latest_ai_summary?.summary,
+                                        }}
                                         button={hasIncident ? {
                                           label: "Investigate",
                                           color: "error",
@@ -67,7 +72,7 @@ export default function AllWorkflows() {
                                       />
                                     );
                                   })}
-                                <Card variant="create" href="/workflows" />
+                                <Card variant="create" href="/import" />
                               </div>
                             )}
         </main>

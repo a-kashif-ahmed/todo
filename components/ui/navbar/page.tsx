@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Zap } from "lucide-react";
+import { Bell, Zap, Sparkles } from "lucide-react";
 import SearchBar from "../searchbar/page";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
@@ -34,6 +34,14 @@ export default function Navbar() {
         </div>
 
         <div className="ml-8 flex items-center gap-5">
+          <a
+            href="/assistant"
+            className="flex items-center gap-1.5 text-xs font-medium text-brand-orange bg-brand-orange/10 border border-brand-orange/25 rounded-full px-3 py-1.5 hover:bg-brand-orange/15 transition-colors"
+          >
+            <Sparkles size={13} />
+            AI Copilot
+          </a>
+
           <a href="/notifications">
             <button className="text-text-muted transition-colors hover:text-text-primary">
               <Bell size={18} />

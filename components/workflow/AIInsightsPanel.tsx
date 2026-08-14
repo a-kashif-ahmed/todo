@@ -1,9 +1,12 @@
 // ─────────────────────────────────────────────────────────────
 // src/components/workflow/AIInsightsPanel.tsx
-// Right panel,real-time node logic + performance metrics
+// Right panel — AI understanding of the workflow, plus system health,
+// dependencies, and recent changes.
 // ─────────────────────────────────────────────────────────────
 
 "use client";
+
+import WorkflowDependencies from "./WorkflowDependencies";
 
 interface Props {
   workflowName: string;
@@ -11,6 +14,10 @@ interface Props {
   systemHealth: "healthy" | "degraded" | "failing" | "unknown";
   dependencies: string[];
   recentChanges: Array<{ label: string; time: string }>;
+  aiSummary?: string;
+  aiComplexity?: "low" | "medium" | "high";
+  aiRisks?: string[];
+  aiSummaryLoading?: boolean;
 }
 
 const healthStyle: Record<string, string> = {
@@ -20,12 +27,22 @@ const healthStyle: Record<string, string> = {
   unknown: "text-text-muted",
 };
 
+const complexityStyle: Record<string, string> = {
+  low: "text-status-success border-status-success/30 bg-status-success/10",
+  medium: "text-status-warning border-status-warning/30 bg-status-warning/10",
+  high: "text-status-error border-status-error/30 bg-status-error/10",
+};
+
 export default function AIInsightsPanel({
   workflowName,
   latencyMs,
   systemHealth,
   dependencies,
   recentChanges,
+  aiSummary,
+  aiComplexity,
+  aiRisks = [],
+  aiSummaryLoading,
 }: Props) {
   return (
     <div className="w-60 border-l border-border bg-surface-2 h-full overflow-y-auto">
@@ -36,6 +53,43 @@ export default function AIInsightsPanel({
       </div>
 
       <div className="p-4 space-y-5">
+
+        {/* AI summary + complexity */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[11px] text-text-muted uppercase tracking-wide">AI Summary</p>
+            {aiComplexity && !aiSummaryLoading && (
+              <span className={`text-[10px] font-medium uppercase border rounded-full px-2 py-0.5 ${complexityStyle[aiComplexity]}`}>
+                {aiComplexity}
+              </span>
+            )}
+          </div>
+          {aiSummaryLoading ? (
+            <div className="space-y-1.5">
+              <div className="h-3 w-full bg-surface-3 rounded animate-pulse" />
+              <div className="h-3 w-3/4 bg-surface-3 rounded animate-pulse" />
+            </div>
+          ) : (
+            <p className="text-xs text-text-muted leading-relaxed">
+              {aiSummary || "No AI summary available yet."}
+            </p>
+          )}
+        </div>
+
+        {/* AI risks */}
+        {!aiSummaryLoading && aiRisks.length > 0 && (
+          <div>
+            <p className="text-[11px] text-text-muted uppercase tracking-wide mb-2">AI-Flagged Risks</p>
+            <div className="space-y-1.5">
+              {aiRisks.map((risk, i) => (
+                <div key={i} className="flex gap-2 text-xs">
+                  <span className="text-status-warning">⚠</span>
+                  <span className="text-text-muted leading-relaxed">{risk}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* System health */}
         <div>
@@ -51,22 +105,7 @@ export default function AIInsightsPanel({
         </div>
 
         {/* Dependencies */}
-        <div>
-          <p className="text-[11px] text-text-muted uppercase tracking-wide mb-2">Upstream Dependencies</p>
-          <div className="flex flex-wrap gap-1.5">
-            {dependencies.length === 0 && (
-              <span className="text-xs text-text-muted">None detected</span>
-            )}
-            {dependencies.map(dep => (
-              <span
-                key={dep}
-                className="text-[11px] bg-surface border border-border rounded px-2 py-1 text-text-muted"
-              >
-                {dep}
-              </span>
-            ))}
-          </div>
-        </div>
+        <WorkflowDependencies dependencies={dependencies} />
 
         {/* Recent changes */}
         <div>
@@ -91,5 +130,3 @@ export default function AIInsightsPanel({
     </div>
   );
 }
-
-

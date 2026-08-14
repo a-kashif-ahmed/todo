@@ -14,7 +14,9 @@ interface Incident {
   status: string;
   detected_at: string;
   error_message: string | null;
+  problem: string | null;
   root_cause: string | null;
+  business_impact: string | null;
   confidence: number | null;
 }
 
@@ -34,6 +36,7 @@ export default function InvestigatePage() {
   const [workflows, setWorkflows] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Incident | null>(null);
+  const [analysing, setAnalysing] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,6 +53,26 @@ export default function InvestigatePage() {
     }
     load();
   }, []);
+
+  async function runAnalysis(inc: Incident) {
+    setAnalysing(true);
+    try {
+      const res = await fetch(`/api/incidents/${inc.id}/analyse`, { method: "POST" }).then(r => r.json());
+      if (res.analysis) {
+        const updated: Incident = {
+          ...inc,
+          problem: res.analysis.problem,
+          root_cause: res.analysis.root_cause,
+          business_impact: res.analysis.business_impact,
+          confidence: res.analysis.confidence,
+        };
+        setSelected(updated);
+        setIncidents(prev => prev.map(i => (i.id === inc.id ? updated : i)));
+      }
+    } finally {
+      setAnalysing(false);
+    }
+  }
 
   return (
     <div className="flex h-full overflow-hidden">
@@ -102,7 +125,9 @@ export default function InvestigatePage() {
                   <AlertTriangle size={12} className="text-status-error" />
                 </div>
                 <p className="text-sm font-medium text-text-primary truncate">{workflows[inc.workflow_id] || "Unknown workflow"}</p>
-                <p className="text-xs text-text-muted mt-0.5 truncate">{inc.error_message || "Investigating..."}</p>
+                <p className="text-xs text-text-muted mt-0.5 truncate">
+                  {inc.problem || inc.error_message || "Investigating..."}
+                </p>
               </button>
             ))
           )}
@@ -132,15 +157,38 @@ export default function InvestigatePage() {
               <p className="text-sm text-text-muted font-mono">{selected.error_message || "Unknown error"}</p>
             </div>
 
-            {/* Root cause if available */}
-            {selected.root_cause && (
-              <div className="bg-surface-2 border border-border rounded-xl p-5 mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">Root Cause</p>
-                  <span className="text-xs text-brand-orange">{Math.round((selected.confidence || 0) * 100)}% confidence</span>
+            {/* AI-first flow: root cause if available, otherwise a clear
+                call to run analysis instead of a silent gap */}
+            {selected.root_cause ? (
+              <>
+                <div className="bg-surface-2 border border-border rounded-xl p-5 mb-4">
+                  {selected.problem && (
+                    <div className="mb-3">
+                      <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-1">Problem</p>
+                      <p className="text-sm text-text-muted leading-relaxed">{selected.problem}</p>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">Root Cause</p>
+                    <span className="text-xs text-brand-orange">{Math.round((selected.confidence || 0) * 100)}% confidence</span>
+                  </div>
+                  <p className="text-sm text-text-muted leading-relaxed">{selected.root_cause}</p>
                 </div>
-                <p className="text-sm text-text-muted leading-relaxed">{selected.root_cause}</p>
-              </div>
+                {selected.business_impact && (
+                  <div className="bg-surface-2 border border-border rounded-xl p-5 mb-4">
+                    <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-1">Business Impact</p>
+                    <p className="text-sm text-text-muted leading-relaxed">{selected.business_impact}</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <button
+                onClick={() => runAnalysis(selected)}
+                disabled={analysing}
+                className="w-full flex items-center justify-center gap-2 bg-brand-orange hover:opacity-90 text-text-primary font-semibold text-sm rounded-xl py-3 mb-4 transition-colors disabled:opacity-60"
+              >
+                {analysing ? "Analyzing..." : "✦ Run AI Analysis"}
+              </button>
             )}
 
             {/* AI tip */}

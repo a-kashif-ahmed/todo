@@ -11,6 +11,9 @@ interface Snapshot {
   source: string;
   execution_status: string | null;
   label?: string | null;
+  // Optional AI summary attached to the snapshot (from ai_summary column /
+  // /api/ai/summary) — shown as a truncated snippet under each entry.
+  ai_summary?: { summary: string; complexity?: "low" | "medium" | "high" } | null;
 }
 
 interface Props {
@@ -23,6 +26,12 @@ const statusDot: Record<string, string> = {
   success: "bg-status-success",
   failure: "bg-status-error",
   unknown: "bg-gray-500",
+};
+
+const complexityDot: Record<string, string> = {
+  low: "text-status-success",
+  medium: "text-status-warning",
+  high: "text-status-error",
 };
 
 export default function SnapshotTimeline({ snapshots, selectedId, onSelect }: Props) {
@@ -51,12 +60,22 @@ export default function SnapshotTimeline({ snapshots, selectedId, onSelect }: Pr
                 <span className="text-xs text-text-muted font-medium">
                   {s.label || s.source}
                 </span>
+                {s.ai_summary?.complexity && (
+                  <span className={`text-[10px] ml-auto ${complexityDot[s.ai_summary.complexity]}`}>
+                    ● {s.ai_summary.complexity}
+                  </span>
+                )}
               </div>
               <p className="text-[11px] text-text-muted">
                 {new Date(s.created_at).toLocaleString(undefined, {
                   month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
                 })}
               </p>
+              {s.ai_summary?.summary && (
+                <p className="text-[11px] text-text-muted/80 mt-1 line-clamp-2">
+                  {s.ai_summary.summary}
+                </p>
+              )}
             </button>
           );
         })}

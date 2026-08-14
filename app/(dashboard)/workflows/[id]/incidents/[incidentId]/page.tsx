@@ -14,9 +14,14 @@ interface Incident {
   id: string;
   workflow_id: string;
   error_message: string | null;
+  problem: string | null;
   root_cause: string | null;
   confidence: number | null;
+  business_impact: string | null;
   impact_summary: string | null;
+  what_changed: string | null;
+  execution_evidence: string | null;
+  recovery_steps: string[] | null;
   suggested_fix: { description: string; node_id?: string; field?: string } | null;
   detected_at: string;
 }
@@ -62,9 +67,14 @@ export default function IncidentAnalysisPage() {
             prev
               ? {
                   ...prev,
+                  problem: analyseRes.analysis.problem,
                   root_cause: analyseRes.analysis.root_cause,
                   confidence: analyseRes.analysis.confidence,
+                  business_impact: analyseRes.analysis.business_impact,
                   impact_summary: analyseRes.analysis.impact_summary,
+                  what_changed: analyseRes.analysis.what_changed,
+                  execution_evidence: analyseRes.analysis.execution_evidence,
+                  recovery_steps: analyseRes.analysis.recovery_steps,
                   suggested_fix: analyseRes.analysis.suggested_fix,
                 }
               : prev
@@ -167,7 +177,7 @@ export default function IncidentAnalysisPage() {
             />
           ))}
 
-          {/* The failure itself */}
+          {/* The failure itself — AI interpretation attached once analysed */}
           <TimelineEvent
             time={new Date(incident.detected_at).toLocaleString(undefined, {
               hour: "2-digit", minute: "2-digit",
@@ -176,7 +186,23 @@ export default function IncidentAnalysisPage() {
             description={incident.error_message || "Execution failed without a specific error message."}
             type="error"
             errorDetail={incident.error_message || "Unknown error"}
+            aiInterpretation={
+              incident.root_cause
+                ? `${incident.root_cause}${incident.what_changed ? ` ${incident.what_changed}` : ""}`
+                : undefined
+            }
           />
+
+          {/* Recovery — only shown once AI analysis has produced steps */}
+          {incident.recovery_steps && incident.recovery_steps.length > 0 && (
+            <TimelineEvent
+              time="Recommended next"
+              title="Recovery"
+              description={incident.recovery_steps.join(" ")}
+              type="ai"
+              badge="AI RECOMMENDED"
+            />
+          )}
         </div>
       </div>
 
@@ -184,10 +210,15 @@ export default function IncidentAnalysisPage() {
       <div>
         {incident.root_cause ? (
           <AIIntelligenceReport
+            problem={incident.problem || undefined}
             rootCause={incident.root_cause}
             confidence={incident.confidence || 0}
             impact={impactLevel}
+            businessImpact={incident.business_impact || undefined}
+            whatChanged={incident.what_changed || undefined}
             explanation={incident.impact_summary || ""}
+            executionEvidence={incident.execution_evidence || undefined}
+            recoverySteps={incident.recovery_steps || []}
             actions={[
               {
                 icon: "fix",

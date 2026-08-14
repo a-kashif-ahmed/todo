@@ -19,6 +19,7 @@ interface Message {
 
 interface Props4 {
   workflowId: string;
+  snapshotId?: string;
   incidentContext?: string;
   onClose: () => void;
   onApplyFix?: () => void;
@@ -28,6 +29,7 @@ interface Props4 {
 
 export default function AIAssistantPanel({
   workflowId,
+  snapshotId,
   incidentContext = "",
   onClose,
   onApplyFix,
@@ -39,6 +41,8 @@ export default function AIAssistantPanel({
   const [streaming, setStreaming] = useState(false);
   const [applyingFix, setApplyingFix] = useState(false);
   const [restoring, setRestoring] = useState(false);
+  const [loadingDocumentation, setLoadingDocumentation] = useState(false);
+  const [loadingDeploymentCheck, setLoadingDeploymentCheck] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [includeContext, setIncludeContext] = useState(true);
   const [listening, setListening] = useState(false);
@@ -155,6 +159,64 @@ export default function AIAssistantPanel({
     try { await onRestore?.(); } finally { setRestoring(false); }
   }
 
+  async function handleViewDocumentation() {
+    if (!snapshotId) {
+      setMessages(prev => [...prev, { role: "assistant", content: "No snapshot is selected to document yet." }]);
+      return;
+    }
+    setLoadingDocumentation(true);
+    try {
+      const res = await fetch("/api/ai/document", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ snapshot_id: snapshotId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Documentation generation failed.");
+
+      const doc = data.documentation;
+      const sections = (doc.sections || [])
+        .map((s: any) => `**${s.heading}** — ${s.content}`)
+        .join("\n");
+      const content = `**${doc.title}**\n\n${doc.overview}${sections ? `\n\n${sections}` : ""}`;
+      setMessages(prev => [...prev, { role: "assistant", content }]);
+    } catch (e: any) {
+      setMessages(prev => [...prev, { role: "assistant", content: `Couldn't generate documentation: ${e.message}` }]);
+    } finally {
+      setLoadingDocumentation(false);
+    }
+  }
+
+  async function handleCheckDeploymentReadiness() {
+    if (!snapshotId) {
+      setMessages(prev => [...prev, { role: "assistant", content: "No snapshot is selected to check yet." }]);
+      return;
+    }
+    setLoadingDeploymentCheck(true);
+    try {
+      const res = await fetch("/api/ai/deployment-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ snapshot_id: snapshotId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Deployment check failed.");
+
+      const check = data.check;
+      const blocking = (check.blocking_issues || []).map((i: string) => `- ${i}`).join("\n");
+      const warnings = (check.warnings || []).map((i: string) => `- ${i}`).join("\n");
+      const content = `**Deployment score: ${check.score}/100 (${check.status})**` +
+        (blocking ? `\n\nBlocking:\n${blocking}` : "") +
+        (warnings ? `\n\nWarnings:\n${warnings}` : "") +
+        (!blocking && !warnings ? "\n\nNo blocking issues or warnings found." : "");
+      setMessages(prev => [...prev, { role: "assistant", content }]);
+    } catch (e: any) {
+      setMessages(prev => [...prev, { role: "assistant", content: `Couldn't check deployment readiness: ${e.message}` }]);
+    } finally {
+      setLoadingDeploymentCheck(false);
+    }
+  }
+
   async function toggleMic() {
     if (!recognitionRef.current) {
       alert("Speech recognition is not supported in this browser.");
@@ -175,7 +237,7 @@ export default function AIAssistantPanel({
       <div className="flex items-center justify-between px-5 py-4 border-b border-border-light">
         <div className="flex items-center gap-3">
           <span className="w-9 h-9 rounded-lg bg-brand-orange/15 border border-brand-orange/25 flex items-center justify-center text-brand-orange">
-            ◎
+            <img src="/logo.png" alt="FlowLens" />
           </span>
           <div>
             <p className="text-sm font-semibold text-text-primary">FlowLens Copilot</p>
@@ -214,6 +276,10 @@ export default function AIAssistantPanel({
                 onOpenCompare={() => onOpenCompare?.()}
                 applyingFix={applyingFix}
                 restoring={restoring}
+                onViewDocumentation={handleViewDocumentation}
+                onCheckDeploymentReadiness={handleCheckDeploymentReadiness}
+                loadingDocumentation={loadingDocumentation}
+                loadingDeploymentCheck={loadingDeploymentCheck}
               />
             )}
           </div>

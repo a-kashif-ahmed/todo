@@ -1,8 +1,3 @@
-// ============================================================
-// INCIDENT ANALYSIS PAGE
-// Copy each block to its file path
-// ============================================================
-
 // ─────────────────────────────────────────────────────────────
 // src/components/incident/TimelineEvent.tsx
 // ─────────────────────────────────────────────────────────────
@@ -11,10 +6,15 @@ interface TimelineEventProps {
   time: string;
   title: string;
   description: string;
-  type: "healthy" | "change" | "connection" | "error" | "blocked";
+  type: "healthy" | "change" | "connection" | "error" | "blocked" | "ai";
   badge?: string;
   codeDiff?: { removed: string; added: string };
   errorDetail?: string;
+  // AI-interpreted commentary attached to this event — e.g. "Copilot: this
+  // change removed the retry handler, which is why the next run failed."
+  // Rendered as its own highlighted block so it's visually distinct from
+  // the raw log line above it.
+  aiInterpretation?: string;
 }
 
 const iconByType: Record<string, string> = {
@@ -23,6 +23,7 @@ const iconByType: Record<string, string> = {
   connection: "⚭",
   error: "▦",
   blocked: "⊘",
+  ai: "✦",
 };
 
 const colorByType: Record<string, string> = {
@@ -31,6 +32,7 @@ const colorByType: Record<string, string> = {
   connection: "text-amber-400 border-amber-400/40 bg-amber-400/10",
   error: "text-status-error border-status-error/40 bg-status-error/10",
   blocked: "text-text-muted border-gray-600/40 bg-gray-600/10",
+  ai: "text-brand-orange border-brand-orange/40 bg-brand-orange/10",
 };
 
 export default function TimelineEvent({
@@ -41,6 +43,7 @@ export default function TimelineEvent({
   badge,
   codeDiff,
   errorDetail,
+  aiInterpretation,
 }: TimelineEventProps) {
   const isError = type === "error";
 
@@ -89,9 +92,16 @@ export default function TimelineEvent({
             Error: {errorDetail}
           </div>
         )}
+
+        {aiInterpretation && (
+          <div className="mt-3 bg-brand-orange/10 border border-brand-orange/20 rounded-lg px-4 py-3">
+            <p className="text-[10px] font-semibold tracking-wide text-brand-orange uppercase mb-1">
+              ✦ AI Interpretation
+            </p>
+            <p className="text-xs text-text-muted leading-relaxed">{aiInterpretation}</p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-

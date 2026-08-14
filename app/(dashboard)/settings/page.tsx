@@ -8,9 +8,18 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { User, Shield, Key, GitBranch, LogOut, Edit2, Copy, Check } from "lucide-react";
+import { User, Shield, Key, GitBranch, LogOut, Edit2, Copy, Check, Sparkles } from "lucide-react";
 
-type SettingsTab = "General" | "Security" | "API Keys" | "Integrations";
+type SettingsTab = "General" | "AI & Privacy" | "Security" | "API Keys" | "Integrations";
+
+interface AISettings {
+  ai_analysis_enabled: boolean;
+  workflow_data_processing: boolean;
+  ai_documentation_enabled: boolean;
+  automatic_reviews_enabled: boolean;
+  privacy_mode: "standard" | "strict";
+  processing_location: "cloud" | "local" | "self_hosted";
+}
 
 export default function SettingsPage() {
   const [tab, setTab] = useState<SettingsTab>("General");
@@ -25,6 +34,8 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [aiSettings, setAiSettings] = useState<AISettings | null>(null);
+  const [savingAi, setSavingAi] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -55,8 +66,39 @@ export default function SettingsPage() {
     }
   }
 
+  async function loadAiSettings() {
+    try {
+      const res = await fetch("/api/settings/ai").then(r => r.json());
+      setAiSettings(res.settings);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   load();
+  loadAiSettings();
 }, []);
+
+  async function updateAiSetting<K extends keyof AISettings>(key: K, value: AISettings[K]) {
+    if (!aiSettings) return;
+    const previous = aiSettings;
+    const next = { ...aiSettings, [key]: value };
+    setAiSettings(next);
+    setSavingAi(true);
+    try {
+      const res = await fetch("/api/settings/ai", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [key]: value }),
+      });
+      if (!res.ok) throw new Error("Save failed");
+    } catch (err) {
+      console.error(err);
+      setAiSettings(previous); // revert on failure
+    } finally {
+      setSavingAi(false);
+    }
+  }
 
   async function handleSave() {
   setSaving(true);
@@ -109,6 +151,7 @@ export default function SettingsPage() {
 
   const tabs: { id: SettingsTab; icon: React.ReactNode }[] = [
     { id: "General",      icon: <User size={14} /> },
+    { id: "AI & Privacy", icon: <Sparkles size={14} /> },
     { id: "Security",     icon: <Shield size={14} /> },
     { id: "API Keys",     icon: <Key size={14} /> },
     { id: "Integrations", icon: <GitBranch size={14} /> },
@@ -224,6 +267,100 @@ export default function SettingsPage() {
             </div>
           )}
 
+          {tab === "AI & Privacy" && aiSettings && (
+            <div className="space-y-5">
+              <div>
+                <h3 className="text-sm font-semibold text-text-muted mb-1">AI & Privacy</h3>
+                <p className="text-xs text-text-muted mb-4">
+                  Control what FlowLens Copilot is allowed to do with your workflow data.
+                  {savingAi && <span className="text-brand-orange"> Saving...</span>}
+                </p>
+              </div>
+
+              <SettingToggle
+                label="AI Analysis"
+                description="Let FlowLens Copilot generate summaries, complexity scores, and review findings for your workflows."
+                checked={aiSettings.ai_analysis_enabled}
+                onChange={v => updateAiSetting("ai_analysis_enabled", v)}
+              />
+              <SettingToggle
+                label="Workflow Data Processing"
+                description="Send node names and structure (never credentials) to the AI for analysis. Turning this off disables most Copilot features."
+                checked={aiSettings.workflow_data_processing}
+                onChange={v => updateAiSetting("workflow_data_processing", v)}
+              />
+              <SettingToggle
+                label="AI Documentation"
+                description="Allow Copilot to auto-generate human-readable documentation for your workflows."
+                checked={aiSettings.ai_documentation_enabled}
+                onChange={v => updateAiSetting("ai_documentation_enabled", v)}
+              />
+              <SettingToggle
+                label="Automatic Reviews"
+                description="Run an AI review automatically whenever a new snapshot is imported or synced, instead of only on request."
+                checked={aiSettings.automatic_reviews_enabled}
+                onChange={v => updateAiSetting("automatic_reviews_enabled", v)}
+              />
+
+              <div className="border-t border-border pt-5">
+                <label className="text-sm font-medium text-text-primary mb-1.5 block">Privacy Mode</label>
+                <p className="text-xs text-text-muted mb-2.5">
+                  Strict mode redacts more aggressively before anything is sent for analysis.
+                </p>
+                <div className="flex gap-2">
+                  {(["standard", "strict"] as const).map(mode => (
+                    <button
+                      key={mode}
+                      onClick={() => updateAiSetting("privacy_mode", mode)}
+                      className={`text-xs font-medium rounded-full px-3.5 py-1.5 border transition-colors capitalize ${
+                        aiSettings.privacy_mode === mode
+                          ? "bg-brand-orange/15 text-brand-orange border-brand-orange/30"
+                          : "bg-surface-2 text-text-muted border-border hover:border-gray-500"
+                      }`}
+                    >
+                      {mode}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-border pt-5">
+                <label className="text-sm font-medium text-text-primary mb-1.5 block">Processing Location</label>
+                <p className="text-xs text-text-muted mb-2.5">
+                  Where workflow data is sent for AI analysis.
+                </p>
+                <div className="space-y-2">
+                  {[
+                    { id: "cloud" as const, label: "Cloud Processing", available: true, desc: "Analyzed via FlowLens's cloud AI service. Fastest, no setup required." },
+                    { id: "local" as const, label: "Local Processing", available: false, desc: "Run analysis on your own infrastructure. Planned." },
+                    { id: "self_hosted" as const, label: "Self-Hosted", available: false, desc: "Bring your own model endpoint. Planned." },
+                  ].map(opt => (
+                    <button
+                      key={opt.id}
+                      onClick={() => opt.available && updateAiSetting("processing_location", opt.id)}
+                      disabled={!opt.available}
+                      className={`w-full flex items-center justify-between text-left rounded-lg border px-4 py-3 transition-colors ${
+                        aiSettings.processing_location === opt.id
+                          ? "border-brand-orange/40 bg-brand-orange/5"
+                          : "border-border bg-surface-2"
+                      } ${opt.available ? "hover:border-gray-500" : "opacity-60 cursor-not-allowed"}`}
+                    >
+                      <div>
+                        <p className="text-sm text-text-primary">{opt.label}</p>
+                        <p className="text-xs text-text-muted mt-0.5">{opt.desc}</p>
+                      </div>
+                      {!opt.available && (
+                        <span className="text-[10px] font-medium text-text-muted bg-surface border border-border rounded-full px-2 py-0.5 flex-shrink-0">
+                          Planned
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {tab === "Security" && (
             <div className="bg-surface-2 border border-border rounded-xl p-5">
               <h3 className="text-sm font-semibold text-text-primary mb-3">Security</h3>
@@ -254,3 +391,37 @@ export default function SettingsPage() {
 }
 
 
+
+// Small reusable toggle row for the AI & Privacy tab.
+function SettingToggle({
+  label,
+  description,
+  checked,
+  onChange,
+}: {
+  label: string;
+  description: string;
+  checked: boolean;
+  onChange: (value: boolean) => void;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 bg-surface-2 border border-border rounded-lg px-4 py-3.5">
+      <div>
+        <p className="text-sm text-text-primary">{label}</p>
+        <p className="text-xs text-text-muted mt-0.5 leading-relaxed">{description}</p>
+      </div>
+      <button
+        onClick={() => onChange(!checked)}
+        className={`flex-shrink-0 w-10 h-6 rounded-full relative transition-colors ${
+          checked ? "bg-brand-orange" : "bg-surface-3 border border-border"
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
+            checked ? "translate-x-[18px]" : "translate-x-0.5"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}

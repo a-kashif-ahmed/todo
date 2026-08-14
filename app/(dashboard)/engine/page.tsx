@@ -19,7 +19,7 @@ interface NormalisedEdge { id: string; source: string; target: string }
 interface NormalisedWorkFlow { nodes: NormalisedNode[]; edges: NormalisedEdge[] }
 
 interface Incident  { id: string; workflow_id: string; error_message: string | null; detected_at: string; }
-interface Workflow  { id: string; name: string; }
+interface Workflow  { id: string; name: string; latest_ai_summary?: { risks: string[]; optimization_opportunities: string[] } | null; latest_ai_review?: { findings: any[] } | null; }
 interface Snapshot  {
   id: string;
   workflow_id: string;
@@ -27,6 +27,8 @@ interface Snapshot  {
   execution_status: "success" | "failure" | "unknown" | string;
   normalised?: NormalisedWorkFlow | null;
 }
+
+import AIEngineStatus from "@/components/engine/AIEngineStatus";
 
 function successRateFor(snaps: Snapshot[]): number | null {
   if (snaps.length === 0) return null;
@@ -37,6 +39,7 @@ function successRateFor(snaps: Snapshot[]): number | null {
 export default function AIEngineStatusPage() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [workflows, setWorkflows] = useState<Record<string, string>>({});
+  const [workflowsFull, setWorkflowsFull] = useState<Workflow[]>([]);
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedWorkflowId, setSelectedWorkflowId] = useState<string | null>(null);
@@ -55,6 +58,7 @@ export default function AIEngineStatusPage() {
       const wfs: Workflow[] = wfRes.workflows || [];
       wfs.forEach(w => { map[w.id] = w.name; });
       setWorkflows(map);
+      setWorkflowsFull(wfs);
 
       setSnapshots(snapRes.snapshots || []);
       setLoading(false);
@@ -196,6 +200,17 @@ export default function AIEngineStatusPage() {
               </div>
             </div>
             <button className="text-text-muted hover:text-text-primary">⋯</button>
+          </div>
+
+          {/* Value stats — what the AI has actually found, not just "it's running" */}
+          <div className="px-5 py-3 border-b border-border">
+            <AIEngineStatus
+              reviewedCount={workflowsFull.filter(w => w.latest_ai_summary || w.latest_ai_review).length}
+              risksDetected={workflowsFull.reduce((sum, w) => sum + (w.latest_ai_summary?.risks.length || 0), 0)}
+              optimizationsFound={workflowsFull.reduce((sum, w) => sum + (w.latest_ai_summary?.optimization_opportunities.length || 0), 0)}
+              deploymentIssues={incidents.length}
+              loading={loading}
+            />
           </div>
 
           {/* AI Confidence */}

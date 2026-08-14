@@ -17,6 +17,12 @@ const WorkflowGraph = dynamic(() => import("@/components/workflow/WorkFlowGraph"
 import SnapshotTimeline from "@/components/workflow/SnapshotTimeline";
 import AIInsightsPanel from "@/components/workflow/AIInsightsPanel";
 import AIAssistantPanel from "@/components/assistant/AIAssistantPanel";
+import AISummaryCard from "@/components/workflow/AISummaryCard";
+import AIScoreCard from "@/components/workflow/AIScoreCard";
+import DeploymentReadiness from "@/components/workflow/DeploymentReadiness";
+import OptimizationPanel from "@/components/workflow/OptimizationPanel";
+import WorkflowDocumentation from "@/components/workflow/WorkflowDocumentation";
+import { buildIncidentContext } from "@/components/assistant/IncidentBanner";
 
 interface Snapshot {
   id: string;
@@ -24,6 +30,7 @@ interface Snapshot {
   source: string;
   execution_status: string | null;
   label?: string | null;
+  ai_summary?: { summary: string; complexity?: "low" | "medium" | "high" } | null;
 }
 
 interface Workflow {
@@ -31,6 +38,36 @@ interface Workflow {
   name: string;
   platform: string;
   status: "healthy" | "degraded" | "failing" | "unknown";
+}
+
+interface WorkflowSummary {
+  summary: string;
+  complexity: "low" | "medium" | "high";
+  node_count: number;
+  risks: string[];
+  optimization_opportunities: string[];
+}
+
+interface DeploymentCheck {
+  score: number;
+  status: "ready" | "needs_review" | "blocked";
+  blocking_issues: string[];
+  warnings: string[];
+}
+
+interface OptimizationOpportunity {
+  id: string;
+  title: string;
+  description: string;
+  impact: "low" | "medium" | "high";
+  node_id?: string;
+}
+
+interface WorkflowDoc {
+  title: string;
+  overview: string;
+  sections: Array<{ heading: string; content: string }>;
+  node_docs: Array<{ node_id: string; label: string; purpose: string }>;
 }
 
 export default function WorkflowDetailPage() {
@@ -42,6 +79,21 @@ export default function WorkflowDetailPage() {
   const [selectedSnapshotId, setSelectedSnapshotId] = useState<string>("");
   const [normalisedData, setNormalisedData] = useState<NormalisedWorkFlow | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // AI Copilot state — summary/complexity/risks, deployment check, and
+  // optimization/documentation (fetched on demand, not on every load, since
+  // those two are heavier calls the person may not always need).
+  const [aiSummary, setAiSummary] = useState<WorkflowSummary | null>(null);
+  const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
+
+  const [deploymentCheck, setDeploymentCheck] = useState<DeploymentCheck | null>(null);
+  const [deploymentLoading, setDeploymentLoading] = useState(false);
+
+  const [optimizations, setOptimizations] = useState<OptimizationOpportunity[]>([]);
+  const [optimizationsLoading, setOptimizationsLoading] = useState(false);
+
+  const [documentation, setDocumentation] = useState<WorkflowDoc | null>(null);
+  const [documentationLoading, setDocumentationLoading] = useState(false);
 
   // Load workflow + snapshots on mount
   useEffect(() => {
@@ -66,6 +118,94 @@ export default function WorkflowDetailPage() {
     fetch(`/api/snapshots/${selectedSnapshotId}`)
       .then(r => r.json())
       .then(data => setNormalisedData(data.snapshot?.normalised || null));
+  }, [selectedSnapshotId]);
+
+  // Fetch the AI summary automatically whenever the selected snapshot
+  // changes — this is the "understand the workflow" moment, so it's cheap
+  // enough to always show. Deployment check / optimization / docs are
+  // heavier and stay behind explicit buttons below.
+  useEffect(() => {
+    if (!selectedSnapshotId) return;
+    let cancelled = false;
+    setAiSummary(null);
+    setDeploymentCheck(null);
+    setOptimizations([]);
+    setDocumentation(null);
+    setAiSummaryLoading(true);
+
+    fetch("/api/ai/summary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ snapshot_id: selectedSnapshotId }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (!cancelled) setAiSummary(data.summary || null);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setAiSummaryLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedSnapshotId]);
+
+  const runDeploymentCheck = useCallback(async () => {
+    if (!selectedSnapshotId) return;
+    setDeploymentLoading(true);
+    try {
+      const res = await fetch("/api/ai/deployment-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          snapshot_id: selectedSnapshotId,
+          compare_snapshot_id: snapshots[1]?.id,
+        }),
+      });
+      const data = await res.json();
+      setDeploymentCheck(data.check || null);
+    } catch {
+      // AI service functions already fail safe and return a fallback shape,
+      // so this only triggers on network-level failures.
+    } finally {
+      setDeploymentLoading(false);
+    }
+  }, [selectedSnapshotId, snapshots]);
+
+  const runOptimizationScan = useCallback(async () => {
+    if (!selectedSnapshotId) return;
+    setOptimizationsLoading(true);
+    try {
+      const res = await fetch("/api/ai/optimize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ snapshot_id: selectedSnapshotId }),
+      });
+      const data = await res.json();
+      setOptimizations(data.optimization?.opportunities || []);
+    } catch {
+    } finally {
+      setOptimizationsLoading(false);
+    }
+  }, [selectedSnapshotId]);
+
+  const generateDocumentation = useCallback(async () => {
+    if (!selectedSnapshotId) return;
+    setDocumentationLoading(true);
+    try {
+      const res = await fetch("/api/ai/document", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ snapshot_id: selectedSnapshotId }),
+      });
+      const data = await res.json();
+      setDocumentation(data.documentation || null);
+    } catch {
+    } finally {
+      setDocumentationLoading(false);
+    }
   }, [selectedSnapshotId]);
 
   const dependencies = normalisedData
@@ -102,7 +242,7 @@ export default function WorkflowDetailPage() {
       />
 
       {/* Main graph area */}
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-6 overflow-y-auto space-y-4">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-lg font-semibold text-text-primary">{workflow.name}</h1>
@@ -125,13 +265,60 @@ export default function WorkflowDetailPage() {
           </button>
         </div>
 
+        {/* AI Summary + Score strip — "understand this workflow" at a glance */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <AISummaryCard summary={aiSummary?.summary} loading={aiSummaryLoading} />
+          <AIScoreCard
+            complexity={aiSummary?.complexity}
+            deploymentScore={deploymentCheck?.score}
+            deploymentStatus={deploymentCheck?.status}
+            loading={aiSummaryLoading}
+          />
+        </div>
+
         {normalisedData ? (
-          <WorkflowGraph workflow={normalisedData} />
+          <WorkflowGraph
+            workflow={normalisedData}
+            riskNodeIds={
+              // Best-effort: match risk text against node labels so risky
+              // nodes stand out on the graph without needing per-node IDs
+              // from generateWorkflowSummary (which returns free-text risks).
+              normalisedData.nodes
+                .filter(n => (aiSummary?.risks || []).some(r => r.toLowerCase().includes(n.label.toLowerCase())))
+                .map(n => n.id)
+            }
+          />
         ) : (
           <div className="h-96 flex items-center justify-center text-text-muted text-sm bg-surface-2 rounded-lg border border-border">
             No snapshot data available
           </div>
         )}
+
+        {/* Deployment readiness + optimization — Review / Documentation / Optimization */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <DeploymentReadiness
+            score={deploymentCheck?.score}
+            status={deploymentCheck?.status}
+            blockingIssues={deploymentCheck?.blocking_issues}
+            warnings={deploymentCheck?.warnings}
+            loading={deploymentLoading}
+            onRunCheck={runDeploymentCheck}
+          />
+          <OptimizationPanel
+            opportunities={optimizations}
+            loading={optimizationsLoading}
+            onRunOptimization={runOptimizationScan}
+          />
+        </div>
+
+        <WorkflowDocumentation
+          title={documentation?.title}
+          overview={documentation?.overview}
+          sections={documentation?.sections}
+          nodeDocs={documentation?.node_docs}
+          loading={documentationLoading}
+          onGenerate={generateDocumentation}
+        />
       </div>
 
       {/* AI Insights panel */}
@@ -141,11 +328,16 @@ export default function WorkflowDetailPage() {
         latencyMs={142}
         dependencies={dependencies}
         recentChanges={recentChanges}
+        aiSummary={aiSummary?.summary}
+        aiComplexity={aiSummary?.complexity}
+        aiRisks={aiSummary?.risks}
+        aiSummaryLoading={aiSummaryLoading}
       />
       {showAssistant && (
   <AIAssistantPanel
     workflowId={workflow.id}
-    incidentContext={`Workflow: ${workflow.name}. Platform: ${workflow.platform}. Status: ${workflow.status}.`}
+    snapshotId={selectedSnapshotId}
+    incidentContext={buildIncidentContext(workflow)}
     onClose={() => setShowAssistant(false)}
     onApplyFix={() => {
       console.log("Apply Fix clicked");
