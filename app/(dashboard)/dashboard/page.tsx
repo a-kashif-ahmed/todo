@@ -231,7 +231,7 @@ export default function Home() {
 
               <RecentActivityFeed />
 
-              <SystemHealthCard
+              <SystemHealthCard key="as"
                 workflows={workflows}
                 loading={loading}
               />
