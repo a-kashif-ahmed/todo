@@ -254,7 +254,7 @@ export default function NotificationsPage() {
               <span className="text-xl font-bold text-text-primary">
                 {stats?.uptime !== null && stats?.uptime !== undefined ? `${stats.uptime}%` : "—"}
               </span>
-              <span className="text-[10px] text-text-muted uppercase tracking-wide">SUCCESS RATE</span>
+              <span className="text-[8px] text-text-muted uppercase tracking-wide">SUCCESS RATE</span>
             </div>
           </div>
         </div>

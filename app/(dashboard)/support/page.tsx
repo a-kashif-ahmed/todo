@@ -36,27 +36,31 @@ const topics = [
     action: "Manage",
   },
 ];
-
+const EMAIL = "flowlensaas@gmail.com"; 
+const SUBJECT = "Issue - FlowLens";
+const BODY = `Hi FlowLens Team,`;
 const support = [
   {
     icon: MessageSquare,
     title: "Community Forum",
+    href:'https://discord.gg/f2B6hamNMX',
     description: "Active discussions on Discord",
     action: "Join Server",
   },
   {
     icon: Mail,
     title: "Email Support",
+    href:`mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(BODY)}`  ,
     description: "Expected response: ~4 hours",
-    action: "Open Ticket",
+    action: "Email Us",
   },
-  {
-    icon: MessageSquare,
-    title: "Priority Chat",
-    description: "Live agent available now",
-    action: "Start Chatting",
-    badge: "PRO",
-  },
+  // {
+  //   icon: MessageSquare,
+  //   title: "Priority Chat",
+  //   description: "Live agent available now",
+  //   action: "Start Chatting",
+  //   badge: "PRO",
+  // },
 ];
 
 export default function SupportPage() {
@@ -81,7 +85,7 @@ export default function SupportPage() {
               detective guide you through complex automation debugging.
             </p>
 
-            <div className="mt-10 flex overflow-hidden rounded-2xl border border-white/10 bg-surface2">
+            <div className="mt-10 flex overflow-hidden rounded-2xl border-text border bg-surface2">
               <div className="flex flex-1 items-center gap-3 px-5">
                 <Search size={20} className="text-primary-500" />
 
@@ -91,7 +95,7 @@ export default function SupportPage() {
                 />
               </div>
 
-              <button className="m-2 rounded-xl bg-brand-orange500 px-8 font-medium hover:bg-brand-orange">
+              <button className="m-2 rounded-xl bg-brand-orange px-8 font-medium hover:bg-brand-orange text-white">
                 Search
               </button>
             </div>
@@ -100,71 +104,7 @@ export default function SupportPage() {
 
         {/* Cards */}
 
-        <div className="grid gap-6 lg:grid-cols-3">
-
-          {/* AI */}
-
-          <div className="relative overflow-hidden rounded-3xl border border-brand-orange/30 bg-gradient-to-br bg-brand-orange  p-8 lg:col-span-2">
-
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs">
-              <Sparkles size={12} />
-              AI Detective
-            </div>
-
-            <h2 className="mt-5 text-5xl font-bold">
-              FlowLens AI
-              <br />
-              Assistant
-            </h2>
-
-            <p className="mt-5 max-w-md text-brand-orange">
-              Our AI detective has analyzed over two million workflow errors.
-              Paste your logs or describe the behavior, and it will find the
-              root cause in seconds.
-            </p>
-
-            <button className="mt-8 bg-surface rounded-xl bg- px-6 py-3 font-medium hover:opacity-90">
-              Start AI Consultation
-            </button>
-
-            <div className="absolute right-8 top-1/2 h-60 w-60 -translate-y-1/2 rounded-3xl bg-" />
-          </div>
-
-          {/* Status */}
-
-          <div className="rounded-3xl border border-white/10 bg-surface2 p-8">
-
-            <h3 className="text-sm font-semibold tracking-widest text-primary-500">
-              SYSTEM STATUS
-            </h3>
-
-            <div className="mt-8 space-y-6">
-
-              <Status
-                title="API Gateway"
-                status="Operational"
-                color="bg-brand-orange"
-              />
-
-              <Status
-                title="Workflow Engine"
-                status="Operational"
-                color="bg-brand-orange"
-              />
-
-              <Status
-                title="AI Training Cluster"
-                status="Maintenance"
-                color="bg-orange-400"
-              />
-            </div>
-
-            <button className="mt-10 text-brand-orange hover:text-brand-orange">
-              Full Incident Report →
-            </button>
-          </div>
-        </div>
-
+       
         {/* Topics */}
 
         <section className="mt-16">
@@ -182,13 +122,13 @@ export default function SupportPage() {
                   key={item.title}
                   className="rounded-3xl border border-white/10 bg-brand-orange p-8 transition hover:border-brand-orange500/30"
                 >
-                  <Icon className="mb-8 text-brand-orange300" size={30} />
+                  <Icon className="mb-8 text-white" size={30} />
 
-                  <h3 className="text-priary text-xl font-semibold">
+                  <h3 className="text-white text-xl font-semibold">
                     {item.title}
                   </h3>
 
-                  <p className="mt-3 text-text-muted">
+                  <p className="mt-3 text-white">
                     {item.description}
                   </p>
 
@@ -210,7 +150,7 @@ export default function SupportPage() {
             Still need help?
           </h2>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2">
             {support.map((item) => {
               const Icon = item.icon;
 
@@ -221,33 +161,29 @@ export default function SupportPage() {
                 >
                   <div className="flex items-center gap-3">
 
-                    <div className="rounded-xl  p-3">
+                    <div className="rounded-xl  p-3 text-white">
                       <Icon />
                     </div>
 
                     <div>
 
-                      <div className="flex items-center gap-2 text-text-primary">
+                      <div className="flex items-center gap-2 text-white">
                         <h3 className="font-semibold">
                           {item.title}
                         </h3>
 
-                        {item.badge && (
-                          <span className="rounded bg-brand-orange px-2 py-0.5 text-xs">
-                            {item.badge}
-                          </span>
-                        )}
+                        
                       </div>
 
-                      <p className="text-sm text-text-muted">
+                      <p className="text-sm text-gray-50">
                         {item.description}
                       </p>
                     </div>
                   </div>
 
-                  <button className="mt-8 bg-surface rounded-xl bg- px-6 py-3 font-medium hover:opacity-90">
+                  <a href={item.href}><button className="mt-8 text-white border border-white  rounded-xl bg- px-6 py-3 font-medium hover:opacity-90">
                     {item.action}
-                  </button>
+                  </button></a>
                 </div>
               );
             })}
@@ -271,7 +207,7 @@ function Status({
   return (
     <div className="flex items-center justify-between">
       <span>{title}</span>
-
+      <span className="p-5"></span>
       <div className="flex items-center gap-2 text-sm text-primary">
         <span className={`h-2 w-2 rounded-full ${color}`} />
         {status}

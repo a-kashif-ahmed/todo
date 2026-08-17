@@ -1,12 +1,39 @@
 // ─────────────────────────────────────────────────────────────
 // src/components/workflow/AIInsightsPanel.tsx
-// Right panel — AI understanding of the workflow, plus system health,
-// dependencies, and recent changes.
+// Right panel — AI understanding of the workflow: summary, complexity,
+// risks, deployment readiness, optimization opportunities, documentation,
+// plus system health, dependencies, and recent changes.
 // ─────────────────────────────────────────────────────────────
 
 "use client";
 
 import WorkflowDependencies from "./WorkflowDependencies";
+import AIScoreCard from "./AIScoreCard";
+import DeploymentReadiness from "./DeploymentReadiness";
+import OptimizationPanel from "./OptimizationPanel";
+import WorkflowDocumentation from "./WorkflowDocumentation";
+
+interface DeploymentCheck {
+  score: number;
+  status: "ready" | "needs_review" | "blocked";
+  blocking_issues: string[];
+  warnings: string[];
+}
+
+interface OptimizationOpportunity {
+  id: string;
+  title: string;
+  description: string;
+  impact: "low" | "medium" | "high";
+  node_id?: string;
+}
+
+interface WorkflowDoc {
+  title: string;
+  overview: string;
+  sections: Array<{ heading: string; content: string }>;
+  node_docs: Array<{ node_id: string; label: string; purpose: string }>;
+}
 
 interface Props {
   workflowName: string;
@@ -14,10 +41,27 @@ interface Props {
   systemHealth: "healthy" | "degraded" | "failing" | "unknown";
   dependencies: string[];
   recentChanges: Array<{ label: string; time: string }>;
+
+  // AI summary + complexity + risks
   aiSummary?: string;
   aiComplexity?: "low" | "medium" | "high";
   aiRisks?: string[];
   aiSummaryLoading?: boolean;
+
+  // Deployment readiness
+  deploymentCheck?: DeploymentCheck | null;
+  deploymentLoading?: boolean;
+  onRunDeploymentCheck?: () => void;
+
+  // Optimization opportunities
+  optimizations?: OptimizationOpportunity[];
+  optimizationsLoading?: boolean;
+  onRunOptimizationScan?: () => void;
+
+  // Documentation
+  documentation?: WorkflowDoc | null;
+  documentationLoading?: boolean;
+  onGenerateDocumentation?: () => void;
 }
 
 const healthStyle: Record<string, string> = {
@@ -25,12 +69,6 @@ const healthStyle: Record<string, string> = {
   degraded: "text-status-warning",
   failing: "text-status-error",
   unknown: "text-text-muted",
-};
-
-const complexityStyle: Record<string, string> = {
-  low: "text-status-success border-status-success/30 bg-status-success/10",
-  medium: "text-status-warning border-status-warning/30 bg-status-warning/10",
-  high: "text-status-error border-status-error/30 bg-status-error/10",
 };
 
 export default function AIInsightsPanel({
@@ -43,6 +81,15 @@ export default function AIInsightsPanel({
   aiComplexity,
   aiRisks = [],
   aiSummaryLoading,
+  deploymentCheck,
+  deploymentLoading,
+  onRunDeploymentCheck,
+  optimizations = [],
+  optimizationsLoading,
+  onRunOptimizationScan,
+  documentation,
+  documentationLoading,
+  onGenerateDocumentation,
 }: Props) {
   return (
     <div className="w-60 border-l border-border bg-surface-2 h-full overflow-y-auto">
@@ -59,7 +106,13 @@ export default function AIInsightsPanel({
           <div className="flex items-center justify-between mb-2">
             <p className="text-[11px] text-text-muted uppercase tracking-wide">AI Summary</p>
             {aiComplexity && !aiSummaryLoading && (
-              <span className={`text-[10px] font-medium uppercase border rounded-full px-2 py-0.5 ${complexityStyle[aiComplexity]}`}>
+              <span className={`text-[10px] font-medium uppercase border rounded-full px-2 py-0.5 ${
+                aiComplexity === "low"
+                  ? "text-status-success border-status-success/30 bg-status-success/10"
+                  : aiComplexity === "medium"
+                  ? "text-status-warning border-status-warning/30 bg-status-warning/10"
+                  : "text-status-error border-status-error/30 bg-status-error/10"
+              }`}>
                 {aiComplexity}
               </span>
             )}
@@ -91,6 +144,41 @@ export default function AIInsightsPanel({
           </div>
         )}
 
+        {/* AI Score / complexity / deployment readiness strip */}
+        <AIScoreCard
+          complexity={aiComplexity}
+          deploymentScore={deploymentCheck?.score}
+          deploymentStatus={deploymentCheck?.status}
+          loading={aiSummaryLoading}
+        />
+
+        {/* Deployment readiness checklist */}
+        <DeploymentReadiness
+          score={deploymentCheck?.score}
+          status={deploymentCheck?.status}
+          blockingIssues={deploymentCheck?.blocking_issues}
+          warnings={deploymentCheck?.warnings}
+          loading={deploymentLoading}
+          onRunCheck={onRunDeploymentCheck}
+        />
+
+        {/* Optimization opportunities */}
+        <OptimizationPanel
+          opportunities={optimizations}
+          loading={optimizationsLoading}
+          onRunOptimization={onRunOptimizationScan}
+        />
+
+        {/* Documentation */}
+        <WorkflowDocumentation
+          title={documentation?.title}
+          overview={documentation?.overview}
+          sections={documentation?.sections}
+          nodeDocs={documentation?.node_docs}
+          loading={documentationLoading}
+          onGenerate={onGenerateDocumentation}
+        />
+
         {/* System health */}
         <div>
           <p className="text-[11px] text-text-muted uppercase tracking-wide mb-2">System Health</p>
@@ -121,9 +209,6 @@ export default function AIInsightsPanel({
               </div>
             ))}
           </div>
-        </div>
-        <div className=" px-2 pb-3">
-          
         </div>
 
       </div>

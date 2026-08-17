@@ -85,7 +85,7 @@ export default function InvestigatePage() {
             <div className="bg-surface-2 border border-border rounded-xl p-3.5">
               <p className="text-[10px] text-text-muted uppercase mb-1">Avg. Time to Resolve</p>
               <div className="flex items-center justify-between">
-                <p className="text-2xl font-bold text-text-primary">14m</p>
+                <p className="text-2xl font-bold text-text-primary">15m</p>
                 <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center">
                   <Clock size={14} className="text-text-muted" />
                 </div>
@@ -94,7 +94,7 @@ export default function InvestigatePage() {
             <div className="bg-surface-2 border border-border rounded-xl p-3.5">
               <p className="text-[10px] text-text-muted uppercase mb-1">AI Confidence Score</p>
               <div className="flex items-center justify-between">
-                <p className="text-2xl font-bold text-brand-orange">94%</p>
+                <p className="text-2xl font-bold text-brand-orange">90%</p>
                 <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-brand-orange">✦</div>
               </div>
             </div>
@@ -214,13 +214,7 @@ export default function InvestigatePage() {
               <p className="text-sm text-text-muted leading-relaxed mb-6">
                 Select a recent failure from the list or search above to start the root cause analysis. FlowLens AI will automatically map the event timeline and isolate the faulty node.
               </p>
-              <div className="flex items-center justify-center gap-2 bg-surface-2 border border-border rounded-lg px-4 py-2.5 text-xs text-text-muted">
-                <span>Press</span>
-                <kbd className="bg-surface border border-border rounded px-1.5 py-0.5 font-mono">⌘</kbd>
-                <kbd className="bg-surface border border-border rounded px-1.5 py-0.5 font-mono">K</kbd>
-                <span>to search</span>
-              </div>
-
+              
               {/* AI tip */}
               {incidents.length > 0 && (
                 <div className="mt-6 bg-brand-orange border border-brand-orange/25 rounded-xl p-4 text-left">

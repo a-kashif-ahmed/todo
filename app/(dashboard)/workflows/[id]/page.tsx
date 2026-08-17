@@ -146,7 +146,9 @@ export default function WorkflowDetailPage() {
       .finally(() => {
         if (!cancelled) setAiSummaryLoading(false);
       });
-
+    runDeploymentCheck();
+    runOptimizationScan();
+    generateDocumentation();
     return () => {
       cancelled = true;
     };
@@ -266,16 +268,7 @@ export default function WorkflowDetailPage() {
         </div>
 
         {/* AI Summary + Score strip — "understand this workflow" at a glance */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <AISummaryCard summary={aiSummary?.summary} loading={aiSummaryLoading} />
-          <AIScoreCard
-            complexity={aiSummary?.complexity}
-            deploymentScore={deploymentCheck?.score}
-            deploymentStatus={deploymentCheck?.status}
-            loading={aiSummaryLoading}
-          />
-        </div>
-
+         
         {normalisedData ? (
           <WorkflowGraph
             workflow={normalisedData}
@@ -295,30 +288,10 @@ export default function WorkflowDetailPage() {
         )}
 
         {/* Deployment readiness + optimization — Review / Documentation / Optimization */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          <DeploymentReadiness
-            score={deploymentCheck?.score}
-            status={deploymentCheck?.status}
-            blockingIssues={deploymentCheck?.blocking_issues}
-            warnings={deploymentCheck?.warnings}
-            loading={deploymentLoading}
-            onRunCheck={runDeploymentCheck}
-          />
-          <OptimizationPanel
-            opportunities={optimizations}
-            loading={optimizationsLoading}
-            onRunOptimization={runOptimizationScan}
-          />
-        </div>
+        
+          
 
-        <WorkflowDocumentation
-          title={documentation?.title}
-          overview={documentation?.overview}
-          sections={documentation?.sections}
-          nodeDocs={documentation?.node_docs}
-          loading={documentationLoading}
-          onGenerate={generateDocumentation}
-        />
+        
       </div>
 
       {/* AI Insights panel */}
@@ -332,6 +305,12 @@ export default function WorkflowDetailPage() {
         aiComplexity={aiSummary?.complexity}
         aiRisks={aiSummary?.risks}
         aiSummaryLoading={aiSummaryLoading}
+        deploymentCheck={deploymentCheck}
+        deploymentLoading={deploymentLoading}
+        documentation={documentation}
+        documentationLoading={documentationLoading}
+        optimizations={optimizations}
+        optimizationsLoading={optimizationsLoading}
       />
       {showAssistant && (
   <AIAssistantPanel

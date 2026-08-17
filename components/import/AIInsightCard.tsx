@@ -10,11 +10,11 @@ export default function AIInsightCard() {
       <div className="flex items-center gap-2 mb-3">
         <span className="text-brand-orange text-sm">
 
-<Image src={logo} alt="FlowLens" /></span>
-        <span className="text-xs font-bold tracking-wide text-brand-orange">AI INSIGHT</span>
+<Image src={logo} alt="FlowLens" width={30} height={30} /></span>
+        <span className="text-xs font-bold tracking-wide text-brand-orange">AI INSIGHTS</span>
       </div>
       <p className="text-sm text-text-muted leading-relaxed">
-        I can automatically refactor your n8n or Zapier flows for better observability.
+        omatically refactor your n8n or Zapier flows for better observability.
         Just connect your account to begin.
       </p>
     </div>

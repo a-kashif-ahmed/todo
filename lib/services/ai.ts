@@ -5,12 +5,12 @@
 
 import { NormalisedWorkFlow, WorkflowDiff } from "@/types/flowlens";
 
-const OPENROUTER_BASE = "https://generativelanguage.googleapis.com/v1beta/openai";
-const MODEL = "gemini-2.0-flash";
+const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
+const MODEL = "google/gemma-4-26b-a4b-it:free";
 
 function openRouterHeaders() {
   return {
-    "Authorization": `Bearer ${process.env.GOOGLE_AI_KEY}`,
+    "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
     "Content-Type": "application/json",
   };
 }

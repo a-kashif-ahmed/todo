@@ -258,15 +258,10 @@ export default function AIEngineStatusPage() {
 
           {/* Actions */}
           <div className="px-5 py-4 space-y-2">
-            <button
-              onClick={() => router.push("/assistant")}
-              className="w-full bg-brand-orange hover:opacity-80 text-text-primary font-semibold text-sm rounded-xl py-3 transition-colors flex items-center justify-center gap-2"
-            >
-              Open AI Assistant
-            </button>
+            
             <button
               onClick={() => router.push("/investigate")}
-              className="w-full bg-surface border border-border text-text-primary font-medium text-sm rounded-xl py-3 hover:border-gray-500 transition-colors"
+              className="w-full bg-brand-orange hover:opacity-80 text-white font-semibold text-sm rounded-xl py-3 transition-colors flex items-center justify-center gap-2"
             >
               View Full Report
             </button>

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import LogoutButton from "../logout/page";
 import ThemeToggle from "../theme-toggle/page";
+import HoverTooltip from "../hover-tip/page";
 
 export default function Navbar() {
   const supabase = createClient();
@@ -34,13 +35,22 @@ export default function Navbar() {
         </div>
 
         <div className="ml-8 flex items-center gap-5">
-          <a
-            href="/assistant"
-            className="flex items-center gap-1.5 text-xs font-medium text-brand-orange bg-brand-orange/10 border border-brand-orange/25 rounded-full px-3 py-1.5 hover:bg-brand-orange/15 transition-colors"
-          >
-            <Sparkles size={13} />
-            AI Copilot
-          </a>
+          <HoverTooltip
+  content={
+    <div>
+      
+      <p className="text-text-muted">Open workflow to access</p>
+    </div>
+  }
+>
+  <span
+    
+    className="flex items-center gap-1.5 text-xs font-medium text-brand-orange bg-brand-orange/10 border border-brand-orange/25 rounded-full px-3 py-1.5 hover:bg-brand-orange/15 transition-colors cursor-pointer"
+  >
+    <Sparkles size={13} />
+    AI Copilot
+  </span>
+</HoverTooltip>
 
           <a href="/notifications">
             <button className="text-text-muted transition-colors hover:text-text-primary">

@@ -9,6 +9,7 @@ import { GitBranch, RotateCcw, Upload, Zap, Clock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@/public/logo.png";
+           
 
 interface HistoryEntry {
   id: string;
@@ -129,7 +130,7 @@ export default function HistoryPage() {
         <div className="flex items-center gap-2">
           <span className="text-brand-orange">
 
-<Image src={logo} alt="FlowLens" width={20} height={20}/></span>
+<Image src={logo} alt="FlowLens" width={50} height={50}/></span>
           <h2 className="text-base font-semibold text-text-primary">Builder Insights</h2>
         </div>
         <p className="text-xs text-text-muted">Maximize your automation visibility</p>
@@ -151,7 +152,9 @@ export default function HistoryPage() {
         {/* Version engine banner */}
         <div className="bg-surface-2 border border-border rounded-xl overflow-hidden">
           <div className="bg-gradient-to-br from-surface-3 to-surface-2 h-24 flex items-center justify-center">
-           
+
+
+<Image src={logo} alt="FlowLens" width={80} height={80} />
           </div>
           <div className="px-4 py-3">
             <p className="text-xs font-semibold text-text-primary">Version Engine Active</p>
@@ -167,9 +170,9 @@ export default function HistoryPage() {
               { label: "Auth Audit",  status: "Synchronized" },
             ].map(item => (
               <div key={item.label} className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full border-2 border-brand-blue flex items-center justify-center flex-shrink-0">
-                  <span className="w-1 h-1 rounded-full bg-brand-blue" />
-                </span>
+                
+                  <Image src={logo} alt="FlowLens" width={40} height={40} />
+                
                 <span className="text-xs text-text-muted">{item.label}: <span className="text-gray-300">{item.status}</span></span>
               </div>
             ))}

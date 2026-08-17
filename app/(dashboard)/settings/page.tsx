@@ -410,18 +410,18 @@ function SettingToggle({
         <p className="text-sm text-text-primary">{label}</p>
         <p className="text-xs text-text-muted mt-0.5 leading-relaxed">{description}</p>
       </div>
-      <button
-        onClick={() => onChange(!checked)}
-        className={`flex-shrink-0 w-10 h-6 rounded-full relative transition-colors ${
-          checked ? "bg-brand-orange" : "bg-surface-3 border border-border"
-        }`}
-      >
-        <span
-          className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
-            checked ? "translate-x-[18px]" : "translate-x-0.5"
-          }`}
-        />
-      </button>
+     <button
+  onClick={() => onChange(!checked)}
+  className={`flex-shrink-0 w-10 h-6 rounded-full relative transition-colors ${
+    checked ? "bg-brand-orange" : "bg-surface-3 border border-border"
+  }`}
+>
+  <span
+    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+      checked ? "translate-x-0.5" : "-translate-x-4"
+    }`}
+  />
+</button>
     </div>
   );
 }
