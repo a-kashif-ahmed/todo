@@ -46,14 +46,6 @@ export default function AllWorkflows() {
       wf.status === "degraded"
   ).length;
 
-  console.log(
-    "Sorted workflows:",
-    sortedWorkflows.map(wf => ({
-      id: wf.id,
-      name: wf.name,
-      status: wf.status,
-    }))
-  );
   return (
     <div className="flex min-h-screen bg-surface  ">
 

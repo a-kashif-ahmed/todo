@@ -12,11 +12,17 @@
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { answerWorkflowQuery, SearchableWorkflow } from "@/lib/services/ai";
+import { assertAiAllowed } from "@/lib/services/aiSettings";
 
 export async function GET(request: Request) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
   const { teamId, db } = ctx;
+
+  const gate = await assertAiAllowed(db, teamId, "analysis");
+  if (!gate.allowed) {
+    return NextResponse.json({ error: gate.reason }, { status: 403 });
+  }
 
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q");
@@ -55,7 +61,7 @@ export async function GET(request: Request) {
       id: wf.id,
       name: wf.name,
       platform: wf.platform,
-      nodes: nodes.map((n: any) => ({
+      nodes: nodes.map((n: { id: string; type: string; label: string; credential_ref?: string }) => ({
         id: n.id,
         type: n.type,
         label: n.label,
@@ -67,7 +73,7 @@ export async function GET(request: Request) {
   try {
     const result = await answerWorkflowQuery(query, searchable);
     return NextResponse.json(result);
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Search failed." }, { status: 500 });
   }
 }

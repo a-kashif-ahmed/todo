@@ -50,6 +50,9 @@ function ComparePage() {
   const [restoring, setRestoring] = useState(false);
   const [restoredMessage, setRestoredMessage] = useState("");
   const [applyingFix, setApplyingFix] = useState(false);
+  const [fixMessage, setFixMessage] = useState("");
+  const [fixError, setFixError] = useState("");
+  const [incidentId, setIncidentId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!fromId || !toId) {
@@ -78,18 +81,20 @@ function ComparePage() {
         ).then(r => r.json());
 
         const matchingIncident = incidentsRes.incidents?.find(
-          (inc: any) => inc.snapshot_before === fromId && inc.snapshot_after === toId
+          (inc: { id: string; snapshot_before: string; snapshot_after: string }) =>
+            inc.snapshot_before === fromId && inc.snapshot_after === toId
         );
 
         if (matchingIncident) {
+          setIncidentId(matchingIncident.id);
           const analyseRes = await fetch(
             `/api/incidents/${matchingIncident.id}/analyse`,
             { method: "POST" }
           ).then(r => r.json());
           setAnalysis(analyseRes.analysis);
         }
-      } catch (e: any) {
-        setError(e.message || "Failed to load comparison");
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : "Failed to load comparison");
       } finally {
         setLoading(false);
       }
@@ -118,9 +123,61 @@ function ComparePage() {
 
   async function handleApplyFix() {
     setApplyingFix(true);
-    // MVP: applying a fix just marks the incident resolved.
-    // Full auto-patch logic comes in a later phase.
-    setTimeout(() => setApplyingFix(false), 1200);
+    setFixMessage("");
+    setFixError("");
+    try {
+      // Reuse the real Fix Workflow pipeline (diagnose -> validate -> apply ->
+      // test) instead of just flipping incident status with no actual change.
+      const context = [analysis?.root_cause, analysis?.impact_summary]
+        .filter(Boolean)
+        .join(" — ");
+
+      const proposeRes = await fetch(`/api/workflows/${workflowId}/fix`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          error_message: context || undefined,
+          user_request: "Apply suggested fix from incident analysis",
+        }),
+      });
+      const proposeData = await proposeRes.json();
+      if (!proposeRes.ok) throw new Error(proposeData.error || "Diagnosis failed.");
+
+      const attempt = proposeData.attempt;
+      if (!attempt?.validation?.valid) {
+        throw new Error(
+          attempt?.validation?.errors?.join(" ") ||
+          "The proposed fix did not pass validation. Open the workflow to review it manually."
+        );
+      }
+
+      const applyRes = await fetch(
+        `/api/workflows/${workflowId}/fix/${attempt.id}/apply`,
+        { method: "POST" }
+      );
+      const applyData = await applyRes.json();
+      if (!applyRes.ok) throw new Error(applyData.error || "Applying the fix failed.");
+
+      if (applyData.test_result?.passed) {
+        if (incidentId) {
+          await fetch(`/api/incidents/${incidentId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "resolved" }),
+          });
+        }
+        setFixMessage("Fix applied and verified. Incident marked resolved.");
+        setTimeout(() => router.push(`/workflows/${workflowId}`), 1500);
+      } else {
+        setFixMessage(
+          "Fix applied but didn't fully verify — open the workflow's Fix Workflow panel to review and retry."
+        );
+      }
+    } catch (e: unknown) {
+      setFixError(e instanceof Error ? e.message : "Applying the fix failed.");
+    } finally {
+      setApplyingFix(false);
+    }
   }
 
   if (loading) {
@@ -190,6 +247,12 @@ function ComparePage() {
             onApplyFix={analysis.suggested_fix ? handleApplyFix : undefined}
             applying={applyingFix}
           />
+          {fixMessage && (
+            <p className="text-xs text-status-success mt-2">{fixMessage}</p>
+          )}
+          {fixError && (
+            <p className="text-xs text-status-error mt-2">{fixError}</p>
+          )}
         </div>
       ) : (
         <div className="bg-surface-2 border border-border rounded-xl p-5 mb-6">

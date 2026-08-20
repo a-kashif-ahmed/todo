@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────────
 
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import type { NormalisedWorkFlow } from "@/types/flowlens";
@@ -22,6 +22,7 @@ import AIScoreCard from "@/components/workflow/AIScoreCard";
 import DeploymentReadiness from "@/components/workflow/DeploymentReadiness";
 import OptimizationPanel from "@/components/workflow/OptimizationPanel";
 import WorkflowDocumentation from "@/components/workflow/WorkflowDocumentation";
+import FixWorkflowPanel, { FixWorkflowPanelHandle } from "@/components/workflow/FixWorkflowPanel";
 import { buildIncidentContext } from "@/components/assistant/IncidentBanner";
 
 interface Snapshot {
@@ -29,6 +30,7 @@ interface Snapshot {
   created_at: string;
   source: string;
   execution_status: string | null;
+  error_message?: string | null;
   label?: string | null;
   ai_summary?: { summary: string; complexity?: "low" | "medium" | "high" } | null;
 }
@@ -74,6 +76,9 @@ export default function WorkflowDetailPage() {
   const params = useParams();
   const workflowId = params.id as string;
   const [showAssistant, setShowAssistant] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+  const [aiUnavailableReason, setAiUnavailableReason] = useState<string | null>(null);
+  const fixPanelRef = useRef<FixWorkflowPanelHandle>(null);
   const [workflow, setWorkflow] = useState<Workflow | null>(null);
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [selectedSnapshotId, setSelectedSnapshotId] = useState<string>("");
@@ -96,21 +101,22 @@ export default function WorkflowDetailPage() {
   const [documentationLoading, setDocumentationLoading] = useState(false);
 
   // Load workflow + snapshots on mount
-  useEffect(() => {
-    async function load() {
-      const [wfRes, snapRes] = await Promise.all([
-        fetch(`/api/workflows/${workflowId}`).then(r => r.json()),
-        fetch(`/api/snapshots?workflow_id=${workflowId}`).then(r => r.json()),
-      ]);
-      setWorkflow(wfRes.workflow);
-      setSnapshots(snapRes.snapshots || []);
-      if (snapRes.snapshots?.length > 0) {
-        setSelectedSnapshotId(snapRes.snapshots[0].id);
-      }
-      setLoading(false);
+  const loadWorkflowAndSnapshots = useCallback(async () => {
+    const [wfRes, snapRes] = await Promise.all([
+      fetch(`/api/workflows/${workflowId}`).then(r => r.json()),
+      fetch(`/api/snapshots?workflow_id=${workflowId}`).then(r => r.json()),
+    ]);
+    setWorkflow(wfRes.workflow);
+    setSnapshots(snapRes.snapshots || []);
+    if (snapRes.snapshots?.length > 0) {
+      setSelectedSnapshotId(snapRes.snapshots[0].id);
     }
-    load();
+    setLoading(false);
   }, [workflowId]);
+
+  useEffect(() => {
+    loadWorkflowAndSnapshots();
+  }, [loadWorkflowAndSnapshots]);
 
   // Load normalised graph data whenever selected snapshot changes
   useEffect(() => {
@@ -132,13 +138,18 @@ export default function WorkflowDetailPage() {
     setOptimizations([]);
     setDocumentation(null);
     setAiSummaryLoading(true);
+    setAiUnavailableReason(null);
 
     fetch("/api/ai/summary", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ snapshot_id: selectedSnapshotId }),
     })
-      .then(r => r.json())
+      .then(async r => {
+        const data = await r.json();
+        if (!r.ok && !cancelled) setAiUnavailableReason(data.error || "AI summary is currently unavailable.");
+        return data;
+      })
       .then(data => {
         if (!cancelled) setAiSummary(data.summary || null);
       })
@@ -167,10 +178,14 @@ export default function WorkflowDetailPage() {
         }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        setAiUnavailableReason(data.error || "Deployment check is currently unavailable.");
+        return;
+      }
       setDeploymentCheck(data.check || null);
     } catch {
-      // AI service functions already fail safe and return a fallback shape,
-      // so this only triggers on network-level failures.
+      // Network-level failure only — AI service functions already fail
+      // safe and return a fallback shape for everything else.
     } finally {
       setDeploymentLoading(false);
     }
@@ -186,6 +201,10 @@ export default function WorkflowDetailPage() {
         body: JSON.stringify({ snapshot_id: selectedSnapshotId }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        setAiUnavailableReason(data.error || "Optimization scan is currently unavailable.");
+        return;
+      }
       setOptimizations(data.optimization?.opportunities || []);
     } catch {
     } finally {
@@ -203,12 +222,41 @@ export default function WorkflowDetailPage() {
         body: JSON.stringify({ snapshot_id: selectedSnapshotId }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        setAiUnavailableReason(data.error || "Documentation generation is currently unavailable.");
+        return;
+      }
       setDocumentation(data.documentation || null);
     } catch {
     } finally {
       setDocumentationLoading(false);
     }
   }, [selectedSnapshotId]);
+
+  const restoreSnapshot = useCallback(async () => {
+    // "Restore" from chat restores to the snapshot before the current one —
+    // same target the "Compare versions" link already uses (snapshots[1]).
+    const target = snapshots[1];
+    if (!target) {
+      alert("No earlier snapshot to restore to yet.");
+      return;
+    }
+    setRestoring(true);
+    try {
+      const res = await fetch("/api/snapshots/restore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ snapshot_id: target.id, workflow_id: workflowId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Restore failed.");
+      await loadWorkflowAndSnapshots();
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Restore failed.");
+    } finally {
+      setRestoring(false);
+    }
+  }, [snapshots, workflowId, loadWorkflowAndSnapshots]);
 
   const dependencies = normalisedData
     ? Array.from(new Set(
@@ -266,7 +314,12 @@ export default function WorkflowDetailPage() {
             Ask FlowLens Copilot
           </button>
         </div>
-
+        {/* Fix Workflow — diagnose, propose, validate, apply, test loop */}
+        <FixWorkflowPanel
+          ref={fixPanelRef}
+          workflowId={workflowId}
+          errorMessage={snapshots.find(s => s.id === selectedSnapshotId)?.error_message}
+        />
         {/* AI Summary + Score strip — "understand this workflow" at a glance */}
          
         {normalisedData ? (
@@ -287,18 +340,20 @@ export default function WorkflowDetailPage() {
           </div>
         )}
 
-        {/* Deployment readiness + optimization — Review / Documentation / Optimization */}
         
-          
 
-        
+        {/* Deployment readiness + optimization — Review / Documentation / Optimization */}
       </div>
 
       {/* AI Insights panel */}
+      {aiUnavailableReason && (
+        <div className="bg-status-warning/10 border border-status-warning/30 rounded-lg px-4 py-2.5 mb-4 text-xs text-status-warning">
+          {aiUnavailableReason}
+        </div>
+      )}
       <AIInsightsPanel
         workflowName={workflow.name}
         systemHealth={workflow.status}
-        latencyMs={142}
         dependencies={dependencies}
         recentChanges={recentChanges}
         aiSummary={aiSummary?.summary}
@@ -319,11 +374,15 @@ export default function WorkflowDetailPage() {
     incidentContext={buildIncidentContext(workflow)}
     onClose={() => setShowAssistant(false)}
     onApplyFix={() => {
-      console.log("Apply Fix clicked");
+      // Doesn't blindly apply anything from chat — triggers a REAL
+      // diagnosis on the same Fix Workflow panel the person reviews and
+      // approves in, so the human-approval gate stays intact either way
+      // they get here.
+      setShowAssistant(false);
+      fixPanelRef.current?.triggerDiagnosis();
+      setTimeout(() => fixPanelRef.current?.scrollIntoView(), 100);
     }}
-    onRestore={() => {
-      console.log("Restore clicked");
-    }}
+    onRestore={restoreSnapshot}
     onOpenCompare={() => {
       window.location.href = `/workflows/${workflow.id}/compare?from=${snapshots[1]?.id || ""}&to=${selectedSnapshotId}`;
     }}

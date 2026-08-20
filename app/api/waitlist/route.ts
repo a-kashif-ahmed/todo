@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServiceClient } from "@/lib/supabase/service";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -13,11 +14,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: persist the email to your database or mailing list provider.
-    console.log("New waitlist signup:", email);
+    const db = createServiceClient();
+    const normalisedEmail = email.trim().toLowerCase();
+
+    const { error } = await db
+      .from("flowlens_waitlist")
+      .insert({ email: normalisedEmail });
+
+    // Unique constraint violation just means they already signed up —
+    // treat that as success rather than an error.
+    if (error && error.code !== "23505") {
+      console.error("Waitlist insert failed:", error);
+      return NextResponse.json(
+        { error: "Something went wrong. Please try again." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Something went wrong." },
       { status: 500 }

@@ -3,7 +3,7 @@
 // optimises and helps deploy workflows (not just root-cause debugging).
 // Uses OpenRouter-compatible API — drop-in compatible with OpenAI SDK format
 
-import { NormalisedWorkFlow, WorkflowDiff } from "@/types/flowlens";
+import { NormalisedWorkFlow, WorkflowDiff, RepairSuggestion, RepairOperation } from "@/types/flowlens";
 
 const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
 const MODEL = "google/gemma-4-26b-a4b-it:free";
@@ -466,6 +466,56 @@ Respond with plain text only. No markdown, no JSON.`;
     console.error("explainChange failed:", e);
     return "AI explanation is unavailable right now — see the raw diff below.";
   }
+}
+
+// ── Fix Workflow (MVP repair loop) ──────────────────────────────────────────
+// The "AI Provider" step of: Context Builder -> AI Provider -> Operation
+// Parser -> Validator -> Apply -> Test. This function only produces the
+// diagnosis + structured operations; it never touches the workflow itself —
+// see lib/services/repairValidator.ts and lib/services/repairEngine.ts for
+// the parts that actually validate/apply them.
+export async function generateRepairFix(
+  workflow: NormalisedWorkFlow,
+  errorMessage: string | undefined,
+  previousAttempts: Array<{ diagnosis: string; operations: RepairOperation[]; test_result: unknown }> = []
+): Promise<RepairSuggestion> {
+  const prompt = `${COPILOT_PERSONA}
+You are repairing a broken automation workflow. Diagnose the problem, then
+propose a SMALL, SAFE set of structured operations to fix it — never rewrite
+the whole workflow, only the minimum changes needed.
+
+Only use operations from this exact set:
+- ADD_RETRY: { type, nodeId, maxRetries, backoff: "fixed"|"exponential" }
+- ADD_TIMEOUT: { type, nodeId, timeoutMs }
+- SET_CONFIG_FIELD: { type, nodeId, field, value }
+- ADD_ERROR_HANDLER: { type, nodeId, handlerNodeId, handlerLabel, handlerType } — handlerNodeId is REQUIRED, a new unique id for the fallback node (e.g. "handler_stripe_123"), not just handlerLabel.
+- FIX_DATA_MAPPING: { type, nodeId, fromPath, toPath }
+
+Example of a correctly-formed ADD_ERROR_HANDLER operation — copy this shape exactly, only changing the values:
+{ "type": "ADD_ERROR_HANDLER", "nodeId": "stripe_123", "handlerNodeId": "handler_stripe_123", "handlerLabel": "Handle Payment Failure", "handlerType": "errorHandler" }
+
+PLATFORM: ${workflow.meta?.platform || "unknown"}
+NODES:
+${JSON.stringify(workflow.nodes, null, 2)}
+EDGES:
+${JSON.stringify(workflow.edges, null, 2)}
+
+${errorMessage ? `EXECUTION ERROR:\n${errorMessage}` : "No execution error message was provided — infer likely reliability gaps (missing retries/timeouts/error handling) instead."}
+
+${previousAttempts.length > 0 ? `PREVIOUS FIX ATTEMPTS (these did not resolve it — do not repeat the same operations, try a different angle):\n${JSON.stringify(previousAttempts, null, 2)}` : ""}
+
+Respond ONLY with valid JSON matching this schema exactly. No markdown. No explanation. JSON only:
+{
+  "diagnosis": "one or two sentences: what is broken and why",
+  "reason": "why this specific fix should resolve it",
+  "operations": [ { "type": "ADD_RETRY", "nodeId": "node_id_here", "maxRetries": 3, "backoff": "exponential" } ]
+}`;
+
+  return callJSON<RepairSuggestion>(prompt, 1200, {
+    diagnosis: "Unable to automatically diagnose this workflow right now.",
+    reason: "AI repair is unavailable — try again shortly or investigate manually.",
+    operations: [],
+  });
 }
 
 // ── Semantic workflow search (lightweight, no vector store) ─────────────────

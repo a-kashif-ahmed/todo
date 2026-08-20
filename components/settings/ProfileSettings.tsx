@@ -50,6 +50,7 @@ export default function ProfileSettings({
   const [isDirty, setIsDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -73,10 +74,47 @@ export default function ProfileSettings({
 
   async function handleSave() {
     setSaving(true);
-    // wire up to your API when ready
-    await new Promise((r) => setTimeout(r, 800));
-    setSaving(false);
-    setIsDirty(false);
+    setSaveError("");
+    try {
+      const requests: Promise<Response>[] = [];
+
+      if (name.trim() && name !== displayName) {
+        requests.push(
+          fetch("/api/profile", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: name.trim() }),
+          })
+        );
+      }
+
+      if (workspaceName.trim() && workspaceName !== teamName) {
+        requests.push(
+          fetch("/api/team", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: workspaceName.trim() }),
+          })
+        );
+      }
+
+      const results = await Promise.all(requests);
+      for (const res of results) {
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || "Failed to save changes.");
+        }
+      }
+
+      // Note: avatar changes are NOT persisted — there's no file-storage
+      // backend wired up in this codebase yet (would need Supabase Storage
+      // or similar). The preview above is local-only and resets on reload.
+      setIsDirty(false);
+    } catch (e: unknown) {
+      setSaveError(e instanceof Error ? e.message : "Failed to save changes.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   function handleCopyId() {
@@ -88,7 +126,7 @@ export default function ProfileSettings({
   return (
     <div className="max-w-5xl">
       {/* Header: avatar, name, badges, save/discard */}
-      <div className="flex items-start justify-between gap-6 mb-8">
+      <div className="flex items-start justify-between gap-6 mb-3">
         <div className="flex items-center gap-4">
           <div className="relative w-16 h-16 shrink-0">
             {avatar ? (
@@ -155,6 +193,10 @@ export default function ProfileSettings({
           </button>
         </div>
       </div>
+
+      {saveError && (
+        <p className="text-xs text-status-error mb-5">{saveError}</p>
+      )}
 
       <div className="flex gap-8">
         {/* Sub-nav */}

@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { diffWorkflows } from "@/lib/services/diff";
 import { explainChange } from "@/lib/services/ai";
+import { assertAiAllowed } from "@/lib/services/aiSettings";
 
 export async function GET(request: Request) {
   const ctx = await getAuthContext();
@@ -47,12 +48,17 @@ export async function GET(request: Request) {
   const diff = diffWorkflows(snapA.normalised, snapB.normalised);
 
   // Semantic AI explanation of the change — best-effort, never blocks the
-  // raw diff from returning if the AI call fails.
+  // raw diff from returning if the AI call fails, and skipped entirely if
+  // the team has automatic AI processing turned off, since this runs on
+  // every compare-page load rather than an explicit user request.
   let explanation = "";
-  try {
-    explanation = await explainChange(diff);
-  } catch (e) {
-    console.error("explainChange failed in /api/diff:", e);
+  const gate = await assertAiAllowed(db, teamId, "automatic_review");
+  if (gate.allowed) {
+    try {
+      explanation = await explainChange(diff);
+    } catch (e) {
+      console.error("explainChange failed in /api/diff:", e);
+    }
   }
 
   return NextResponse.json({ diff, from, to, explanation });

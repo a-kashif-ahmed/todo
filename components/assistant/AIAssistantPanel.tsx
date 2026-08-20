@@ -147,6 +147,13 @@ export default function AIAssistantPanel({
       }
     }
     setStreaming(false);
+    // Surface the action bar (Apply Fix / Restore / Compare / Docs / Deployment
+    // check) under the reply so it's actually reachable — previously nothing
+    // ever set showActions, so this bar never rendered.
+    setMessages(prev => [
+      ...prev.slice(0, -1),
+      { ...prev[prev.length - 1], showActions: true },
+    ]);
   }
 
   async function handleApplyFix() {

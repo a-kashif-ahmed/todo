@@ -35,29 +35,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: teamErr.message }, { status: 500 });
     }
 
-    console.log("trying_profiles");
-    console.log(team);
     const { error: profileErr } = await db.from("flowlens_profiles").insert({
-      id:userId,
+      id: userId,
       team_id: team.id,
       name: displayName,
       role: role,
-      password:password,
-      email:email,  
-
+      password: password,
+      email: email,
     });
 
     if (profileErr) {
-  console.error(profileErr);
+      console.error(profileErr);
 
-  return NextResponse.json(
-    { error: profileErr.message },
-    { status: 500 }
-  );
-}
+      return NextResponse.json(
+        { error: profileErr.message },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ team }, { status: 201 });
   } catch (e) {
+    console.error("Onboarding failed:", e);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

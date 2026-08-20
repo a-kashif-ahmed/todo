@@ -36,8 +36,6 @@
 ) {
   const url = apiUrl(baseUrl, `/scenarios?organizationId=${makeTeamId}&pg[limit]=1`);
 
-  console.log("REQUEST URL:", url);
-
   const response = await fetch(url, {
     headers: {
       Authorization: `Token ${apiToken}`,
@@ -45,14 +43,10 @@
     },
   });
 
-  console.log("STATUS:", response.status);
-
   const text = await response.text();
 
-  console.log("BODY:", text);
-
   if (!response.ok) {
-    throw new Error(`Make API Error ${response.status}`);
+    throw new Error(`Make API Error ${response.status}: ${text.slice(0, 300)}`);
   }
 
   return true;
@@ -76,10 +70,7 @@
     }
   );
 
-  console.log("GET SCENARIOS STATUS:", response.status);
-
   const text = await response.text();
-  console.log("GET SCENARIOS BODY:", text);
 
   if (!response.ok) {
     throw new Error("Unable to fetch scenarios");

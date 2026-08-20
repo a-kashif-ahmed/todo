@@ -6,6 +6,7 @@ import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { testN8nConnection, getN8nWorkflows } from "@/lib/connections/n8n";
 import { testMakeConnection, getMakeScenarios } from "@/lib/connections/make";
 import { generateWebhookSecret, buildZapierWebhookUrl } from "@/lib/connections/zapier";
+import { encrypt } from "@/lib/services/crypto";
 
 export async function POST(request: Request) {
   try {
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
         platform,
         name,
         base_url: platform === "zapier" ? null : baseUrl,
-        api_key: platform === "zapier" ? null : apiKey,
+        api_key: platform === "zapier" ? null : encrypt(apiKey),
         external_team_id: platform === "make" ? makeTeamId : null,
         webhook_secret: webhookSecret,
         status: "connected",
@@ -86,8 +87,6 @@ export async function POST(request: Request) {
     } else if (platform === "make") {
       const scenarios = await getMakeScenarios(baseUrl, apiKey, makeTeamId);
 
-      console.log("MAKE SCENARIOS:", scenarios);
-
       const rows = scenarios.map((s) => ({
         team_id: profile.team_id,
         external_id: String(s.id),
@@ -96,22 +95,12 @@ export async function POST(request: Request) {
         status: s.isActive ? "healthy" : "unknown",
       }));
 
-      console.log("ROWS:", rows);
-
-      const { data, error } = await db
-        .from("flowlens_workflows")
-        .upsert(rows, {
-          onConflict: "external_id",
-        })
-        .select();
-
-      console.log("UPSERT DATA:", data);
-      console.log("UPSERT ERROR:", error);
-
-      if (error) throw error;
-
       if (rows.length > 0) {
-        await db.from("flowlens_workflows").upsert(rows, { onConflict: "external_id" });
+        const { error: upsertError } = await db
+          .from("flowlens_workflows")
+          .upsert(rows, { onConflict: "external_id" });
+
+        if (upsertError) throw upsertError;
       }
     }
 
@@ -123,9 +112,9 @@ export async function POST(request: Request) {
           ? buildZapierWebhookUrl(profile.team_id, webhookSecret!)
           : undefined,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error.message || "Connection failed" },
+      { error: error instanceof Error ? error.message : "Connection failed" },
       { status: 500 }
     );
   }

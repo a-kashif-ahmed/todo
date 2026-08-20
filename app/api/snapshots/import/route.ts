@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { normalise, detectPlatform } from "@/lib/services/normalizer";
 import { generateWorkflowSummary } from "@/lib/services/ai";
+import { assertAiAllowed } from "@/lib/services/aiSettings";
 
 export async function POST(request: Request) {
   const ctx = await getAuthContext();
@@ -34,8 +35,8 @@ export async function POST(request: Request) {
   let normalised;
   try {
     normalised = normalise(platform, raw_json);
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 400 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Failed to normalise workflow." }, { status: 400 });
   }
 
   const { data: snapshot, error } = await db
@@ -77,16 +78,22 @@ export async function POST(request: Request) {
 
   // Kick off the AI Copilot summary immediately after import so the person
   // sees "18 nodes, medium complexity, 2 deployment risks" instead of just
-  // "Workflow imported." Best-effort — import still succeeds if this fails.
+  // "Workflow imported." Best-effort — import still succeeds if this fails,
+  // and it's skipped entirely (silently, not an import error) if the team
+  // has "Automatic reviews" turned off — this IS the automatic-trigger case
+  // that setting exists for, since nobody explicitly asked for AI here.
   let ai_summary = null;
-  try {
-    ai_summary = await generateWorkflowSummary(normalised);
-    await db
-      .from("flowlens_snapshots")
-      .update({ ai_summary })
-      .eq("id", snapshot.id);
-  } catch (e) {
-    console.error("Post-import AI summary failed:", e);
+  const gate = await assertAiAllowed(db, teamId, "automatic_review");
+  if (gate.allowed) {
+    try {
+      ai_summary = await generateWorkflowSummary(normalised);
+      await db
+        .from("flowlens_snapshots")
+        .update({ ai_summary })
+        .eq("id", snapshot.id);
+    } catch (e) {
+      console.error("Post-import AI summary failed:", e);
+    }
   }
 
   return NextResponse.json({ snapshot, ai_summary }, { status: 201 });

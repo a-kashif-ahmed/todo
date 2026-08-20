@@ -3,15 +3,29 @@
 // POST /api/ai/chat — streaming AI assistant
 // ─────────────────────────────────────────────────────────────
 
-import { getAuthContext } from "@/lib/supabase/auth-helper";
+import { getAuthContext, AuthContext } from "@/lib/supabase/auth-helper";
 import { createChatStream } from "@/lib/services/ai";
 import { NextResponse } from "next/server";
+import type { FlowNode, FlowEdge } from "@/types/flowlens";
+import { assertAiAllowed } from "@/lib/services/aiSettings";
+
+interface FixAttemptRow {
+  attempt_number: number;
+  diagnosis: string | null;
+  status: string;
+  operations: unknown[] | null;
+  test_result: { passed: boolean; message: string } | null;
+}
 
 // Builds a complete workflow-aware context string server-side instead of
 // trusting only whatever the client passed in. Falls back gracefully if the
 // workflow/snapshot can't be loaded so chat still works without it.
+//
+// Bounded on purpose: node configs and fix-attempt history can get large on
+// complex workflows, so each section is capped rather than dumped raw, to
+// keep prompts predictable in size and cost.
 async function buildWorkflowContext(
-  db: any,
+  db: AuthContext["db"],
   teamId: string,
   workflowId?: string,
   clientContext = ""
@@ -36,7 +50,7 @@ async function buildWorkflowContext(
 
       const { data: snapshots } = await db
         .from("flowlens_snapshots")
-        .select("id, normalised, created_at")
+        .select("id, normalised, created_at, source, execution_status, error_message")
         .eq("workflow_id", workflowId)
         .eq("team_id", teamId)
         .order("created_at", { ascending: false })
@@ -45,19 +59,59 @@ async function buildWorkflowContext(
       const latest = snapshots?.[0];
       if (latest?.normalised) {
         const { nodes = [], edges = [] } = latest.normalised;
+
         parts.push(
-          `Latest snapshot has ${nodes.length} nodes and ${edges.length} edges.`
+          `Latest snapshot (${latest.source}, ${new Date(latest.created_at).toLocaleString()}): ` +
+          `${nodes.length} nodes, ${edges.length} edges, execution_status=${latest.execution_status || "unknown"}.`
         );
-        parts.push(
-          `Nodes: ${nodes.map((n: any) => `${n.label} (${n.type})`).join(", ")}`
+
+        if (latest.error_message) {
+          parts.push(`Most recent execution error: ${latest.error_message}`);
+        }
+
+        // Node details WITH config — credentials are already stripped at
+        // normalise time (see lib/services/normalizer.ts stripCredentials),
+        // so it's safe to include as-is. Cap each config's JSON so one
+        // huge node config can't blow out the whole prompt.
+        const nodeLines = nodes.map((n: FlowNode) => {
+          const configStr = n.config && Object.keys(n.config).length
+            ? JSON.stringify(n.config).slice(0, 300)
+            : "{}";
+          return `- ${n.id} "${n.label}" (${n.type})${n.credential_ref ? ` [uses credential: ${n.credential_ref}]` : ""}: config=${configStr}`;
+        });
+        parts.push(`Nodes:\n${nodeLines.join("\n")}`);
+
+        const edgeLines = edges.map((e: FlowEdge) => `${e.source} -> ${e.target}${e.label ? ` (${e.label})` : ""}`);
+        if (edgeLines.length) {
+          parts.push(`Edges:\n${edgeLines.join("\n")}`);
+        }
+      }
+
+      // Recent Fix Workflow attempts — so the assistant can talk about a
+      // fix that's already been proposed/applied instead of re-diagnosing
+      // from scratch or contradicting what the Fix Workflow panel is showing.
+      const { data: fixAttempts } = await db
+        .from("flowlens_fix_attempts")
+        .select("attempt_number, diagnosis, status, operations, test_result, created_at")
+        .eq("workflow_id", workflowId)
+        .eq("team_id", teamId)
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+      if (fixAttempts?.length) {
+        const attemptLines = (fixAttempts as FixAttemptRow[]).map((a) =>
+          `- Attempt #${a.attempt_number} [${a.status}]: ${a.diagnosis || "no diagnosis"}. ` +
+          `${a.operations?.length || 0} operation(s). ` +
+          `${a.test_result ? `Test: ${a.test_result.passed ? "passed" : "failed"} — ${a.test_result.message}` : "Not yet tested."}`
         );
+        parts.push(`Recent Fix Workflow attempts (most recent first):\n${attemptLines.join("\n")}`);
       }
     } catch (e) {
       console.error("buildWorkflowContext failed:", e);
     }
   }
 
-  return parts.join("\n");
+  return parts.join("\n\n").slice(0, 12000);
 }
 
 // Simple in-memory rate limiter (upgrade to Upstash Redis in production)
@@ -89,11 +143,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "messages array required" }, { status: 400 });
   }
 
+  // Only require workflow_data_processing when this message actually pulls
+  // in a specific workflow's data — a workflow-free chat message shouldn't
+  // be blocked by that toggle, but the master ai_analysis_enabled switch
+  // still applies either way.
+  const gate = await assertAiAllowed(db, teamId, "chat", { includesWorkflowData: !!workflowId });
+  if (!gate.allowed) {
+    return NextResponse.json({ error: gate.reason }, { status: 403 });
+  }
+
   try {
     const fullContext = await buildWorkflowContext(db, teamId, workflowId, context);
     return await createChatStream(messages, fullContext);
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Chat request failed." }, { status: 500 });
   }
 }
 

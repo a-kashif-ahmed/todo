@@ -4,23 +4,7 @@
 
 "use client";
 
-interface ConnectionItem {
-  id: string;
-  label: string;
-}
-
-const connections: ConnectionItem[] = [
-  { id: "n8n", label: "Connect n8n" },
-  { id: "zapier", label: "Connect Zapier" },
-  { id: "make", label: "Connect Make" },
-];
-
 export default function DirectConnections() {
-  function handleConnect(id: string) {
-    // UI placeholder for now,wire up OAuth flow in a later phase
-    console.log(`Connect clicked: ${id}`);
-  }
-
   return (
     <div className="bg-surface-2 border border-border rounded-xl p-5">
       <p className="text-[11px] font-semibold tracking-wide text-text-muted uppercase mb-4">

@@ -13,16 +13,18 @@ import {
   getMakeScenarioLogs,
   normalizeMakeStatus,
 } from "@/lib/connections/make";
+import { decrypt } from "@/lib/services/crypto";
 
 export async function POST() {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
-  const { db } = ctx;
+  const { db, teamId } = ctx;
 
   const { data: integrations, error } = await db
     .from("flowlens_platforms")
     .select("*")
-    .eq("status", "connected");
+    .eq("status", "connected")
+    .eq("team_id", teamId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -167,7 +169,8 @@ async function syncN8n(db: any, integration: any) {
   let incidentsCreated = 0;
   let incidentsResolved = 0;
 
-  const workflows = await getN8nWorkflows(integration.base_url, integration.api_key);
+  const apiKey = decrypt(integration.api_key);
+  const workflows = await getN8nWorkflows(integration.base_url, apiKey);
   const workflowIdByExternalId = new Map<string, string>();
 
   for (const wf of workflows) {
@@ -183,7 +186,7 @@ async function syncN8n(db: any, integration: any) {
     workflowsImported++;
   }
 
-  const executions = await getN8nExecutions(integration.base_url, integration.api_key);
+  const executions = await getN8nExecutions(integration.base_url, apiKey);
 
   for (const ex of executions) {
     const workflowId = workflowIdByExternalId.get(ex.workflowId);
@@ -215,9 +218,10 @@ async function syncMake(db: any, integration: any) {
   let incidentsCreated = 0;
   let incidentsResolved = 0;
 
+  const apiKey = decrypt(integration.api_key);
   const scenarios = await getMakeScenarios(
     integration.base_url,
-    integration.api_key,
+    apiKey,
     integration.external_team_id
   );
   const workflowIdByExternalId = new Map<string, string>();
@@ -239,7 +243,7 @@ async function syncMake(db: any, integration: any) {
     const workflowId = workflowIdByExternalId.get(String(sc.id));
     if (!workflowId) continue;
 
-    const logs = await getMakeScenarioLogs(integration.base_url, integration.api_key, sc.id);
+    const logs = await getMakeScenarioLogs(integration.base_url, apiKey, sc.id);
 
     for (const log of logs) {
       const status = normalizeMakeStatus(log.status);

@@ -7,6 +7,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { diffWorkflows } from "@/lib/services/diff";
 import { analyseRootCause } from "@/lib/services/ai";
+import { assertAiAllowed } from "@/lib/services/aiSettings";
 
 
 
@@ -57,6 +58,14 @@ export async function POST(
       { error: "Incident is missing one or both snapshots" },
       { status: 400 }
     );
+  }
+
+  // Gate only applies to a fresh AI call — the cached-result branch above
+  // still returns previously-generated analysis even if AI is currently
+  // disabled, since that's reading stored data, not making a new AI call.
+  const gate = await assertAiAllowed(db, teamId, "analysis");
+  if (!gate.allowed) {
+    return NextResponse.json({ error: gate.reason }, { status: 403 });
   }
 
   const diff = diffWorkflows(

@@ -7,11 +7,17 @@
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { optimizeWorkflow } from "@/lib/services/ai";
+import { assertAiAllowed } from "@/lib/services/aiSettings";
 
 export async function POST(request: Request) {
   const ctx = await getAuthContext();
   if (ctx.error) return ctx.error;
   const { teamId, db } = ctx;
+
+  const gate = await assertAiAllowed(db, teamId, "analysis");
+  if (!gate.allowed) {
+    return NextResponse.json({ error: gate.reason }, { status: 403 });
+  }
 
   const { snapshot_id } = await request.json();
 
@@ -33,7 +39,7 @@ export async function POST(request: Request) {
   try {
     const optimization = await optimizeWorkflow(snapshot.normalised);
     return NextResponse.json({ optimization, workflow_id: snapshot.workflow_id });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e: unknown) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Optimization failed." }, { status: 500 });
   }
 }
