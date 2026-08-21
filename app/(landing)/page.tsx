@@ -12,6 +12,25 @@ import DiscordFeedbackCard from "@/components/socialcard/DiscordcCard";
 export default function LandingPage() {
   return (
     <>
+     <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "FlowLens",
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Web",
+            description:
+              "FlowLens shows you exactly what changed in your n8n, Zapier, or Make workflow and why it broke.",
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
+            },
+          }),
+        }}
+      />
       <Navbar />
       <Hero />
       <Problem/>
