@@ -51,7 +51,7 @@ export default function CallTA() {
 
             <p className="mx-auto mt-6 max-w-xl text-sm sm:text-base text-text-muted">
               Every minute spent debugging is a minute your automation
-              isn&apos;t working. Join the FlowLens and be among the
+              isn&apos;t working. Join FlowLens and be among the
               first to debug AI workflows.
             </p>
 
@@ -70,7 +70,7 @@ export default function CallTA() {
                 disabled={loading}
                 className="w-full sm:w-auto rounded-xl bg-brand-orange px-8 py-3 font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
               >
-                {loading ? "Joining..." : "Get Started"}
+                {loading ? "Redirecting..." : "Get Started"}
               </button>
               </a>
             </div>

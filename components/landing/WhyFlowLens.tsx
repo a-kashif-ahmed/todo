@@ -6,7 +6,7 @@ const rows: [string, string][] = [
   ["Error logs", "Plain-English explanations"],
   ["Execution failures", "Workflow version history"],
   ["Raw JSON differences", "Impact analysis"],
-  ["Manual investigation", "Guided recovery"],
+  ["Manual investigation", "AI-proposed fixes, you approve"],
 ];
 
 export default function WhyFlowLens() {

@@ -18,9 +18,7 @@ export default function Hero() {
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-text-muted">
-          FlowLens watches every version of your automation and tells you,
-          in plain English, what changed and why it failed , before
-          your customers notice.
+          FlowLens watches every version of your automation and tells you, in plain English, what changed, why it failed, and proposes a fix you can review ; before your customers notice
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
