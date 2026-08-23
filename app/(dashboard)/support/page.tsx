@@ -49,7 +49,7 @@ const topics = [
     href: null,
   },
 ];
-const EMAIL = "flowlensaas@gmail.com"; 
+const EMAIL = "spacestoic7@gmail.com"; 
 const SUBJECT = "Issue - FlowLens";
 const BODY = `Hi FlowLens Team,`;
 const support = [

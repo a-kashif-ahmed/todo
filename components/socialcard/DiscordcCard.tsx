@@ -3,7 +3,7 @@
 import { MessageSquare, Mail, ExternalLink } from "lucide-react";
 
 const DISCORD_INVITE = "https://discord.gg/f2B6hamNMX";
-const EMAIL = "flowlensaas@gmail.com"; 
+const EMAIL = "spacestoic7@gmail.com"; 
 const SUBJECT = "FlowLens Feedback";
 const BODY = `Hi FlowLens Team,
 
