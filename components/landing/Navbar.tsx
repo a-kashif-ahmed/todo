@@ -51,6 +51,11 @@ export default function Navbar() {
       Feedback
     </a>
   </li>
+   <li>
+    <a href="#pricing" className="transition hover:text-text-primary">
+      Pricing
+    </a>
+  </li>
 </ul>
 
 {/* Desktop Actions */}
@@ -125,6 +130,15 @@ export default function Navbar() {
                   className="block hover:text-text-primary  "
                 >
                   Feedback
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#pricing"
+                  onClick={() => setIsOpen(false)}
+                  className="block hover:text-text-primary  "
+                >
+                  Pricing
                 </a>
               </li>
               

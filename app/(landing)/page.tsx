@@ -8,6 +8,7 @@ import WhyFlowLens from "@/components/landing/WhyFlowLens";
 import CallTA from "@/components/landing/CallTA";
 import Solution from "@/components/landing/Solution";
 import DiscordFeedbackCard from "@/components/socialcard/DiscordcCard";
+import Pricing from "@/components/landing/Pricing";
 
 export default function LandingPage() {
   return (
@@ -37,7 +38,7 @@ export default function LandingPage() {
       <Solution/>  
       <BeforeAfter/>
       <WhyFlowLens/>
-       
+       <Pricing/>
       <CallTA/>
       
       <DiscordFeedbackCard />
