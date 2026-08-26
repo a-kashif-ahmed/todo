@@ -1,3 +1,7 @@
+// ─────────────────────────────────────────────────────────────
+// src/app/(dashboard)/support/page.tsx
+// ─────────────────────────────────────────────────────────────
+
 "use client";
 
 import { useState } from "react";
@@ -10,22 +14,28 @@ import {
   CreditCard,
   MessageSquare,
   Mail,
-  ExternalLink,
+  ArrowRight,
   Sparkles,
   Loader2,
 } from "lucide-react";
 
 // "Getting Started" and "Integrations" link to real pages already in the
 // app. "API Reference" and "Billing" have no backing page/content yet —
-// rather than pretend those buttons do something, they're marked
-// "Coming soon" and disabled, so nothing here silently does nothing.
+// marked "Coming soon" and disabled rather than pretending to work.
 const topics = [
   {
     icon: Rocket,
     title: "Getting Started",
-    description: "The core fundamentals of FlowLens automation.",
+    description: "Import your first workflow and see how FlowLens tracks it.",
     action: "Import a workflow",
     href: "/import",
+  },
+  {
+    icon: Network,
+    title: "Integrations",
+    description: "Connect n8n, Zapier, or Make to start syncing workflows.",
+    action: "View connections",
+    href: "/connections",
   },
   {
     icon: BookOpen,
@@ -35,13 +45,6 @@ const topics = [
     href: null,
   },
   {
-    icon: Network,
-    title: "Integrations",
-    description: "Connect to n8n, Zapier, Make, and more.",
-    action: "View connections",
-    href: "/connections",
-  },
-  {
     icon: CreditCard,
     title: "Billing",
     description: "Manage subscriptions and usage credits.",
@@ -49,31 +52,41 @@ const topics = [
     href: null,
   },
 ];
-const EMAIL = "spacestoic7@gmail.com"; 
+
+const EMAIL = "flowlensaas@gmail.com";
 const SUBJECT = "Issue - FlowLens";
 const BODY = `Hi FlowLens Team,`;
+
 const support = [
   {
     icon: MessageSquare,
-    title: "Community Forum",
-    href:'https://discord.gg/f2B6hamNMX',
-    description: "Active discussions on Discord",
-    action: "Join Server",
+    title: "Community",
+    href: "https://discord.gg/f2B6hamNMX",
+    description: "Active discussions and quick answers on Discord.",
+    action: "Join Discord",
   },
   {
     icon: Mail,
     title: "Email Support",
-    href:`mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(BODY)}`  ,
-    description: "Expected response: ~4 hours",
-    action: "Email Us",
+    href: `mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(BODY)}`,
+    description: "Usually respond within 4–48 hours.",
+    action: "Email us",
   },
-  // {
-  //   icon: MessageSquare,
-  //   title: "Priority Chat",
-  //   description: "Live agent available now",
-  //   action: "Start Chatting",
-  //   badge: "PRO",
-  // },
+];
+
+const faqs = [
+  {
+    q: "Why did my workflow suddenly stop working?",
+    a: "Open the workflow's Compare view to see exactly what changed between the last two versions, or click Fix Workflow for an AI diagnosis of the most recent failure.",
+  },
+  {
+    q: "Does FlowLens change my live n8n/Zapier/Make workflow?",
+    a: "No. Fixes are proposed and applied to a new FlowLens snapshot that you review first — nothing is pushed back to your live platform automatically.",
+  },
+  {
+    q: "Which platforms are supported?",
+    a: "n8n, Zapier, and Make today. Connect them from the Connections page, or import a workflow JSON export directly.",
+  },
 ];
 
 export default function SupportPage() {
@@ -104,55 +117,47 @@ export default function SupportPage() {
 
   return (
     <div className="min-h-screen bg-surface text-text-primary">
-      <div className="mx-auto max-w-7xl px-8 py-1">
+      <div className="mx-auto max-w-6xl px-6 md:px-8 py-16">
 
-        {/* Hero */}
+        {/* Hero + search */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+            How can we help?
+          </h1>
+          <p className="mt-4 text-text-muted max-w-xl mx-auto">
+            Search your own workflows, browse common topics, or reach the team directly.
+          </p>
 
-        <div className="relative mb-14 overflow-hidden rounded-3xl border border-white/10 bg-surface2 p-12">
-
-          <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg- blur-[140px]" />
-
-          <div className="relative z-10 text-center">
-
-            <h1 className="text-5xl font-bold">
-              How can we help?
-            </h1>
-
-            <p className="mt-4 text-primary max-w-2xl mx-auto">
-              Search your workflows, or reach out to the team below.
-            </p>
-
-            <div className="mt-10 flex overflow-hidden rounded-2xl border-text border bg-surface2">
+          <div className="mt-10 mx-auto max-w-2xl">
+            <div className="flex overflow-hidden rounded-2xl border border-border bg-surface-2 focus-within:border-brand-orange/50 transition-colors">
               <div className="flex flex-1 items-center gap-3 px-5">
-                <Search size={20} className="text-primary-500" />
-
+                <Search size={18} className="text-text-muted shrink-0" />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") runSearch(); }}
                   placeholder='Ask about your workflows (e.g. "where is Stripe used")'
-                  className="h-16 w-full bg-transparent outline-none placeholder:text-primary-500"
+                  className="h-14 w-full bg-transparent outline-none text-sm text-text-primary placeholder:text-text-muted"
                 />
               </div>
-
               <button
                 onClick={runSearch}
                 disabled={searching || !query.trim()}
-                className="m-2 rounded-xl bg-brand-orange px-8 font-medium hover:bg-brand-orange text-white disabled:opacity-40 flex items-center gap-2"
+                className="m-1.5 rounded-xl bg-brand-orange px-6 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40 flex items-center gap-2"
               >
-                {searching && <Loader2 size={16} className="animate-spin" />}
+                {searching && <Loader2 size={14} className="animate-spin" />}
                 Search
               </button>
             </div>
 
             {searchError && (
-              <p className="mt-4 text-sm text-status-error">{searchError}</p>
+              <p className="mt-3 text-sm text-status-error text-center">{searchError}</p>
             )}
 
             {searchResult && (
-              <div className="mt-6 text-left bg-surface border border-border rounded-2xl p-6 max-w-2xl mx-auto">
+              <div className="mt-5 text-left bg-surface-2 border border-border rounded-2xl p-5">
                 <div className="flex items-center gap-2 mb-2">
-                  <Sparkles size={16} className="text-brand-orange" />
+                  <Sparkles size={15} className="text-brand-orange" />
                   <span className="text-sm font-medium text-text-primary">Answer</span>
                 </div>
                 <p className="text-sm text-text-muted leading-relaxed">{searchResult.answer}</p>
@@ -162,7 +167,7 @@ export default function SupportPage() {
                       <Link
                         key={m.id}
                         href={`/workflows/${m.id}`}
-                        className="text-xs font-medium bg-surface-2 border border-border rounded-full px-3 py-1.5 text-text-primary hover:border-brand-orange/40 transition-colors"
+                        className="text-xs font-medium bg-surface border border-border rounded-full px-3 py-1.5 text-text-primary hover:border-brand-orange/40 transition-colors"
                       >
                         {m.name}
                       </Link>
@@ -174,35 +179,30 @@ export default function SupportPage() {
           </div>
         </div>
 
-        {/* Cards */}
-
-       
         {/* Topics */}
-
-        <section className="mt-16">
-
-          <h2 className="mb-6 text-3xl font-bold">
-            Common Topics
+        <section className="mb-16">
+          <h2 className="mb-6 text-xl font-semibold text-text-primary">
+            Common topics
           </h2>
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {topics.map((item) => {
               const Icon = item.icon;
-              const card = (
+              const inner = (
                 <>
-                  <Icon className="mb-8 text-white" size={30} />
-
-                  <h3 className="text-white text-xl font-semibold">
-                    {item.title}
-                  </h3>
-
-                  <p className="mt-3 text-white">
-                    {item.description}
-                  </p>
-
-                  <span className="mt-8 flex items-center gap-2 text-brand-orange">
+                  <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center mb-5 group-hover:bg-brand-orange/10 transition-colors">
+                    <Icon size={18} className="text-text-primary" />
+                  </div>
+                  <h3 className="text-text-primary text-base font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-sm text-text-muted leading-relaxed">{item.description}</p>
+                  <span
+                    className={`mt-5 flex items-center gap-1.5 text-sm font-medium ${
+                      item.href ? "text-brand-orange" : "text-text-muted"
+                    }`}
+                  >
                     {item.action}
-                    {item.href && <ExternalLink size={14} />}
+                    {item.href && (
+                      <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                    )}
                   </span>
                 </>
               );
@@ -211,9 +211,10 @@ export default function SupportPage() {
                 return (
                   <div
                     key={item.title}
-                    className="rounded-3xl border border-white/10 bg-brand-orange p-8 opacity-60 cursor-not-allowed"
+                    className="group rounded-2xl border border-border bg-surface-2 p-6 opacity-60 cursor-not-allowed"
+                    aria-disabled
                   >
-                    {card}
+                    {inner}
                   </div>
                 );
               }
@@ -222,84 +223,70 @@ export default function SupportPage() {
                 <Link
                   key={item.title}
                   href={item.href}
-                  className="rounded-3xl border border-white/10 bg-brand-orange p-8 transition hover:border-brand-orange500/30 block"
+                  className="group rounded-2xl border border-border bg-surface-2 p-6 hover:border-brand-orange/30 transition-colors block"
                 >
-                  {card}
+                  {inner}
                 </Link>
               );
             })}
           </div>
         </section>
 
-        {/* Help */}
+        {/* FAQ */}
+        <section className="mb-16">
+          <h2 className="mb-6 text-xl font-semibold text-text-primary">
+            Frequently asked
+          </h2>
+          <div className="divide-y divide-border border border-border rounded-2xl bg-surface-2 overflow-hidden">
+            {faqs.map((item) => (
+              <details key={item.q} className="group px-6 py-4">
+                <summary className="flex items-center justify-between cursor-pointer list-none text-sm font-medium text-text-primary">
+                  {item.q}
+                  <span className="text-text-muted transition-transform group-open:rotate-45 text-lg leading-none">+</span>
+                </summary>
+                <p className="mt-3 text-sm text-text-muted leading-relaxed">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
 
-        <section className="mt-16">
-
-          <h2 className="mb-6 text-3xl font-bold">
+        {/* Contact */}
+        <section>
+          <h2 className="mb-6 text-xl font-semibold text-text-primary">
             Still need help?
           </h2>
-
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             {support.map((item) => {
               const Icon = item.icon;
-
               return (
                 <div
                   key={item.title}
-                  className="rounded-3xl border border-white/10 bg-brand-orange p-8 hover:border-brand-orange500/30"
+                  className="rounded-2xl border border-border bg-surface-2 p-6 flex flex-col justify-between"
                 >
-                  <div className="flex items-center gap-3">
-
-                    <div className="rounded-xl  p-3 text-white">
-                      <Icon />
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center shrink-0">
+                      <Icon size={18} className="text-text-primary" />
                     </div>
-
                     <div>
-
-                      <div className="flex items-center gap-2 text-white">
-                        <h3 className="font-semibold">
-                          {item.title}
-                        </h3>
-
-                        
-                      </div>
-
-                      <p className="text-sm text-gray-50">
-                        {item.description}
-                      </p>
+                      <h3 className="font-semibold text-text-primary">{item.title}</h3>
+                      <p className="text-sm text-text-muted mt-1">{item.description}</p>
                     </div>
                   </div>
 
-                  <a href={item.href}><button className="mt-8 text-white border border-white  rounded-xl bg- px-6 py-3 font-medium hover:opacity-90">
+                  <a
+                    href={item.href}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="mt-6 inline-flex w-fit items-center rounded-lg border border-border px-4 py-2 text-sm font-medium text-text-primary hover:border-brand-orange/40 hover:text-brand-orange transition-colors"
+                  >
                     {item.action}
-                  </button></a>
+                  </a>
                 </div>
               );
             })}
           </div>
         </section>
 
-      </div>
-    </div>
-  );
-}
-
-function Status({
-  title,
-  status,
-  color,
-}: {
-  title: string;
-  status: string;
-  color: string;
-}) {
-  return (
-    <div className="flex items-center justify-between">
-      <span>{title}</span>
-      <span className="p-5"></span>
-      <div className="flex items-center gap-2 text-sm text-primary">
-        <span className={`h-2 w-2 rounded-full ${color}`} />
-        {status}
       </div>
     </div>
   );
