@@ -95,7 +95,7 @@ export default function Pricing() {
             Built to grow with how you automate.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-text-muted max-w-2xl mx-auto">
-            From a single builder to a full agency book of clients — pick the
+            From a single builder to a full agency book of clients , pick the
             plan that matches how you use FlowLens today.
           </p>
         </div>
@@ -155,7 +155,14 @@ export default function Pricing() {
               </div>
             </FadeUp>
           ))}
+          
         </div>
+        <p className="mt-10 flex items-center justify-center gap-2 text-sm">
+  <span className="rounded-full bg-brand-orange/10 px-2.5 py-1 text-xs font-semibold tracking-wide text-brand-orange">
+    Note
+  </span>
+  <span className="text-text-muted">Pricing might vary after launch</span>
+</p>
       </div>
     </section>
   );
