@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { normalise, detectPlatform } from "@/lib/services/normalizer";
 import { generateWorkflowSummary } from "@/lib/services/ai";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 export async function POST(request: Request) {
   const ctx = await getAuthContext();
@@ -86,7 +86,8 @@ export async function POST(request: Request) {
   const gate = await assertAiAllowed(db, teamId, "automatic_review");
   if (gate.allowed) {
     try {
-      ai_summary = await generateWorkflowSummary(normalised);
+      const provider = await getTeamAIProvider(db, teamId);
+      ai_summary = await generateWorkflowSummary(provider, normalised);
       await db
         .from("flowlens_snapshots")
         .update({ ai_summary })

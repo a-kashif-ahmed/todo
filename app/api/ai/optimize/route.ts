@@ -7,7 +7,7 @@
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { optimizeWorkflow } from "@/lib/services/ai";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 export async function POST(request: Request) {
   const ctx = await getAuthContext();
@@ -37,7 +37,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const optimization = await optimizeWorkflow(snapshot.normalised);
+    const provider = await getTeamAIProvider(db, teamId);
+    const optimization = await optimizeWorkflow(provider, snapshot.normalised);
     return NextResponse.json({ optimization, workflow_id: snapshot.workflow_id });
   } catch (e: unknown) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Optimization failed." }, { status: 500 });

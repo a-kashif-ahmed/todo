@@ -7,7 +7,7 @@
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { documentWorkflow } from "@/lib/services/ai";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 export async function POST(request: Request) {
   const ctx = await getAuthContext();
@@ -37,7 +37,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const documentation = await documentWorkflow(snapshot.normalised);
+    const provider = await getTeamAIProvider(db, teamId);
+    const documentation = await documentWorkflow(provider, snapshot.normalised);
 
     // Best-effort persistence — safe no-op if the column doesn't exist yet.
     try {

@@ -7,7 +7,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { diffWorkflows } from "@/lib/services/diff";
 import { analyseRootCause } from "@/lib/services/ai";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 
 
@@ -73,7 +73,7 @@ export async function POST(
     incident.snap_after.normalised
   );
 
-  const analysis = await analyseRootCause(diff, incident.error_message);
+  const analysis = await analyseRootCause(await getTeamAIProvider(db, teamId), diff, incident.error_message);
 
   // Store result on incident. The four original columns always exist; the
   // new business-impact fields are best-effort until a migration adds them

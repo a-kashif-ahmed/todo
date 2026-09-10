@@ -12,7 +12,7 @@
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { answerWorkflowQuery, SearchableWorkflow } from "@/lib/services/ai";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 export async function GET(request: Request) {
   const ctx = await getAuthContext();
@@ -71,7 +71,8 @@ export async function GET(request: Request) {
   }
 
   try {
-    const result = await answerWorkflowQuery(query, searchable);
+    const provider = await getTeamAIProvider(db, teamId);
+    const result = await answerWorkflowQuery(provider, query, searchable);
     return NextResponse.json(result);
   } catch (e: unknown) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Search failed." }, { status: 500 });

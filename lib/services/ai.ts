@@ -1,42 +1,23 @@
 // src/lib/services/ai.ts
 // AI Workflow Copilot service layer — understands, reviews, documents,
 // optimises and helps deploy workflows (not just root-cause debugging).
-// Uses OpenRouter-compatible API — drop-in compatible with OpenAI SDK format
+//
+// Every exported function takes an `AIProvider` as its first argument
+// instead of hardcoding OpenRouter — callers resolve the team's configured
+// provider via `getTeamAIProvider()` (lib/services/aiSettings.ts) and pass
+// it in. This is what makes BYOK / custom endpoints work: nothing in this
+// file knows or cares whether it's talking to OpenRouter, OpenAI, a
+// self-hosted vLLM box, or anything else — that's entirely encapsulated in
+// the provider instance.
 
 import { NormalisedWorkFlow, WorkflowDiff, RepairSuggestion, RepairOperation } from "@/types/flowlens";
-
-const OPENROUTER_BASE = "https://openrouter.ai/api/v1";
-const MODEL = "google/gemma-4-26b-a4b-it:free";
-
-function openRouterHeaders() {
-  return {
-    "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-    "Content-Type": "application/json",
-  };
-}
+import { AIProvider, ChatMessage as ProviderMessage } from "@/lib/ai/provider";
 
 // Shared helper — calls the model and parses a JSON response, with a
 // consistent error shape so every endpoint fails the same safe way.
-async function callJSON<T>(prompt: string, maxTokens: number, fallback: T): Promise<T> {
+async function callJSON<T>(provider: AIProvider, prompt: string, maxTokens: number, fallback: T): Promise<T> {
   try {
-    const res = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
-      method: "POST",
-      headers: openRouterHeaders(),
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: maxTokens,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
-
-    if (!res.ok) {
-      const err = await res.text();
-      console.error("OpenRouter bad request:", res.status, err);
-      throw new Error(`OpenRouter error: ${err}`);
-    }
-
-    const data = await res.json();
-    const text = data.choices?.[0]?.message?.content || "{}";
+    const text = await provider.complete(prompt, { maxTokens });
     return JSON.parse(text) as T;
   } catch (e) {
     console.error("callJSON failed:", e);
@@ -135,6 +116,7 @@ export interface DeploymentCheck {
 
 // ── Root cause analysis (non-streaming) ─────────────────────────────────────
 export async function analyseRootCause(
+  provider: AIProvider,
   diff: WorkflowDiff,
   errorMessage?: string
 ): Promise<RootCauseAnalysis> {
@@ -196,7 +178,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. No expla
   "recovery_steps": ["short actionable step", "..."]
 }`;
 
-  return callJSON<RootCauseAnalysis>(prompt, 1200, {
+  return callJSON<RootCauseAnalysis>(provider, prompt, 1200, {
     root_cause: "Unable to determine root cause automatically.",
     confidence: 0,
     impact_summary: "Manual investigation required.",
@@ -214,6 +196,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. No expla
 // Used right after import and on the workflow detail page so the person sees
 // an AI understanding of the workflow, not just a raw node/edge graph.
 export async function generateWorkflowSummary(
+  provider: AIProvider,
   workflow: NormalisedWorkFlow
 ): Promise<WorkflowSummary> {
   const nodeCount = workflow.nodes.length;
@@ -239,49 +222,27 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
   "optimization_opportunities": ["short suggestion", "..."]
 }`;
 
-  try {
-    const res = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
-      method: "POST",
-      headers: openRouterHeaders(),
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 800,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
+  const parsed = await callJSON<{
+    summary?: string;
+    complexity?: "low" | "medium" | "high";
+    risks?: string[];
+    optimization_opportunities?: string[];
+  }>(provider, prompt, 800, {});
 
-    if (!res.ok) {
-      const err = await res.text();
-      console.error("OpenRouter bad request:", res.status, err);
-      throw new Error(`OpenRouter error: ${err}`);
-    }
-
-    const data = await res.json();
-    const text = data.choices?.[0]?.message?.content || "{}";
-    const parsed = JSON.parse(text);
-    return {
-      summary: parsed.summary || "No summary available.",
-      complexity: parsed.complexity || "medium",
-      node_count: nodeCount,
-      risks: parsed.risks || [],
-      optimization_opportunities: parsed.optimization_opportunities || [],
-    };
-  } catch (e) {
-    console.error("generateWorkflowSummary failed:", e);
-    return {
-      summary: "AI summary is unavailable right now.",
-      complexity: "medium",
-      node_count: nodeCount,
-      risks: [],
-      optimization_opportunities: [],
-    };
-  }
+  return {
+    summary: parsed.summary || "AI summary is unavailable right now.",
+    complexity: parsed.complexity || "medium",
+    node_count: nodeCount,
+    risks: parsed.risks || [],
+    optimization_opportunities: parsed.optimization_opportunities || [],
+  };
 }
 
 // ── Full AI review (findings + severity) ────────────────────────────────────
 // Distinct from generateWorkflowSummary's short risk list — this produces a
 // structured findings list suitable for a review UI (AIReviewPanel / ReviewFinding).
 export async function reviewWorkflow(
+  provider: AIProvider,
   workflow: NormalisedWorkFlow
 ): Promise<WorkflowReview> {
   const prompt = `${COPILOT_PERSONA}
@@ -314,6 +275,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
 }`;
 
   const result = await callJSON<{ findings: ReviewFinding[]; overall_risk: FindingSeverity }>(
+    provider,
     prompt,
     1200,
     { findings: [], overall_risk: "low" }
@@ -326,6 +288,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
 // Standalone version of the opportunities list embedded in generateWorkflowSummary,
 // for callers (OptimizationPanel) that want just this without a full summary call.
 export async function optimizeWorkflow(
+  provider: AIProvider,
   workflow: NormalisedWorkFlow
 ): Promise<WorkflowOptimization> {
   const prompt = `${COPILOT_PERSONA}
@@ -352,11 +315,12 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
   ]
 }`;
 
-  return callJSON<WorkflowOptimization>(prompt, 900, { opportunities: [] });
+  return callJSON<WorkflowOptimization>(provider, prompt, 900, { opportunities: [] });
 }
 
 // ── Auto-generated documentation ─────────────────────────────────────────────
 export async function documentWorkflow(
+  provider: AIProvider,
   workflow: NormalisedWorkFlow
 ): Promise<WorkflowDocumentation> {
   const prompt = `${COPILOT_PERSONA}
@@ -384,7 +348,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
   ]
 }`;
 
-  return callJSON<WorkflowDocumentation>(prompt, 1500, {
+  return callJSON<WorkflowDocumentation>(provider, prompt, 1500, {
     title: workflow.meta?.name || "Untitled workflow",
     overview: "AI documentation is unavailable right now.",
     sections: [],
@@ -394,6 +358,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
 
 // ── Deployment readiness check ───────────────────────────────────────────────
 export async function checkDeploymentReadiness(
+  provider: AIProvider,
   workflow: NormalisedWorkFlow,
   recentDiff?: WorkflowDiff
 ): Promise<DeploymentCheck> {
@@ -418,7 +383,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
   "warnings": ["short warning statement", "..."]
 }`;
 
-  return callJSON<DeploymentCheck>(prompt, 900, {
+  return callJSON<DeploymentCheck>(provider, prompt, 900, {
     score: 0,
     status: "needs_review",
     blocking_issues: [],
@@ -429,7 +394,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
 // ── Semantic diff explanation ───────────────────────────────────────────────
 // Turns a raw node-level diff ("Node A changed from X to Y") into a plain
 // English explanation of what the change actually does and why it matters.
-export async function explainChange(diff: WorkflowDiff): Promise<string> {
+export async function explainChange(provider: AIProvider, diff: WorkflowDiff): Promise<string> {
   if (diff.summary.added === 0 && diff.summary.removed === 0 && diff.summary.modified === 0) {
     return "No structural changes between these two snapshots.";
   }
@@ -448,20 +413,8 @@ EDGES CHANGED: ${diff.edgesChanged}
 Respond with plain text only. No markdown, no JSON.`;
 
   try {
-    const res = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
-      method: "POST",
-      headers: openRouterHeaders(),
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 300,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
-
-    if (!res.ok) throw new Error(`OpenRouter error: ${await res.text()}`);
-
-    const data = await res.json();
-    return data.choices?.[0]?.message?.content?.trim() || "AI explanation unavailable.";
+    const text = await provider.complete(prompt, { maxTokens: 300 });
+    return text.trim() || "AI explanation unavailable.";
   } catch (e) {
     console.error("explainChange failed:", e);
     return "AI explanation is unavailable right now — see the raw diff below.";
@@ -475,6 +428,7 @@ Respond with plain text only. No markdown, no JSON.`;
 // see lib/services/repairValidator.ts and lib/services/repairEngine.ts for
 // the parts that actually validate/apply them.
 export async function generateRepairFix(
+  provider: AIProvider,
   workflow: NormalisedWorkFlow,
   errorMessage: string | undefined,
   previousAttempts: Array<{ diagnosis: string; operations: RepairOperation[]; test_result: unknown }> = []
@@ -511,7 +465,7 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. No expla
   "operations": [ { "type": "ADD_RETRY", "nodeId": "node_id_here", "maxRetries": 3, "backoff": "exponential" } ]
 }`;
 
-  return callJSON<RepairSuggestion>(prompt, 1200, {
+  return callJSON<RepairSuggestion>(provider, prompt, 1200, {
     diagnosis: "Unable to automatically diagnose this workflow right now.",
     reason: "AI repair is unavailable — try again shortly or investigate manually.",
     operations: [],
@@ -539,6 +493,7 @@ export interface SemanticSearchResult {
 }
 
 export async function answerWorkflowQuery(
+  provider: AIProvider,
   query: string,
   workflows: SearchableWorkflow[]
 ): Promise<SemanticSearchResult> {
@@ -572,15 +527,19 @@ Respond ONLY with valid JSON matching this schema exactly. No markdown. JSON onl
   ]
 }`;
 
-  return callJSON<SemanticSearchResult>(prompt, 1000, {
+  return callJSON<SemanticSearchResult>(provider, prompt, 1000, {
     answer: "AI search is unavailable right now.",
     matches: [],
   });
 }
 
 // ── Streaming chat (Copilot) ─────────────────────────────────────────────────
-// Returns a raw Response with SSE stream — pass directly to route handler
+// Returns a raw Response with SSE stream — pass directly to route handler.
+// provider.streamChat() already normalizes OpenAI-shaped and Anthropic-
+// shaped SSE into plain text deltas, so this function never needs to know
+// which kind of endpoint it's talking to.
 export async function createChatStream(
+  provider: AIProvider,
   messages: ChatMessage[],
   context: string
 ): Promise<Response> {
@@ -596,59 +555,26 @@ WORKFLOW CONTEXT:
 ${context || "No workflow context provided."}`,
   };
 
-  const res = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
-    method: "POST",
-    headers: openRouterHeaders(),
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 1000,
-      stream: true,
-      messages: [systemMessage, ...messages],
-    }),
-  });
-
-  if (!res.ok) {
-    throw new Error(`OpenRouter stream error: ${res.statusText}`);
-  }
-
-  // Transform OpenRouter SSE → FlowLens SSE format
-  const reader = res.body!.getReader();
-  const decoder = new TextDecoder();
+  const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
     async start(controller) {
-      const encoder = new TextEncoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split("\n");
-
-        for (const line of lines) {
-          if (!line.startsWith("data: ")) continue;
-          const raw = line.slice(6).trim();
-          if (raw === "[DONE]") {
-            controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-            controller.close();
-            return;
-          }
-          try {
-            const parsed = JSON.parse(raw);
-            const text = parsed.choices?.[0]?.delta?.content;
-            if (text) {
-              controller.enqueue(
-                encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
-              );
-            }
-          } catch {
-            // skip malformed chunks
-          }
+      try {
+        for await (const delta of provider.streamChat(
+          [systemMessage, ...messages] as ProviderMessage[],
+          { maxTokens: 1000 }
+        )) {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: delta })}\n\n`));
         }
+      } catch (e) {
+        console.error("createChatStream failed mid-stream:", e);
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ text: "\n\n[AI stream interrupted — try again.]" })}\n\n`)
+        );
+      } finally {
+        controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+        controller.close();
       }
-      controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-      controller.close();
     },
   });
 

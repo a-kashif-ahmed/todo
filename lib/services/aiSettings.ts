@@ -9,13 +9,27 @@
 // This file is what makes them real.
 // ─────────────────────────────────────────────────────────────
 
+import { createProvider, AIProvider } from "../ai/provider";
+import { decryptApiKey } from "../ai/keyEncryption";
+
 export interface AISettings {
   ai_analysis_enabled: boolean;
   workflow_data_processing: boolean;
   ai_documentation_enabled: boolean;
   automatic_reviews_enabled: boolean;
   privacy_mode: "standard" | "strict";
+  // "self_hosted" now means "custom endpoint / BYOK" — the person has
+  // pointed FlowLens at their own endpoint (see ai_provider_* fields
+  // below). "local" is still Planned (on-device inference, no network
+  // call at all) and stays unavailable until that's actually built.
   processing_location: "cloud" | "local" | "self_hosted";
+  // Custom endpoint config — only meaningful when processing_location is
+  // "self_hosted". ai_provider_key_encrypted is never sent to the client;
+  // the settings route strips it and returns has_api_key instead.
+  ai_provider_endpoint?: string;
+  ai_provider_shape?: "openai" | "anthropic";
+  ai_provider_model?: string;
+  ai_provider_key_encrypted?: string;
 }
 
 export const DEFAULT_AI_SETTINGS: AISettings = {
@@ -108,17 +122,63 @@ export async function assertAiAllowed(
     };
   }
 
-  // Only cloud processing actually exists in this codebase today — no
-  // local/self-hosted inference backend is wired up. Rather than silently
-  // keep using cloud when the person picked something else, refuse and say
-  // so, so the setting isn't quietly lying to them.
-  if (settings.processing_location !== "cloud") {
+  // Cloud always works (uses FlowLens's own key via env vars). Self-hosted
+  // works once the person has actually finished configuring an endpoint —
+  // refusing here with a clear reason beats silently falling back to cloud
+  // and quietly ignoring their choice. Local isn't built yet at all.
+  if (settings.processing_location === "local") {
     return {
       allowed: false,
-      reason: `Processing location is set to "${settings.processing_location}", but only cloud processing is available right now. Switch it back to Cloud in Settings → AI & Privacy to use AI features.`,
+      reason: `Local on-device processing isn't available yet. Switch to Cloud or Self-Hosted in Settings → AI & Privacy to use AI features.`,
       settings,
     };
   }
 
+  if (settings.processing_location === "self_hosted") {
+    if (!settings.ai_provider_endpoint || !settings.ai_provider_model || !settings.ai_provider_key_encrypted) {
+      return {
+        allowed: false,
+        reason: "Self-hosted processing is selected but the endpoint, model, or API key isn't fully configured yet. Finish setup in Settings → AI & Privacy, or switch back to Cloud.",
+        settings,
+      };
+    }
+  }
+
   return { allowed: true, settings };
+}
+
+// The one place that decides which actual AIProvider instance to use for a
+// team — resolves the team's custom endpoint if self-hosted is configured,
+// otherwise falls back to FlowLens's own cloud provider (env vars).
+// `assertAiAllowed` should always be called first; this function assumes
+// the caller already knows the request is allowed.
+export async function getTeamAIProvider(db: DbLike, teamId: string): Promise<AIProvider> {
+  const settings = await getAiSettings(db, teamId);
+
+  if (
+    settings.processing_location === "self_hosted" &&
+    settings.ai_provider_endpoint &&
+    settings.ai_provider_model &&
+    settings.ai_provider_key_encrypted
+  ) {
+    return createProvider({
+      endpoint: settings.ai_provider_endpoint,
+      shape: settings.ai_provider_shape || "openai",
+      model: settings.ai_provider_model,
+      apiKey: decryptApiKey(settings.ai_provider_key_encrypted),
+    });
+  }
+
+  // Cloud fallback — FlowLens's own key. If OPENROUTER_API_KEY isn't set,
+  // this throws when the provider actually tries to call out, which is the
+  // correct failure mode (loud, not a silent no-op).
+  return createProvider({
+    endpoint: "https://openrouter.ai/api/v1/chat/completions",
+    shape: "openai",
+    // The previous hardcoded model (google/gemma-4-26b-a4b-it:free) was
+    // broken — this is the fix called out in todo.md's "Immediate Next
+    // Actions" #1, folded in here since it's the same code path.
+    model: process.env.FLOWLENS_AI_MODEL || "google/gemini-2.0-flash-001",
+    apiKey: process.env.OPENROUTER_API_KEY || "",
+  });
 }

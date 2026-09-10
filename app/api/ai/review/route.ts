@@ -7,7 +7,7 @@
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { reviewWorkflow } from "@/lib/services/ai";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 export async function POST(request: Request) {
   const ctx = await getAuthContext();
@@ -37,7 +37,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const review = await reviewWorkflow(snapshot.normalised);
+    const provider = await getTeamAIProvider(db, teamId);
+    const review = await reviewWorkflow(provider, snapshot.normalised);
 
     // Best-effort persistence so the dashboard's "Recent Workflow Reviews"
     // and "AI Findings" widgets have something to read without re-running

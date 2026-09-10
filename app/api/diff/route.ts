@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { diffWorkflows } from "@/lib/services/diff";
 import { explainChange } from "@/lib/services/ai";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 export async function GET(request: Request) {
   const ctx = await getAuthContext();
@@ -55,7 +55,8 @@ export async function GET(request: Request) {
   const gate = await assertAiAllowed(db, teamId, "automatic_review");
   if (gate.allowed) {
     try {
-      explanation = await explainChange(diff);
+      const provider = await getTeamAIProvider(db, teamId);
+      explanation = await explainChange(provider, diff);
     } catch (e) {
       console.error("explainChange failed in /api/diff:", e);
     }

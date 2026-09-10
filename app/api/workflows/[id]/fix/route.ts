@@ -11,7 +11,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { generateRepairFix } from "@/lib/services/ai";
 import { validateOperations, normalizeOperations } from "@/lib/services/repairValidator";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 import type { RepairOperation } from "@/types/flowlens";
 
 export async function GET(
@@ -109,7 +109,9 @@ export async function POST(
   }
 
   // 3. Diagnose + propose (AI Provider step).
+  const provider = await getTeamAIProvider(db, teamId);
   const suggestion = await generateRepairFix(
+    provider,
     latestSnapshot.normalised,
     effectiveError,
     previousAttempts

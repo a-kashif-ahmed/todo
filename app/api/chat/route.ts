@@ -7,7 +7,7 @@ import { getAuthContext, AuthContext } from "@/lib/supabase/auth-helper";
 import { createChatStream } from "@/lib/services/ai";
 import { NextResponse } from "next/server";
 import type { FlowNode, FlowEdge } from "@/types/flowlens";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 interface FixAttemptRow {
   attempt_number: number;
@@ -154,7 +154,8 @@ export async function POST(request: Request) {
 
   try {
     const fullContext = await buildWorkflowContext(db, teamId, workflowId, context);
-    return await createChatStream(messages, fullContext);
+    const provider = await getTeamAIProvider(db, teamId);
+    return await createChatStream(provider, messages, fullContext);
   } catch (e: unknown) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Chat request failed." }, { status: 500 });
   }

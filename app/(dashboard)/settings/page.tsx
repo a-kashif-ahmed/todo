@@ -19,6 +19,11 @@ interface AISettings {
   automatic_reviews_enabled: boolean;
   privacy_mode: "standard" | "strict";
   processing_location: "cloud" | "local" | "self_hosted";
+  ai_provider_endpoint?: string;
+  ai_provider_shape?: "openai" | "anthropic";
+  ai_provider_model?: string;
+  has_api_key?: boolean;
+  api_key_hint?: string;
 }
 
 export default function SettingsPage() {
@@ -35,7 +40,12 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
   const [aiSettings, setAiSettings] = useState<AISettings | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
   const [savingAi, setSavingAi] = useState(false);
+  const [providerForm, setProviderForm] = useState({ endpoint: "", shape: "openai" as "openai" | "anthropic", model: "", apiKey: "" });
+  const [providerSaving, setProviderSaving] = useState(false);
+  const [providerError, setProviderError] = useState<string | null>(null);
+  const [providerSaved, setProviderSaved] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -70,6 +80,14 @@ export default function SettingsPage() {
     try {
       const res = await fetch("/api/settings/ai").then(r => r.json());
       setAiSettings(res.settings);
+      if (res.settings) {
+        setProviderForm(prev => ({
+          ...prev,
+          endpoint: res.settings.ai_provider_endpoint || "",
+          shape: res.settings.ai_provider_shape || "openai",
+          model: res.settings.ai_provider_model || "",
+        }));
+      }
     } catch (err) {
       console.error(err);
     }
@@ -79,24 +97,73 @@ export default function SettingsPage() {
   loadAiSettings();
 }, []);
 
+  
+
   async function updateAiSetting<K extends keyof AISettings>(key: K, value: AISettings[K]) {
     if (!aiSettings) return;
     const previous = aiSettings;
     const next = { ...aiSettings, [key]: value };
     setAiSettings(next);
     setSavingAi(true);
+    setAiError(null);
     try {
       const res = await fetch("/api/settings/ai", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ [key]: value }),
       });
-      if (!res.ok) throw new Error("Save failed");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `Save failed (${res.status})`);
     } catch (err) {
       console.error(err);
       setAiSettings(previous); // revert on failure
+      setAiError(err instanceof Error ? err.message : "Save failed.");
     } finally {
       setSavingAi(false);
+    }
+  }
+
+  // Endpoint + shape + model + key must be validated and saved together —
+  // a half-saved custom provider (e.g. endpoint without a working key)
+  // should never silently become the active config.
+  async function saveProviderConfig() {
+    if (!providerForm.endpoint || !providerForm.model) {
+      setProviderError("Endpoint and model are required.");
+      return;
+    }
+    // A key is only required the first time — if one's already saved
+    // (has_api_key) the person can update just the endpoint/model without
+    // re-entering it, unless they're deliberately changing it.
+    if (!aiSettings?.has_api_key && !providerForm.apiKey) {
+      setProviderError("API key is required.");
+      return;
+    }
+
+    setProviderSaving(true);
+    setProviderError(null);
+    setProviderSaved(false);
+    try {
+      const res = await fetch("/api/settings/ai", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          processing_location: "self_hosted",
+          ai_provider_endpoint: providerForm.endpoint,
+          ai_provider_shape: providerForm.shape,
+          ai_provider_model: providerForm.model,
+          ...(providerForm.apiKey ? { ai_provider_api_key: providerForm.apiKey } : {}),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not save — check your endpoint, shape, and key.");
+      setAiSettings(data.settings);
+      setProviderForm(prev => ({ ...prev, apiKey: "" })); // never keep plaintext in state after save
+      setProviderSaved(true);
+      setTimeout(() => setProviderSaved(false), 2500);
+    } catch (err: unknown) {
+      setProviderError(err instanceof Error ? err.message : "Save failed.");
+    } finally {
+      setProviderSaving(false);
     }
   }
 
@@ -332,8 +399,8 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   {[
                     { id: "cloud" as const, label: "Cloud Processing", available: true, desc: "Analyzed via FlowLens's cloud AI service. Fastest, no setup required." },
-                    { id: "local" as const, label: "Local Processing", available: false, desc: "Run analysis on your own infrastructure. Planned." },
-                    { id: "self_hosted" as const, label: "Self-Hosted", available: false, desc: "Bring your own model endpoint. Planned." },
+                    { id: "self_hosted" as const, label: "Self-Hosted / BYOK", available: true, desc: "Bring your own endpoint, model, and API key — nothing goes through FlowLens's own AI service." },
+                    { id: "local" as const, label: "Local Processing", available: false, desc: "Fully on-device inference, no network calls at all. Planned." },
                   ].map(opt => (
                     <button
                       key={opt.id}
@@ -358,6 +425,92 @@ export default function SettingsPage() {
                   ))}
                 </div>
               </div>
+
+              {aiSettings.processing_location === "self_hosted" && (
+                <div className="border-t border-border pt-5">
+                  <label className="text-sm font-medium text-text-primary mb-1.5 block">Custom Endpoint</label>
+                  <p className="text-xs text-text-muted mb-3">
+                    Paste in the endpoint, shape, and model for your provider. See the{" "}
+                    <a href="/docs/ai-endpoints" className="text-brand-orange hover:underline">
+                      supported endpoints guide
+                    </a>{" "}
+                    for the exact values each provider needs.
+                  </p>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs text-text-muted mb-1 block">Endpoint URL</label>
+                      <input
+                        type="text"
+                        value={providerForm.endpoint}
+                        onChange={e => setProviderForm(prev => ({ ...prev, endpoint: e.target.value }))}
+                        placeholder="https://api.openai.com/v1/chat/completions"
+                        className="w-full text-sm bg-surface border border-border rounded-lg px-3 py-2 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-orange/50"
+                      />
+                    </div>
+
+                    <div className="flex gap-3">
+                      <div className="flex-1">
+                        <label className="text-xs text-text-muted mb-1 block">Shape</label>
+                        <div className="flex gap-2">
+                          {(["openai", "anthropic"] as const).map(shape => (
+                            <button
+                              key={shape}
+                              onClick={() => setProviderForm(prev => ({ ...prev, shape }))}
+                              className={`text-xs font-medium rounded-full px-3 py-1.5 border transition-colors ${
+                                providerForm.shape === shape
+                                  ? "bg-brand-orange/15 text-brand-orange border-brand-orange/30"
+                                  : "bg-surface-2 text-text-muted border-border hover:border-gray-500"
+                              }`}
+                            >
+                              {shape === "openai" ? "OpenAI-compatible" : "Anthropic-compatible"}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-text-muted mb-1 block">Model</label>
+                      <input
+                        type="text"
+                        value={providerForm.model}
+                        onChange={e => setProviderForm(prev => ({ ...prev, model: e.target.value }))}
+                        placeholder="gpt-4o-mini"
+                        className="w-full text-sm bg-surface border border-border rounded-lg px-3 py-2 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-orange/50"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-text-muted mb-1 block">
+                        API Key {aiSettings.has_api_key && <span className="text-status-success">— {aiSettings.api_key_hint || "configured"}</span>}
+                      </label>
+                      <input
+                        type="password"
+                        value={providerForm.apiKey}
+                        onChange={e => setProviderForm(prev => ({ ...prev, apiKey: e.target.value }))}
+                        placeholder={aiSettings.has_api_key ? "Leave blank to keep current key" : "sk-..."}
+                        className="w-full text-sm bg-surface border border-border rounded-lg px-3 py-2 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-orange/50"
+                      />
+                      <p className="text-[11px] text-text-muted mt-1">
+                        Encrypted at rest. Never logged, never sent back to your browser once saved.
+                      </p>
+                    </div>
+
+                    {providerError && (
+                      <p className="text-xs text-status-error">{providerError}</p>
+                    )}
+
+                    <button
+                      onClick={saveProviderConfig}
+                      disabled={providerSaving}
+                      className="text-xs font-medium bg-brand-orange text-white rounded-lg px-4 py-2 disabled:opacity-60 hover:opacity-90 transition-opacity"
+                    >
+                      {providerSaving ? "Testing connection..." : providerSaved ? "Saved ✓" : "Test & Save"}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

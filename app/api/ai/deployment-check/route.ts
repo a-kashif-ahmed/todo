@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/supabase/auth-helper";
 import { checkDeploymentReadiness } from "@/lib/services/ai";
 import { diffWorkflows } from "@/lib/services/diff";
-import { assertAiAllowed } from "@/lib/services/aiSettings";
+import { assertAiAllowed, getTeamAIProvider } from "@/lib/services/aiSettings";
 
 export async function POST(request: Request) {
   const ctx = await getAuthContext();
@@ -58,7 +58,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const check = await checkDeploymentReadiness(snapshot.normalised, recentDiff);
+    const provider = await getTeamAIProvider(db, teamId);
+    const check = await checkDeploymentReadiness(provider, snapshot.normalised, recentDiff);
     return NextResponse.json({ check, workflow_id: snapshot.workflow_id });
   } catch (e: unknown) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Deployment check failed." }, { status: 500 });
